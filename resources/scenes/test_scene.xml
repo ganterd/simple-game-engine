@@ -1,0 +1,14 @@
+<scene name="Test Scene">
+	<entities>
+		<entity name="Test Entity">
+			<model>
+				<path>../../resources/models/test_scene.dae</path>
+			</model>
+			<position>
+				<x>0</x>
+				<y>0</y>
+				<z>0</z>
+			</position>
+		</entity>
+	</entities>
+</scene>
