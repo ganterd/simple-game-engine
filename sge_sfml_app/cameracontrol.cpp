@@ -21,7 +21,6 @@ void CameraControl::update()
         f = glm::rotate(f, -m.x, u);
     }
 
-
     mCurrentVelocity -= mCurrentVelocity * decelerationPercentPerSecond * d;
 
     if(SGE::Input::isKeyPressed(SGE::Input::Key::W))
@@ -32,6 +31,10 @@ void CameraControl::update()
         mCurrentVelocity -= r * d * accelerationPerSecond;
     if(SGE::Input::isKeyPressed(SGE::Input::Key::D))
         mCurrentVelocity += r * d * accelerationPerSecond;
+    if(SGE::Input::isKeyPressed(SGE::Input::Key::Space))
+        mCurrentVelocity += u * d * accelerationPerSecond;
+    if(SGE::Input::isKeyPressed(SGE::Input::Key::LeftControl))
+        mCurrentVelocity -= u * d * accelerationPerSecond;
 
     float speed = glm::length(mCurrentVelocity);
     if(speed > maxSpeedPerSecond)
