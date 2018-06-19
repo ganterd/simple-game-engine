@@ -19,8 +19,7 @@ const int DEFAULT_SCREEN_HEIGHT = 600;
 
 using namespace SGE;
 
-SGE::IDisplayManager* dm;
-SGE::IDisplayManager* dm2;
+SGE::IDisplay* dm;
 GraphicsManager::IGraphicsManager* gm;
 Scene* scene;
 
@@ -40,6 +39,12 @@ void main_loop()
 	gm->clearBuffer();
 	ShaderManager::useShader("normals");
 	scene->update();
+
+	if(SGE::Input::IsKeyPressed(SGE::Input::Key::W))
+	{
+		LOG(INFO) << "W pressed";
+	}
+
 	scene->draw();
 	dm->swapBuffers();
 }
@@ -47,7 +52,7 @@ void main_loop()
 void init()
 {
 	/* Initialise the display manager */
-	dm = SGE::DisplayManager::getInstance();
+	dm = SGE::DisplayManager::getDisplayInstance();
 
 	/* Initialise the graphics manager */
 	gm = new GraphicsManager::OGLGraphicsManager(dm);
@@ -63,7 +68,7 @@ void init()
 
 void exit()
 {
-	//dm->exit();
+	dm->exit();
 }
 
 int main( int argc, char* args[] )

@@ -1,7 +1,7 @@
 #ifndef SGE_I_GRAPHICS_MANAGER_HPP
 #define SGE_I_GRAPHICS_MANAGER_HPP
 
-#include <sge/display/IDisplayManager.hpp>
+#include <sge/display/IDisplay.hpp>
 
 namespace SGE
 {
@@ -10,7 +10,7 @@ namespace SGE
 		class IGraphicsManager
 		{
 		protected:
-			SGE::IDisplayManager* dm;
+			SGE::IDisplay* dm;
 
 		public:
 			virtual int init() = 0;

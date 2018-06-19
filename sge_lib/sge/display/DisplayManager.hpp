@@ -1,8 +1,8 @@
 #ifndef SGE_DISPLAY_MANAGER
 #define SGE_DISPLAY_MANAGER
 
-#include <sge/display/IDisplayManager.hpp>
-#include <sge/display/SFMLDisplayManager.hpp>
+#include <sge/display/IDisplay.hpp>
+#include <sge/display/SFMLDisplay.hpp>
 
 namespace SGE
 {

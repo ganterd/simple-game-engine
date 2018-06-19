@@ -1,6 +1,6 @@
 #include <sge/display/DisplayManager.hpp>
 
-SGE::IDisplay* SGE::DisplayManager::m_CurrentDM = nullptr;
+SGE::IDisplay* SGE::DisplayManager::m_CurrentDisplay = nullptr;
 
 SGE::IDisplay* SGE::DisplayManager::init()
 {

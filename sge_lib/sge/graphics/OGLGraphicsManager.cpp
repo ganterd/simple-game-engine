@@ -4,7 +4,7 @@ namespace SGE
 {
 	namespace GraphicsManager
 	{
-		OGLGraphicsManager::OGLGraphicsManager(SGE::IDisplayManager* dm)
+		OGLGraphicsManager::OGLGraphicsManager(SGE::IDisplay* dm)
 		{
 			this->init();
 		}

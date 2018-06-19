@@ -3,6 +3,8 @@
 
 #include <vector>
 
+#include <sge/time/time.hpp>
+#include <sge/input/input.hpp>
 #include <sge/model/Entity.hpp>
 #include <sge/graphics/IShader.hpp>
 #include <sge/graphics/ShaderManager.hpp>

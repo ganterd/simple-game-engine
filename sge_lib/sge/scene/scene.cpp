@@ -6,27 +6,30 @@ namespace SGE
 	{
 		camera = new Camera();
 		ShaderManager::init();
+		Time::init();
 	}
-	
+
 	void Scene::addEntity(Entity* entity)
 	{
 		this->entities.push_back(entity);
 	}
-	
+
 	void Scene::update()
 	{
 		//glm::mat4 rotMat = glm::rotate(0.2f, 0.0f, 1.0f, 0.0f);
 		//glm::vec4 camMat = camera->getPosition();
 		//camera->setPosition(camMat);
+		Time::tick();
+		Input::Update();
+		camera->update();
 	}
-	
+
 	void Scene::draw()
 	{
 		glEnable(GL_CULL_FACE);
 		glEnable(GL_DEPTH_TEST);
 		glCullFace(GL_BACK);
-		camera->update();
-		
+
 		IShader* shader = ShaderManager::getCurrentShader();
 		if(shader == NULL)
 		{
@@ -41,11 +44,11 @@ namespace SGE
 		for(int i = 0; i < entities_count; ++i)
 		{
 			glm::mat4 mvpMat = vpMat * entities[i]->getModelMat();
-			
+
 			shader->setMVP(mvpMat);
 			entities[i]->draw();
 		}
-		
+
 		/* Gather lights. Don't use acceleration structure in case */
 		/* lights are accidentally culled */
 		sceneLights.empty();
@@ -62,11 +65,11 @@ namespace SGE
 		}
 		lightScene();
 	}
-	
+
 	void Scene::lightScene()
 	{
 		for(int i = 0; i < sceneLights.size(); ++i)
-		{	
+		{
 			//shader->setLightPosition(sceneLights[i].light->getPosition());
 		}
 	}

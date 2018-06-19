@@ -16,7 +16,7 @@ namespace SGE
 		class OGLGraphicsManager: public IGraphicsManager
 		{
 		public:
-			OGLGraphicsManager(SGE::IDisplayManager*);
+			OGLGraphicsManager(SGE::IDisplay*);
 			int init();
 			void clearBuffer();
 		};
