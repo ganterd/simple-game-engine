@@ -4,77 +4,83 @@ namespace SGE
 {
 	Camera::Camera()
 	{
-		this->setFoV(45.0f);
-		this->setAspectRatio(4.0f / 3.0f);
-		this->setNearPlaneDistance(0.1);
-		this->setFarPlaneDistance(1000.0f);
-		
-		position = glm::vec4(0.0f,-0.5f,5.0f,1.0f);
-		lookingAt = glm::vec4(0,0,0,0);
-		upVector = glm::vec4(0,1,0,0);
+		setFoV(45.0f);
+		setAspectRatio(4.0f / 3.0f);
+		setNearPlaneDistance(0.1);
+		setFarPlaneDistance(1000.0f);
+
+		mPosition = glm::vec3(0.0f,-0.5f,5.0f);
+		mForwardVector = glm::vec3(0, 0, -1);
+		mUpVector = glm::vec3(0,1,0);
 	}
-	
-	void Camera::lookAt(glm::vec4 p)
+
+	void Camera::lookAt(const glm::vec3& p)
 	{
-		this->lookingAt = p;
+		mForwardVector = glm::normalize(p - mPosition);
 	}
-	
+
 	void Camera::update()
 	{
-		viewMat = glm::lookAt(
-			glm::vec3(position),
-			glm::vec3(lookingAt),
-			glm::vec3(upVector)
-		);
-		
-		this->vpMat = projectionMat * viewMat;
+		viewMat = glm::lookAt(mPosition,	mPosition + mForwardVector, mUpVector);
+		vpMat = projectionMat * viewMat;
 	}
-	
+
 	void Camera::updateProjectionMat()
 	{
-		projectionMat = glm::perspective(
-			this->fov, 
-			this->ratio, 
-			this->nearPlane, 
-			this->farPlane
-		);
+		projectionMat = glm::perspective(fov, ratio, nearPlane, farPlane);
 	}
-	
-	void Camera::setPosition(glm::vec4 p )
+
+	void Camera::setLookVector(const glm::vec3& l)
 	{
-		this->position = p;
-		this->update();
+		mForwardVector = glm::normalize(l);
+		update();
 	}
-	
+
+	void Camera::setPosition(const glm::vec3& p )
+	{
+		mPosition = p;
+		update();
+	}
+
 	void Camera::setFoV(float fov)
 	{
 		this->fov = fov;
 		this->updateProjectionMat();
 	}
-	
+
 	void Camera::setAspectRatio(float r)
 	{
 		this->ratio = r;
 		this->updateProjectionMat();
 	}
-	
+
 	void Camera::setNearPlaneDistance(float p)
 	{
 		this->nearPlane = p;
 		this->updateProjectionMat();
 	}
-	
+
 	void Camera::setFarPlaneDistance(float p)
 	{
 		this->farPlane = p;
 		this->updateProjectionMat();
 	}
-	
-	glm::vec4 Camera::getPosition()
+
+	glm::vec3 Camera::getPosition()
 	{
-		return this->position;
+		return mPosition;
 	}
-	
+
+	glm::vec3 Camera::getForwardVector()
+	{
+		return mForwardVector;
+	}
+
+	glm::vec3 Camera::getUpVector()
+	{
+		return mUpVector;
+	}
+
 	glm::mat4 Camera::getVPMat()
 	{
 		return this->vpMat;

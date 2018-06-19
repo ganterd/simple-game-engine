@@ -18,12 +18,12 @@ SGE::Input* SGE::Input::GetInstance()
     return mInstance;
 }
 
-void SGE::Input::Update()
+void SGE::Input::update()
 {
     GetInstance()->InternalUpdate();
 }
 
-bool SGE::Input::IsKeyPressed(Key k)
+bool SGE::Input::isKeyPressed(Key k)
 {
     return GetInstance()->InternalKeyPressed(k);
 }

@@ -12,9 +12,9 @@ namespace SGE
 	class Camera
 	{
 	private:
-		glm::vec4 position;
-		glm::vec4 lookingAt;
-		glm::vec4 upVector;
+		glm::vec3 mPosition;
+		glm::vec3 mForwardVector;
+		glm::vec3 mUpVector;
 
 		float fov;
 		float ratio;
@@ -29,15 +29,17 @@ namespace SGE
 	public:
 		Camera();
 
-		void lookAt(glm::vec4 p);
-
-		void setPosition(glm::vec4 p);
+		void lookAt(const glm::vec3& p);
+		void setLookVector(const glm::vec3& l);
+		void setPosition(const glm::vec3& p);
 		void setFoV(float fov);
 		void setAspectRatio(float r);
 		void setNearPlaneDistance(float p);
 		void setFarPlaneDistance(float p);
 
-		glm::vec4 getPosition();
+		glm::vec3 getPosition();
+		glm::vec3 getForwardVector();
+		glm::vec3 getUpVector();
 		glm::mat4 getVPMat();
 
 		void update();

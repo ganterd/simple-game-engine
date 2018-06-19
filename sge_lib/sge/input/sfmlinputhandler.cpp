@@ -52,14 +52,17 @@ SGE::SFMLInputHandler::SFMLInputHandler()
 	SFMLKeyMapping[Input::Key::Up] = sf::Keyboard::Up;
 	SFMLKeyMapping[Input::Key::Down] = sf::Keyboard::Down;
 
-    InternalUpdate();
+    sf::Vector2i p = sf::Mouse::getPosition();
+    mMousePosition = glm::vec2((float)p.x, (float)p.y);
+    mMouseDelta = glm::vec2(0.0f);
 }
 
 void SGE::SFMLInputHandler::InternalUpdate()
 {
     sf::Vector2i p = sf::Mouse::getPosition();
-    mMousePosition = glm::vec2((float)p.x, (float)p.y);
-    mMouseDelta = glm::vec2(0.0f);
+    glm::vec2 newMousePos = glm::vec2((float)p.x, (float)p.y);
+    mMouseDelta = newMousePos - mMousePosition;
+    mMousePosition = newMousePos;
 }
 
 bool SGE::SFMLInputHandler::InternalKeyPressed(Key k)

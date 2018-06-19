@@ -27,10 +27,10 @@ namespace SGE
             Left, Right, Up, Down
         };
 
-        static void Update();
-        static bool IsKeyPressed(Key k);
-        static glm::vec2 MouseDelta(){ return mMouseDelta; };
-        static glm::vec2 MousePosition(){ return mMousePosition; };
+        static void update();
+        static bool isKeyPressed(Key k);
+        static glm::vec2 mouseDelta(){ return mMouseDelta; };
+        static glm::vec2 mousePosition(){ return mMousePosition; };
 
     protected:
         static glm::vec2 mMousePosition;

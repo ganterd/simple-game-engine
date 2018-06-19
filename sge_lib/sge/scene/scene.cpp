@@ -16,11 +16,8 @@ namespace SGE
 
 	void Scene::update()
 	{
-		//glm::mat4 rotMat = glm::rotate(0.2f, 0.0f, 1.0f, 0.0f);
-		//glm::vec4 camMat = camera->getPosition();
-		//camera->setPosition(camMat);
 		Time::tick();
-		Input::Update();
+		Input::update();
 		camera->update();
 	}
 

@@ -1,5 +1,8 @@
 // Local Includes
 //---------------------------------------------------
+#include <easylogging++.h>
+INITIALIZE_EASYLOGGINGPP
+
 #include <sge/configmanager/ConfigManager.hpp>
 #include <sge/display/DisplayManager.hpp>
 #include <sge/scene/scene.hpp>
@@ -7,9 +10,7 @@
 #include <sge/graphics/ShaderManager.hpp>
 #include <sge/graphics/OGLGraphicsManager.hpp>
 
-#include <easylogging++.h>
-
-INITIALIZE_EASYLOGGINGPP
+#include "cameracontrol.hpp"
 
 // Function Prototypes
 //---------------------------------------------------
@@ -22,6 +23,7 @@ using namespace SGE;
 SGE::IDisplay* dm;
 GraphicsManager::IGraphicsManager* gm;
 Scene* scene;
+CameraControl* cameraControl;
 
 bool quit = false;
 
@@ -39,11 +41,7 @@ void main_loop()
 	gm->clearBuffer();
 	ShaderManager::useShader("normals");
 	scene->update();
-
-	if(SGE::Input::IsKeyPressed(SGE::Input::Key::W))
-	{
-		LOG(INFO) << "W pressed";
-	}
+	cameraControl->update();
 
 	scene->draw();
 	dm->swapBuffers();
@@ -61,6 +59,9 @@ void init()
 	SceneImporter sceneImporter;
 	scene = sceneImporter.importSceneFromFile("../../resources/scenes/test_scene.xml");
 	scene->camera->setAspectRatio((float)dm->size().width / (float)dm->size().height);
+
+	cameraControl = new CameraControl();
+	cameraControl->mCamera = scene->camera;
 
 	ShaderManager::loadShader("normals");
 	ShaderManager::loadShader("depth");

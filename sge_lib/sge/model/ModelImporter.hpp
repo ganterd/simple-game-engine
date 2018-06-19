@@ -33,6 +33,8 @@ namespace SGE
 		void extractMaterials();
 		std::vector<ITexture*> extractMaterialTextures(aiMaterial* mat, aiTextureType type);
 		void extractTriangles(float scale);
+		void _nodeRecurse(aiNode* n, const aiMatrix4x4& m);
+		void _processMesh(aiMesh*, const aiMatrix4x4& m);
 		void extractLights();
 
 	public:
