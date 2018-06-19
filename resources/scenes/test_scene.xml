@@ -1,12 +1,12 @@
 <scene name="Test Scene">
 	<entities>
-		<entity name="Test Entity">
-			<model>
-				<path>../../resources/models/test_scene.dae</path>
+		<entity name="Sponza">
+			<model scale="0.01">
+				<path>../../resources/models/sponza.dae</path>
 			</model>
 			<position>
 				<x>0</x>
-				<y>0</y>
+				<y>-1</y>
 				<z>0</z>
 			</position>
 		</entity>

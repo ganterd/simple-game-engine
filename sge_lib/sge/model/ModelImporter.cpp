@@ -8,14 +8,20 @@ namespace SGE
 	
 	bool ModelImporter::importModel(std::string file)
 	{
+		return this->importModel(file, 1.0f, false);
+	}
+	
+	bool ModelImporter::importModel(std::string file, float scale, bool makeLeftHanded)
+	{
 		LOG(INFO) << " Loading model: " << file ;
-		std::cout;
-		Assimp::Importer importer;
+		LOG(DEBUG) << " |- Make Left Handed: " << (makeLeftHanded ? "true" : "false");
 		
+		Assimp::Importer importer;
 		model = importer.ReadFile(file,
 			aiProcess_Triangulate |
 			aiProcess_JoinIdenticalVertices |
-			aiProcess_FlipWindingOrder
+			//aiProcess_FlipWindingOrder |
+			(makeLeftHanded ? aiProcess_MakeLeftHanded : 0)
 		);
 		
 		if(!model)
@@ -27,8 +33,11 @@ namespace SGE
 		
 		this->printModelInfo();
 		
+		/* Initialise the Matrials for the model */
+		this->extractMaterials();
+		
 		/* Create the VAOs for the model */
-		this->extractTriangles();
+		this->extractTriangles(scale);
 		
 		/* Create light sources for the model */
 		this->extractLights();
@@ -38,24 +47,77 @@ namespace SGE
 	
 	void ModelImporter::printModelInfo()
 	{
-		
-		LOG(INFO) << " |-Materials: " << model->mNumMaterials ;
-		LOG(INFO) << " |-Textures: " << model->mNumTextures ;
-		LOG(INFO) << " |-Cameras: " << model->mNumCameras ;
-		LOG(INFO) << " |-Animations: " << model->mNumAnimations ;
-		std::cout;
+		LOG(INFO) << " |-Textures: " << model->mNumTextures;
+		LOG(INFO) << " |-Cameras: " << model->mNumCameras;
+		LOG(INFO) << " |-Animations: " << model->mNumAnimations;
 	}
 	
-	void ModelImporter::extractTriangles()
+	void ModelImporter::extractMaterials()
+	{
+		LOG(INFO) << " |-Materials: " << model->mNumMaterials;
+		for(int i = 0; i < model->mNumMaterials; ++i)
+		{
+			/* Get textures */
+			aiMaterial* material = model->mMaterials[i];
+			this->extractMaterialTextures(material, aiTextureType_DIFFUSE);
+			this->extractMaterialTextures(material, aiTextureType_SPECULAR);
+			this->extractMaterialTextures(material, aiTextureType_AMBIENT);
+			this->extractMaterialTextures(material, aiTextureType_EMISSIVE);
+			this->extractMaterialTextures(material, aiTextureType_SHININESS);			
+			this->extractMaterialTextures(material, aiTextureType_NORMALS);
+			this->extractMaterialTextures(material, aiTextureType_OPACITY);			
+		}
+	}
+	
+	std::vector<ITexture*> ModelImporter::extractMaterialTextures(aiMaterial* mat, aiTextureType type)
+	{
+		std::vector<ITexture*> textures;
+		aiString path;
+		for(int j = 0; j < mat->GetTextureCount(type); ++j)
+		{
+			mat->GetTexture(type, j, &path);
+			ITexture* tex = NULL;
+			switch(type)
+			{
+				case aiTextureType_DIFFUSE:
+					tex = new DiffuseTexture();
+					break;
+				case aiTextureType_SPECULAR:
+					LOG(WARNING) << "No handler for specular textures yet";
+					break;
+				case aiTextureType_AMBIENT:
+					LOG(WARNING) << "No handler for ambient textures yet";
+					break;
+				case aiTextureType_EMISSIVE:
+					LOG(WARNING) << "No handler for emissive textures yet";
+					break;
+				case aiTextureType_SHININESS:
+					LOG(WARNING) << "No handler for shininess textures yet";
+					break;
+				case aiTextureType_NORMALS:
+					LOG(WARNING) << "No handler for normals textures yet";
+					break;
+				case aiTextureType_OPACITY:
+					tex = new OpacityTexture();
+					break;
+			}
+			
+			if(tex)
+			{
+				tex->LoadFromFile(path.data);
+				LOG(INFO) << "     |-" << j << ": " << (*tex);
+			}
+		}
+		
+		return textures;
+	}
+	
+	void ModelImporter::extractTriangles(float scale)
 	{
 		LOG(INFO) << " |-Meshes: " << model->mNumMeshes ;
 		for(int i = 0; i < model->mNumMeshes; ++i)
 		{
 			aiMesh* mesh = model->mMeshes[i];
-			
-			LOG(DEBUG) << "   |-Mesh " << i ;
-			LOG(DEBUG) << "     |-Verts: " << mesh->mNumVertices
-				;
 
 			GLfloat* meshVertexData = new GLfloat[mesh->mNumVertices * 3];
 			GLfloat* meshNormalsData = new GLfloat[mesh->mNumVertices * 3];
@@ -63,19 +125,17 @@ namespace SGE
 			/* Direct copy VBO from mesh */
 			for(int j = 0; j < mesh->mNumVertices; ++j)
 			{
-				meshVertexData[(j * 3) + 0] = mesh->mVertices[j].x;
-				meshVertexData[(j * 3) + 1] = mesh->mVertices[j].z;
-				meshVertexData[(j * 3) + 2] = mesh->mVertices[j].y;
+				meshVertexData[(j * 3) + 0] = mesh->mVertices[j].x * scale;
+				meshVertexData[(j * 3) + 1] = mesh->mVertices[j].y * scale;
+				meshVertexData[(j * 3) + 2] = mesh->mVertices[j].z * scale;
 				
 
 				meshNormalsData[(j * 3) + 0] = mesh->mNormals[j].x;
-				meshNormalsData[(j * 3) + 1] = mesh->mNormals[j].z;
-				meshNormalsData[(j * 3) + 2] = mesh->mNormals[j].y;
+				meshNormalsData[(j * 3) + 1] = mesh->mNormals[j].y;
+				meshNormalsData[(j * 3) + 2] = mesh->mNormals[j].z;
 			}
 			
 			/* Extract the VBI from faces */
-			LOG(DEBUG) << "     |-Polys: " << mesh->mNumFaces
-				;
 			unsigned int* meshIndexData = new unsigned int[mesh->mNumFaces * 3];
 			for(int j = 0; j < mesh->mNumFaces; ++j)
 			{
@@ -89,6 +149,7 @@ namespace SGE
 			resultMesh->setVBOData(meshVertexData, mesh->mNumVertices);
 			resultMesh->setNBOData(meshNormalsData, mesh->mNumVertices);
 			resultMesh->setIBOData(meshIndexData, mesh->mNumFaces);
+			LOG(DEBUG) << "   |-" << i << ": " << (*resultMesh);
 			meshes.push_back(resultMesh);
 		}
 	}

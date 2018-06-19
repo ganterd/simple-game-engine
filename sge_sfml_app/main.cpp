@@ -1,11 +1,11 @@
 // Local Includes
 //---------------------------------------------------
 #include <sge/configmanager/ConfigManager.hpp>
-#include <sge/displaymanager/DisplayManager.hpp>
+#include <sge/display/DisplayManager.hpp>
 #include <sge/scene/scene.hpp>
 #include <sge/scene/sceneimporter.hpp>
-#include <sge/graphicsmanager/ShaderManager.hpp>
-#include <sge/graphicsmanager/OGLGraphicsManager.hpp>
+#include <sge/graphics/ShaderManager.hpp>
+#include <sge/graphics/OGLGraphicsManager.hpp>
 
 #include <easylogging++.h>
 
@@ -35,7 +35,7 @@ void main_loop()
 		LOG(INFO) << "Quit requested";
 		return;
 	}
-	
+
 	dm->setAsTarget();
 	gm->clearBuffer();
 	ShaderManager::useShader("normals");
@@ -48,15 +48,15 @@ void init()
 {
 	/* Initialise the display manager */
 	dm = DisplayManager::init();
-	
+
 	/* Initialise the graphics manager */
 	gm = new GraphicsManager::OGLGraphicsManager(dm);
-	
+
 	/* Instantiate the scene object */
 	SceneImporter sceneImporter;
 	scene = sceneImporter.importSceneFromFile("../../resources/scenes/test_scene.xml");
 	scene->camera->setAspectRatio((float)dm->size().width / (float)dm->size().height);
-	
+
 	ShaderManager::loadShader("normals");
 	ShaderManager::loadShader("depth");
 }
@@ -71,15 +71,15 @@ int main( int argc, char* args[] )
     el::Configurations conf("../../resources/logger.conf");
     el::Loggers::reconfigureLogger("default", conf);
     el::Loggers::reconfigureAllLoggers(conf);
-    
+
     ConfigManager::init();
-    
+
 	init();
-	
+
 	while(!quit)
 		main_loop();
-	
+
 	exit();
-	
+
 	return 0;
 }
