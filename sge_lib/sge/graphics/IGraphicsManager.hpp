@@ -10,7 +10,7 @@ namespace SGE
 		class IGraphicsManager
 		{
 		protected:
-			DisplayManager::IDisplayManager* dm;
+			SGE::IDisplayManager* dm;
 
 		public:
 			virtual int init() = 0;

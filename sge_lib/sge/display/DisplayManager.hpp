@@ -6,18 +6,19 @@
 
 namespace SGE
 {
-	namespace DisplayManager
+	class DisplayManager
 	{
-		static const std::string DEFAULT_METHOD = "SFML";
-		static const int DEFAULT_WIDTH = 600;
-		static const int DEFAULT_HEIGHT = 400;
-		static const int DEFAULT_X_POS = 50;
-		static const int DEFAULT_Y_POS = 50;
-		static const int DEFAULT_X_RES = 600;
-		static const int DEFAULT_Y_RES = 400;
-		static const bool DEFAULT_FULLSCREEN = false;
-		IDisplayManager* init();
-	}
+	private:
+		static SGE::IDisplayManager* m_CurrentDM;
+		static SGE::IDisplayManager* init();
+
+	public:
+		static SGE::IDisplayManager* getInstance(){
+			if(m_CurrentDM == nullptr)
+				m_CurrentDM = init();
+			return m_CurrentDM;
+		}
+	};
 }
 
 #endif

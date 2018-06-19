@@ -10,31 +10,28 @@
 
 namespace SGE
 {
-	namespace DisplayManager
+	class SFMLDisplayManager: public IDisplayManager
 	{
-		class SFMLDisplayManager: public IDisplayManager
-		{
-		private:
-			sf::RenderWindow* window;
+	private:
+		sf::RenderWindow* window;
 
-			bool quit;
+		bool quit;
 
-		public:
-			SFMLDisplayManager(int w, int h, int x, int y, bool fullscreen);
+	public:
+		SFMLDisplayManager(int w, int h, int x, int y, bool fullscreen);
 
-			bool createGLContext();
-			void setAsTarget();
-			void handleEvents();
-			void swapBuffers();
-			void exit();
+		bool createGLContext();
+		void setAsTarget();
+		void handleEvents();
+		void swapBuffers();
+		void exit();
 
-			bool wasQuitRequested();
+		bool wasQuitRequested();
 
-			// Callback functions
-			// --------------------------------------------------------------
-			void onResize(void (*func)(Size));
-		};
-	}
+		// Callback functions
+		// --------------------------------------------------------------
+		void onResize(void (*func)(Size));
+	};
 }
 
 #endif

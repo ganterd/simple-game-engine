@@ -19,8 +19,8 @@ const int DEFAULT_SCREEN_HEIGHT = 600;
 
 using namespace SGE;
 
-DisplayManager::IDisplayManager* dm;
-DisplayManager::IDisplayManager* dm2;
+SGE::IDisplayManager* dm;
+SGE::IDisplayManager* dm2;
 GraphicsManager::IGraphicsManager* gm;
 Scene* scene;
 
@@ -47,7 +47,7 @@ void main_loop()
 void init()
 {
 	/* Initialise the display manager */
-	dm = DisplayManager::init();
+	dm = SGE::DisplayManager::getInstance();
 
 	/* Initialise the graphics manager */
 	gm = new GraphicsManager::OGLGraphicsManager(dm);
