@@ -1,10 +1,10 @@
 #include <sge/display/DisplayManager.hpp>
 
-SGE::IDisplayManager* SGE::DisplayManager::m_CurrentDM = nullptr;
+SGE::IDisplay* SGE::DisplayManager::m_CurrentDM = nullptr;
 
-SGE::IDisplayManager* SGE::DisplayManager::init()
+SGE::IDisplay* SGE::DisplayManager::init()
 {
-	SGE::IDisplayManager::Method method = SGE::IDisplayManager::Method::SFML;
+	SGE::IDisplay::Method method = SGE::IDisplay::Method::SFML;
 	std::string sWidth = SGE::ConfigManager::get("display.window.width");
 	std::string sHeight = SGE::ConfigManager::get("display.window.height");
 	std::string sXPos = SGE::ConfigManager::get("display.window.x");
@@ -22,22 +22,22 @@ SGE::IDisplayManager* SGE::DisplayManager::init()
 	bool fullScreen = sFullscreen.compare("true") == 0;
 
 	if(width == 0)
-		width = SGE::IDisplayManager::DEFAULT_WIDTH;
+		width = SGE::IDisplay::DEFAULT_WIDTH;
 	if(height == 0)
-		height = SGE::IDisplayManager::DEFAULT_HEIGHT;
+		height = SGE::IDisplay::DEFAULT_HEIGHT;
 	if(xPos == 0)
-		xPos = SGE::IDisplayManager::DEFAULT_X_POS;
+		xPos = SGE::IDisplay::DEFAULT_X_POS;
 	if(yPos == 0)
-		yPos = SGE::IDisplayManager::DEFAULT_Y_POS;
+		yPos = SGE::IDisplay::DEFAULT_Y_POS;
 	if(xRes == 0)
-		xRes = SGE::IDisplayManager::DEFAULT_X_RES;
+		xRes = SGE::IDisplay::DEFAULT_X_RES;
 	if(yRes == 0)
-		yRes = SGE::IDisplayManager::DEFAULT_Y_RES;
+		yRes = SGE::IDisplay::DEFAULT_Y_RES;
 
-	SGE::IDisplayManager* dm;
-	if(method == SGE::IDisplayManager::Method::SFML)
+	SGE::IDisplay* dm;
+	if(method == SGE::IDisplay::Method::SFML)
 	{
-		dm = new SGE::SFMLDisplayManager(width, height, xPos, yPos, fullScreen);
+		dm = new SGE::SFMLDisplay(width, height, xPos, yPos, fullScreen);
 		return dm;
 	}
 	else

@@ -9,14 +9,14 @@ namespace SGE
 	class DisplayManager
 	{
 	private:
-		static SGE::IDisplayManager* m_CurrentDM;
-		static SGE::IDisplayManager* init();
+		static SGE::IDisplay* m_CurrentDisplay;
+		static SGE::IDisplay* init();
 
 	public:
-		static SGE::IDisplayManager* getInstance(){
-			if(m_CurrentDM == nullptr)
-				m_CurrentDM = init();
-			return m_CurrentDM;
+		static SGE::IDisplay* getDisplayInstance(){
+			if(m_CurrentDisplay == nullptr)
+				m_CurrentDisplay = init();
+			return m_CurrentDisplay;
 		}
 	};
 }
