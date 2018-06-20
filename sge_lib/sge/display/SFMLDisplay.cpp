@@ -16,6 +16,8 @@ namespace SGE
 		if( window == NULL )
 			LOG(FATAL) << "Window could not be created";
 
+		window->setMouseCursorVisible(false);
+		window->setMouseCursorGrabbed(true);
 		mWindowSize.width = w;
 		mWindowSize.height = h;
 

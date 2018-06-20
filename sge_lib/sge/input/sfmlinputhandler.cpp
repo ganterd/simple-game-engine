@@ -60,10 +60,19 @@ SGE::SFMLInputHandler::SFMLInputHandler()
 
 void SGE::SFMLInputHandler::InternalUpdate()
 {
-    sf::Vector2i p = sf::Mouse::getPosition();
+    SFMLDisplay* d = dynamic_cast<SFMLDisplay*>(DisplayManager::getDisplayInstance());
+    if(d == nullptr)
+    {
+        LOG(ERROR) << "No SFML window to get input from?";
+        return;
+    }
+
+    glm::vec2 center(d->mWindowSize.width / 2,  d->mWindowSize.height / 2);
+    sf::Vector2i p = sf::Mouse::getPosition(*d->window);
     glm::vec2 newMousePos = glm::vec2((float)p.x, (float)p.y);
-    mMouseDelta = newMousePos - mMousePosition;
-    mMousePosition = newMousePos;
+    mMouseDelta = newMousePos - center;
+    mMousePosition = center;
+    sf::Mouse::setPosition(sf::Vector2i(center.x, center.y), *d->window);
 }
 
 bool SGE::SFMLInputHandler::InternalKeyPressed(Key k)

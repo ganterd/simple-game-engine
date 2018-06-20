@@ -1,8 +1,8 @@
 <display>
 	<method>SFML</method>
 	<window>
-		<width>1000</width>
-		<height>750</width>
+		<width>1080</width>
+		<height>720</height>
 		<x>0</x>
 		<y>0</y>
 		<fullscreen>false</fullscreen>

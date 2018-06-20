@@ -13,6 +13,7 @@ namespace SGE
 {
 	class SFMLDisplay: public IDisplay
 	{
+	friend class SFMLInputHandler;
 	private:
 		sf::RenderWindow* window;
 
