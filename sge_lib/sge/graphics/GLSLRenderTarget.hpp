@@ -16,8 +16,7 @@ namespace SGE
 	class Export GLSLRenderTarget : public IRenderTarget
 	{
 	public:
-		GLSLRenderTarget();
-		GLSLRenderTarget(unsigned short buffers);
+		GLSLRenderTarget(int width, int height);
 		~GLSLRenderTarget();
 
 		virtual void bind();

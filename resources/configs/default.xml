@@ -1,10 +1,8 @@
 <display>
 	<method>SFML</method>
 	<window>
-		<width>1000</width>
-		<height>750</width>
-		<x>0</x>
-		<y>0</y>
+		<width>1080</width>
+		<height>720</height>
 		<fullscreen>false</fullscreen>
 	</window>
 	<renderer>GL</renderer>

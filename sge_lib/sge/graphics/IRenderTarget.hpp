@@ -33,12 +33,12 @@ namespace SGE
 		void removeRenderBuffer(IRenderBuffer* buffer);
 
 	protected:
-		int bufferWidth;
-		int bufferHeight;
+		int mBufferWidth;
+		int mBufferHeight;
+		glm::vec4 mBufferClearColour;
 
-		glm::vec4 bufferClearColour;
-
-		std::vector<IRenderBuffer*> m_renderBuffers;
+		std::vector<IRenderBuffer*> mRenderBuffers;
+		std::vector<IRenderBuffer*> mColourAttachments;
 
 		/* Called after the dimensions are set. */
 		virtual void updateBufferDimensions();

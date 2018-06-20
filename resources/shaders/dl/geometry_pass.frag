@@ -1,13 +1,12 @@
 #version 330 core
 
-varying vec3 fragNormal;
-//out vec3 color;
- 
+in vec3 fragNormal;
+in vec3 fragPosition;
+
+layout (location = 0) out vec4 position;
+layout (location = 1) out vec4 normal;
+
 void main(){
-    gl_FragColor = vec4(
-    	clamp(fragNormal.x, 0, 1),
-    	clamp(fragNormal.y, 0, 1),
-    	clamp(fragNormal.z, 0, 1),
-    	1
-    );
+    position = vec4(vec3(1.0f) - fragNormal, 1.0f);
+    normal = vec4(fragNormal, 1.0f);
 }

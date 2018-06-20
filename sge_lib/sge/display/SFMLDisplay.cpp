@@ -8,36 +8,23 @@ namespace SGE
 
 		//Create window
 		sf::ContextSettings settings;
-		settings.depthBits         = 24; // Request a 24-bit depth buffer
-		settings.stencilBits       = 8;  // Request a 8 bits stencil buffer
-		settings.antialiasingLevel = 2;  // Request 2 levels of antialiasing
+		settings.depthBits = 24;
+		settings.stencilBits = 8;
+		settings.antialiasingLevel = 2;
 
 		window = new sf::RenderWindow(sf::VideoMode(w, h), "Window", sf::Style::Close, settings);
 		if( window == NULL )
 			LOG(FATAL) << "Window could not be created";
 
+		window->setMouseCursorVisible(false);
+		window->setMouseCursorGrabbed(true);
 		mWindowSize.width = w;
 		mWindowSize.height = h;
-
 		quit = false;
-		//this->createGLContext();
-	}
-
-	bool SFMLDisplay::createGLContext()
-	{
-		LOG(INFO) << "Creating GL context...";
-		//glContext = SDL_GL_CreateContext(window);
-		//if(glContext == NULL)
-		//{
-		//	LOG(FATAL) << "Couldn't create GL context: " << SDL_GetError();
-		//	return false;
-		//}
-		return true;
 	}
 
 	void SFMLDisplay::setAsTarget()
 	{
-		//SDL_GL_MakeCurrent(this->window, glContext);
 	}
 
 	void SFMLDisplay::handleEvents()

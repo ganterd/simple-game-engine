@@ -14,13 +14,10 @@ namespace SGE
 		GLSLTexture();
 		~GLSLTexture();
 
-		void bindTexture(){};
-		void unbindTexture(){};
+		virtual void bindTexture(int textureUnit);
+		virtual void unbindTexture();
 
 		static GLuint dataTypeToGLDataType(ITexture::DataType dataType);
-
-	protected:
-		GLuint m_glTexID;
 	};
 }
 

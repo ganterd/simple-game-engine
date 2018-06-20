@@ -1,12 +1,11 @@
-#version 330
+#version 430
 
 in vec2 vPosition;
 
-varying vec3 fragPosition;
+out vec2 fragPosition;
 
 void main()
 {
-	vec4 v = vec4(vPosition, 0.0f, 0.0f);
 	fragPosition = vPosition;
-	gl_Position = v;
+	gl_Position = vec4(vPosition, 0.0f, 1.0f);
 }

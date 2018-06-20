@@ -6,11 +6,11 @@ namespace SGE
 	{
 		this->m_type = textureType_OPACITY;
 	}
-	
-	void OpacityTexture::bindTexture()
+
+	void OpacityTexture::bindTexture(int textureUnit)
 	{
 	}
-	
+
 	void OpacityTexture::unbindTexture()
 	{
 	}
