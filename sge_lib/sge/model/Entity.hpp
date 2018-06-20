@@ -9,7 +9,7 @@
 
 namespace SGE
 {
-	class Export Entity
+	class Entity
 	{
 	private:
 		std::vector<Mesh*> meshes;
@@ -20,23 +20,23 @@ namespace SGE
 		void updateTranslationMatrix();
 		
 	public:
-		Entity();
+		Export Entity();
 		
-		bool loadFromFile(std::string file);
-		bool loadFromFile(std::string file, float scale, bool makeLeftHanded);
+		Export bool loadFromFile(std::string file);
+		Export bool loadFromFile(std::string file, float scale, bool makeLeftHanded);
 		
-		void draw();
+		Export void draw();
 		
-		void setPositionX(float);
-		void setPositionY(float);
-		void setPositionZ(float);
-		void setPosition(float, float, float);
-		void setPosition(glm::vec3);
+		Export void setPositionX(float);
+		Export void setPositionY(float);
+		Export void setPositionZ(float);
+		Export void setPosition(float, float, float);
+		Export void setPosition(glm::vec3);
 		
-		glm::vec3 getPosition();
+		Export glm::vec3 getPosition();
 		
-		glm::mat4 getModelMat();
-		std::vector<ILight*> getLights();
+		Export glm::mat4 getModelMat();
+		Export std::vector<ILight*> getLights();
 	};
 }
 

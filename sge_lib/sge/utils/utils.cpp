@@ -15,7 +15,7 @@ namespace SGE
 			return NULL;
 
 		fseek(file, 0, SEEK_END);
-		int count = ftell(file);
+		size_t count = ftell(file);
 		rewind(file);
 
 

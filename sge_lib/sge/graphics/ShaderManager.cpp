@@ -48,6 +48,7 @@ namespace SGE
 		);
 
 		shaders[shader] = s;
+		return s;
 	}
 
 	bool ShaderManager::hasShader(std::string shader)

@@ -11,7 +11,7 @@ void CameraControl::update()
     glm::vec3 f = mCamera->getForwardVector();
     glm::vec3 u = mCamera->getUpVector();
     glm::vec3 r = glm::normalize(glm::cross(f, u));
-    float d = SGE::Time::getDelta();
+    float d = (float)SGE::Time::getDelta();
 
     glm::vec2 m = SGE::Input::mouseDelta();
     if(m.x != 0.0f || m.y != 0.0f)

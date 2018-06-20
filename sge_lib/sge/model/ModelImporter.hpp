@@ -22,7 +22,7 @@
 
 namespace SGE
 {
-	class Export ModelImporter
+	class ModelImporter
 	{
 	const aiScene* model;
 	std::vector<Mesh*> meshes;
@@ -38,13 +38,13 @@ namespace SGE
 		void extractLights();
 
 	public:
-		ModelImporter();
+		Export ModelImporter();
 
-		bool importModel(std::string file);
-		bool importModel(std::string file, float scale, bool makeLeftHanded);
+		Export bool importModel(std::string file);
+		Export bool importModel(std::string file, float scale, bool makeLeftHanded);
 
-		std::vector<Mesh*> getMeshes();
-		std::vector<ILight*> getLights();
+		Export std::vector<Mesh*> getMeshes();
+		Export std::vector<ILight*> getLights();
 	};
 };
 

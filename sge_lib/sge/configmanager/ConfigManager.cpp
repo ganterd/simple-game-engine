@@ -40,6 +40,7 @@ namespace SGE
 				ConfigManager::recursiveParse("", n);
 		
 		LOG(DEBUG) << "Finished reading config";
+		return true;
 	}
 	
 	void ConfigManager::recursiveParse(std::string currentNodeName, const tinyxml2::XMLElement* n)

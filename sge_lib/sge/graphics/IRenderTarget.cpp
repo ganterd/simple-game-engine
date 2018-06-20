@@ -32,7 +32,7 @@ namespace SGE
 	unsigned int IRenderTarget::addRenderBuffer(IRenderBuffer* buffer)
 	{
 		mRenderBuffers.push_back(buffer);
-		return mRenderBuffers.size() - 1;
+		return (int)mRenderBuffers.size() - 1;
 	}
 
 	IRenderBuffer* IRenderTarget::getRenderBuffer(unsigned int idx)

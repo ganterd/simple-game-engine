@@ -55,7 +55,7 @@ namespace SGE
 	void ModelImporter::extractMaterials()
 	{
 		LOG(INFO) << " |-Materials: " << model->mNumMaterials;
-		for(int i = 0; i < model->mNumMaterials; ++i)
+		for(unsigned int i = 0; i < model->mNumMaterials; ++i)
 		{
 			/* Get textures */
 			aiMaterial* material = model->mMaterials[i];
@@ -73,7 +73,7 @@ namespace SGE
 	{
 		std::vector<ITexture*> textures;
 		aiString path;
-		for(int j = 0; j < mat->GetTextureCount(type); ++j)
+		for(unsigned int j = 0; j < mat->GetTextureCount(type); ++j)
 		{
 			mat->GetTexture(type, j, &path);
 			ITexture* tex = NULL;
@@ -140,7 +140,7 @@ namespace SGE
 		GLfloat* meshNormalsData = new GLfloat[mesh->mNumVertices * 3];
 
 		/* Direct copy VBO from mesh */
-		for(int j = 0; j < mesh->mNumVertices; ++j)
+		for(unsigned int j = 0; j < mesh->mNumVertices; ++j)
 		{
 			aiVector3D v = m * mesh->mVertices[j];
 			meshVertexData[(j * 3) + 0] = v.x;
@@ -155,7 +155,7 @@ namespace SGE
 
 		/* Extract the VBI from faces */
 		unsigned int* meshIndexData = new unsigned int[mesh->mNumFaces * 3];
-		for(int j = 0; j < mesh->mNumFaces; ++j)
+		for(unsigned int j = 0; j < mesh->mNumFaces; ++j)
 		{
 			meshIndexData[(j * 3) + 0] = mesh->mFaces[j].mIndices[0];
 			meshIndexData[(j * 3) + 1] = mesh->mFaces[j].mIndices[1];
@@ -174,7 +174,7 @@ namespace SGE
 	void ModelImporter::extractLights()
 	{
 		LOG(INFO) << " |-Lights: " << model->mNumLights ;
-		for(int i = 0; i < model->mNumLights; ++i)
+		for(unsigned int i = 0; i < model->mNumLights; ++i)
 		{
 			LOG(DEBUG) << "   |-Light " << i ;
 			aiLight* light = model->mLights[i];

@@ -13,18 +13,18 @@
 
 namespace SGE
 {
-	class Export GLSLRenderTarget : public IRenderTarget
+	class GLSLRenderTarget : public IRenderTarget
 	{
 	public:
-		GLSLRenderTarget(int width, int height);
-		~GLSLRenderTarget();
+		Export GLSLRenderTarget(int width, int height);
+		Export ~GLSLRenderTarget();
 
-		virtual void bind();
-		virtual void unbind();
+		Export virtual void bind();
+		Export virtual void unbind();
 
-		virtual void clear();
+		Export virtual void clear();
 
-		unsigned int addRenderBuffer(IRenderBuffer::BufferType bufferType, ITexture::DataType dataType);
+		Export unsigned int addRenderBuffer(IRenderBuffer::BufferType bufferType, ITexture::DataType dataType);
 
 	private:
 

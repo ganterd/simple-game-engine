@@ -66,7 +66,7 @@ namespace SGE
 		}
 		else
 		{
-			attachment = GL_COLOR_ATTACHMENT0 + mColourAttachments.size();
+			attachment = GL_COLOR_ATTACHMENT0 + (GLuint)mColourAttachments.size();
 		}
 
 		IRenderBuffer* buffer = new GLSLRenderBuffer(
@@ -88,7 +88,7 @@ namespace SGE
 			{
 				attachments[i] = GL_COLOR_ATTACHMENT0 + i;
 			}
-			glDrawBuffers(mColourAttachments.size(), attachments);
+			glDrawBuffers((int)mColourAttachments.size(), attachments);
 			delete[] attachments;
 		}
 
@@ -96,6 +96,6 @@ namespace SGE
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-		return mRenderBuffers.size() - 1;
+		return (int)mRenderBuffers.size() - 1;
 	}
 }

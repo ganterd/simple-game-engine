@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.2.2)
 
 project("VCT")
 
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
@@ -16,8 +16,10 @@ find_package(Threads REQUIRED)
 
 
 ## Addind definition to fail on first error. Makes it easier to read.
-if(NOT WIN32)
-	add_definitions( -Wfatal-errors )
+if(WIN32)
+	add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+else()
+	add_definitions( -Wfatal-errors -std=c++11 )
 endif()
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)

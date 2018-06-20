@@ -72,7 +72,7 @@ void SGE::SFMLInputHandler::InternalUpdate()
     glm::vec2 newMousePos = glm::vec2((float)p.x, (float)p.y);
     mMouseDelta = newMousePos - center;
     mMousePosition = center;
-    sf::Mouse::setPosition(sf::Vector2i(center.x, center.y), *d->window);
+    sf::Mouse::setPosition(sf::Vector2i((int)center.x, (int)center.y), *d->window);
 }
 
 bool SGE::SFMLInputHandler::InternalKeyPressed(Key k)

@@ -10,7 +10,7 @@
 
 namespace SGE
 {
-	class Export Camera
+	class Camera
 	{
 	private:
 		glm::vec3 mPosition;
@@ -28,22 +28,22 @@ namespace SGE
 
 		void updateProjectionMat();
 	public:
-		Camera();
+		Export Camera();
 
-		void lookAt(const glm::vec3& p);
-		void setLookVector(const glm::vec3& l);
-		void setPosition(const glm::vec3& p);
-		void setFoV(float fov);
-		void setAspectRatio(float r);
-		void setNearPlaneDistance(float p);
-		void setFarPlaneDistance(float p);
+		Export void lookAt(const glm::vec3& p);
+		Export void setLookVector(const glm::vec3& l);
+		Export void setPosition(const glm::vec3& p);
+		Export void setFoV(float fov);
+		Export void setAspectRatio(float r);
+		Export void setNearPlaneDistance(float p);
+		Export void setFarPlaneDistance(float p);
 
-		glm::vec3 getPosition();
-		glm::vec3 getForwardVector();
-		glm::vec3 getUpVector();
-		glm::mat4 getVPMat();
+		Export glm::vec3 getPosition();
+		Export glm::vec3 getForwardVector();
+		Export glm::vec3 getUpVector();
+		Export glm::mat4 getVPMat();
 
-		void update();
+		Export void update();
 	};
 }
 

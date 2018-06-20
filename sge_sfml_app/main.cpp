@@ -18,7 +18,7 @@ INITIALIZE_NULL_EASYLOGGINGPP
 const int DEFAULT_SCREEN_WIDTH = 600;
 const int DEFAULT_SCREEN_HEIGHT = 600;
 
-using namespace SGE;
+using namespace SGE; 
 
 SGE::IDisplay* dm;
 GraphicsManager::IGraphicsManager* gm;

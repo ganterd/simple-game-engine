@@ -7,7 +7,7 @@
 
 namespace SGE
 {
-	class Export ILight
+	class ILight
 	{
 	private:
 		glm::vec4 position;
@@ -15,20 +15,20 @@ namespace SGE
 		float intensity;
 		
 	public:
-		ILight()
+		Export ILight()
 		{
 			this->position = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
 			this->color = glm::vec3(1.0f, 1.0f, 1.0f);
 			intensity = 1.0f;
 		};
 		
-		void setPosition(glm::vec4 p){ this->position = p; };
-		void setColor(glm::vec3 c){ this->color = c; };
-		void setIntesnsity(float i){ this->intensity = i; };
+		Export void setPosition(glm::vec4 p){ this->position = p; };
+		Export void setColor(glm::vec3 c){ this->color = c; };
+		Export void setIntesnsity(float i){ this->intensity = i; };
 		
-		glm::vec4 getPosition(){ return this->position; };
-		glm::vec3 getColor() { return this->color; };
-		float getIntensity(){ return this->intensity; };
+		Export glm::vec4 getPosition(){ return this->position; };
+		Export glm::vec3 getColor() { return this->color; };
+		Export float getIntensity(){ return this->intensity; };
 	};
 }
 

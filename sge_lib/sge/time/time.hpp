@@ -7,12 +7,12 @@
 
 namespace SGE
 {
-	class Export Time
+	class Time
     {
     friend class Scene;
     public:
         typedef std::chrono::time_point<std::chrono::system_clock> TimePoint;
-        static double getDelta(){ return mTickDelta; };
+        Export static double getDelta(){ return mTickDelta; };
 
     private:
 

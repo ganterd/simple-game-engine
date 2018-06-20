@@ -11,26 +11,26 @@
 
 namespace SGE
 {
-	class Export IRenderTarget
+	class IRenderTarget
 	{
 	public:
-		virtual void bind() = 0;
-		virtual void unbind() = 0;
+		Export virtual void bind() = 0;
+		Export virtual void unbind() = 0;
 
-		virtual void clear() = 0;
-		void setClearColour(float r, float g, float b, float a);
-		void setClearColour(glm::vec4 c);
+		Export virtual void clear() = 0;
+		Export void setClearColour(float r, float g, float b, float a);
+		Export void setClearColour(glm::vec4 c);
 
-		void setBufferDimensions(int w, int h);
-		int getBufferWidth();
-		int getBufferHeight();
+		Export void setBufferDimensions(int w, int h);
+		Export int getBufferWidth();
+		Export int getBufferHeight();
 
-		virtual unsigned int addRenderBuffer(IRenderBuffer::BufferType bufferType, ITexture::DataType dataType) = 0;
-		unsigned int addRenderBuffer(IRenderBuffer* buffer);
-		unsigned int addRenderBuffer(IRenderBuffer* buffer, unsigned int idx);
-		IRenderBuffer* getRenderBuffer(unsigned int bufferIndex);
-		void removeRenderBuffer(unsigned int bufferIndex);
-		void removeRenderBuffer(IRenderBuffer* buffer);
+		Export virtual unsigned int addRenderBuffer(IRenderBuffer::BufferType bufferType, ITexture::DataType dataType) = 0;
+		Export unsigned int addRenderBuffer(IRenderBuffer* buffer);
+		Export unsigned int addRenderBuffer(IRenderBuffer* buffer, unsigned int idx);
+		Export IRenderBuffer* getRenderBuffer(unsigned int bufferIndex);
+		Export void removeRenderBuffer(unsigned int bufferIndex);
+		Export void removeRenderBuffer(IRenderBuffer* buffer);
 
 	protected:
 		int mBufferWidth;

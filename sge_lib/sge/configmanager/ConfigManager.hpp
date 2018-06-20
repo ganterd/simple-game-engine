@@ -10,7 +10,7 @@
 
 namespace SGE
 {
-	class Export ConfigManager
+	class ConfigManager
 	{
 	private:
 		static std::string filePath;
@@ -18,9 +18,9 @@ namespace SGE
 		
 		static void recursiveParse(std::string currentNodeName, const tinyxml2::XMLElement* n);
 	public:
-		static void setConfigFile(std::string file);
-		static bool init();
-		static std::string get(std::string prop);
+		Export static void setConfigFile(std::string file);
+		Export static bool init();
+		Export static std::string get(std::string prop);
 	};
 }
 

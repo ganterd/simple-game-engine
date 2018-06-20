@@ -50,7 +50,7 @@ namespace SGE
 
 		/* Draw the meshes */
 		// TODO: Use acceleration structure
-		int entities_count = entities.size();
+		int entities_count = (int)entities.size();
 		renderTarget->bind();
 		renderTarget->clear();
 		for(int i = 0; i < entities_count; ++i)
