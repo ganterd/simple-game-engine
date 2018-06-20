@@ -7,8 +7,16 @@ namespace SGE
 		camera = new Camera();
 		ShaderManager::init();
 		ShaderManager::loadShader("dl_pass");
+		ShaderManager::loadShader("dl/geometry_pass");
 		Time::init();
 		overlayQuad = new OverlayQuad();
+
+		int bufferWidth = DisplayManager::getDisplayInstance()->size().width;
+		int bufferHeight = DisplayManager::getDisplayInstance()->size().height;
+		renderTarget = new GLSLRenderTarget(bufferWidth, bufferHeight);
+		renderTarget->addRenderBuffer(IRenderBuffer::BufferType::Color, ITexture::DataType::Float);
+		renderTarget->addRenderBuffer(IRenderBuffer::BufferType::Color, ITexture::DataType::Float);
+		renderTarget->addRenderBuffer(IRenderBuffer::BufferType::Depth, ITexture::DataType::Float);
 	}
 
 	void Scene::addEntity(Entity* entity)
@@ -36,24 +44,23 @@ namespace SGE
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+		ShaderManager::useShader("dl/geometry_pass");
 		IShader* shader = ShaderManager::getCurrentShader();
-		if(shader == NULL)
-		{
-			std::cout << "[Scene] No shader attached..." << std::endl;
-			return;
-		}
 		glm::mat4 vpMat = this->camera->getVPMat();
 
 		/* Draw the meshes */
 		// TODO: Use acceleration structure
 		int entities_count = entities.size();
+		renderTarget->bind();
+		renderTarget->clear();
 		for(int i = 0; i < entities_count; ++i)
 		{
 			glm::mat4 mvpMat = vpMat * entities[i]->getModelMat();
 
 			shader->setMVP(mvpMat);
-			//entities[i]->draw();
+			entities[i]->draw();
 		}
+		renderTarget->unbind();
 
 		/* Gather lights. Don't use acceleration structure in case */
 		/* lights are accidentally culled */
@@ -73,8 +80,12 @@ namespace SGE
 
 		glDisable(GL_CULL_FACE);
 		glDisable(GL_DEPTH_TEST);
+		renderTarget->getRenderBuffer(0)->bindTexture(0);
+		renderTarget->getRenderBuffer(1)->bindTexture(1);
 		ShaderManager::useShader("dl_pass");
 		overlayQuad->draw();
+		renderTarget->getRenderBuffer(0)->unbindTexture();
+		renderTarget->getRenderBuffer(1)->unbindTexture();
 	}
 
 	void Scene::lightScene()

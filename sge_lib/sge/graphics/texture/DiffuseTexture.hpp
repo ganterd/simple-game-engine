@@ -10,8 +10,8 @@ namespace SGE
 	public:
 		DiffuseTexture();
 
-		void bindTexture();
-		void unbindTexture();
+		virtual void bindTexture(int textureUnit = 0);
+		virtual void unbindTexture();
 	};
 }
 

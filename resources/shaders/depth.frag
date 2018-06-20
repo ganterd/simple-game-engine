@@ -3,7 +3,7 @@
 in vec4 gl_FragCoord;
 in vec3 fragNormal;
 
-out vec4 color;
+layout (location = 0) out vec4 color;
 
 float near = 0.1f;
 float far = 10.0f;

@@ -6,4 +6,14 @@ namespace SGE
 	{
 		return this->m_bufferType;
 	}
+
+	void IRenderBuffer::bindTexture(int textureUnit)
+	{
+		mTexture->bindTexture(textureUnit);
+	}
+
+	void IRenderBuffer::unbindTexture()
+	{
+		mTexture->unbindTexture();
+	}
 }

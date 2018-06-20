@@ -5,7 +5,7 @@
 
 namespace SGE
 {
-	class IRenderBuffer : public ITexture
+	class IRenderBuffer
 	{
 	public:
 		enum BufferType
@@ -18,6 +18,8 @@ namespace SGE
 
 		virtual void bindBuffer() = 0;
 		virtual void unbindBuffer() = 0;
+		virtual void bindTexture(int textureUnit = 0);
+		virtual void unbindTexture();
 
 		virtual void clear() = 0;
 
@@ -25,6 +27,7 @@ namespace SGE
 
 	protected:
 		BufferType m_bufferType;
+		ITexture* mTexture;
 	};
 }
 

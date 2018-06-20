@@ -2,19 +2,18 @@
 
 namespace SGE
 {
-	GLSLRenderTarget::GLSLRenderTarget() : GLSLRenderTarget(0)
-	{
-	}
-
-	GLSLRenderTarget::GLSLRenderTarget(unsigned short buffers)
+	GLSLRenderTarget::GLSLRenderTarget(int width, int height)
 	{
 		fbo = 0;
-		this->gBuffers = NULL;
-		this->gBufferCount = 0;
+		mBufferWidth = width;
+		mBufferHeight = height;
+		gBuffers = NULL;
+		gBufferCount = 0;
 
-		this->initFBO();
-		addRenderBuffer(IRenderBuffer::BufferType::Color, ITexture::DataType::Float);
-		addRenderBuffer(IRenderBuffer::BufferType::Depth, ITexture::DataType::Float);
+		initFBO();
+		unbind();
+		//addRenderBuffer(IRenderBuffer::BufferType::Color, ITexture::DataType::Float);
+		//addRenderBuffer(IRenderBuffer::BufferType::Depth, ITexture::DataType::Float);
 	}
 
 	GLSLRenderTarget::~GLSLRenderTarget()
@@ -23,45 +22,33 @@ namespace SGE
 
 	void GLSLRenderTarget::clear()
 	{
-		this->bind();
+		bind();
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	}
 
 	void GLSLRenderTarget::updateBufferDimensions()
 	{
-		// TODO: Update target dimensions
 	}
 
 	void GLSLRenderTarget::bind()
 	{
-		if(this->m_renderBuffers.size() > 0)
-		{
-			glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 
-			// TODO: Update so
-			// glDrawBuffers(this->m_renderBuffers.size(), [colour attachments]);
-			glActiveTexture(GL_TEXTURE0);
-			glEnable(GL_TEXTURE_2D);
-			GLenum buffers[] = { GL_COLOR_ATTACHMENT0 };
-			glDrawBuffers(1, buffers);
-		}
-		else
+		if(mColourAttachments.size() == 0)
 		{
-			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+			LOG(ERROR) << "No colour attachments to bind to...";
 		}
 	}
 
 	void GLSLRenderTarget::unbind()
 	{
-		//glBindRenderbuffer(GL_RENDERBUFFER, 0);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
 	void GLSLRenderTarget::initFBO()
 	{
 		glGenFramebuffers(1, &fbo);
-
 		GLSLRenderBuffer::checkFBOStatus();
 	}
 
@@ -70,23 +57,45 @@ namespace SGE
 			ITexture::DataType dataType
 	)
 	{
-		GLuint colorAttachment = GL_COLOR_ATTACHMENT0 + this->m_renderBuffers.size();
-		if(bufferType == IRenderBuffer::BufferType::Depth)
-			colorAttachment = GL_DEPTH_ATTACHMENT;
+		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 
-		glBindFramebuffer(GL_FRAMEBUFFER, this->fbo);
+		GLuint attachment;
+		if(bufferType == IRenderBuffer::BufferType::Depth)
+		{
+			attachment = GL_DEPTH_ATTACHMENT;
+		}
+		else
+		{
+			attachment = GL_COLOR_ATTACHMENT0 + mColourAttachments.size();
+		}
+
 		IRenderBuffer* buffer = new GLSLRenderBuffer(
-			this->bufferWidth,
-			this->bufferHeight,
-			this->fbo,
+			mBufferWidth,
+			mBufferHeight,
+			fbo,
 			bufferType,
 			dataType,
-			colorAttachment
+			attachment
 		);
+		mRenderBuffers.push_back(buffer);
+
+		if(bufferType == IRenderBuffer::BufferType::Color)
+		{
+			LOG(DEBUG) << "New colour attachment [" << attachment << "]";
+			mColourAttachments.push_back(buffer);
+			unsigned int* attachments = new unsigned int[mColourAttachments.size()];
+			for(int i = 0; i < mColourAttachments.size(); ++i)
+			{
+				attachments[i] = GL_COLOR_ATTACHMENT0 + i;
+			}
+			glDrawBuffers(mColourAttachments.size(), attachments);
+			delete[] attachments;
+		}
+
+		GLSLRenderBuffer::checkFBOStatus();
+
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-		this->m_renderBuffers.push_back(buffer);
-
-		return this->m_renderBuffers.size() - 1;
+		return mRenderBuffers.size() - 1;
 	}
 }

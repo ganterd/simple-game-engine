@@ -28,6 +28,7 @@ namespace SGE
 	public:
 		Camera* camera;
 		OverlayQuad* overlayQuad;
+		GLSLRenderTarget* renderTarget;
 
 		Scene();
 

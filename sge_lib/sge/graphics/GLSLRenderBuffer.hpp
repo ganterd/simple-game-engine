@@ -28,11 +28,8 @@ namespace SGE
 
 			void clear();
 
-			void bindBuffer();
-			void unbindBuffer();
-
-			void bindTexture();
-			void unbindTexture();
+			virtual void bindBuffer();
+			virtual void unbindBuffer();
 
 			static bool checkFBOStatus();
 
@@ -42,9 +39,6 @@ namespace SGE
 			GLuint m_glDataType;
 			GLuint m_glColorAttachment;
 			GLuint m_glFrameBufferID;
-
-			GLuint m_glTextureID;
-			GLuint m_glTextureUnit;
 
 			static GLuint _bufferTypeToGLInternalFormat(IRenderBuffer::BufferType type);
 	};
