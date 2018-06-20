@@ -4,12 +4,13 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include <sge/utils/export.hpp>
 #include <sge/graphics/IShader.hpp>
 #include <sge/graphics/ShaderManager.hpp>
 
 namespace SGE
 {
-	class Camera
+	class Export Camera
 	{
 	private:
 		glm::vec3 mPosition;

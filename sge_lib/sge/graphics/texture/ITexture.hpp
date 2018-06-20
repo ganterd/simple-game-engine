@@ -4,9 +4,11 @@
 #include <string>
 #include <iostream>
 
+#include <sge/utils/export.hpp>
+
 namespace SGE
 {
-	class ITexture
+	class Export ITexture
 	{
 	public:
 		enum Type

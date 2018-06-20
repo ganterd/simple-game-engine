@@ -10,7 +10,7 @@
 
 namespace SGE
 {
-	class SFMLDisplay: public IDisplay
+	class Export SFMLDisplay : public IDisplay
 	{
 	private:
 		sf::RenderWindow* window;

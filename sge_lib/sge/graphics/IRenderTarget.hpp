@@ -11,7 +11,7 @@
 
 namespace SGE
 {
-	class IRenderTarget
+	class Export IRenderTarget
 	{
 	public:
 		virtual void bind() = 0;

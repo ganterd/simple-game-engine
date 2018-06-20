@@ -3,7 +3,7 @@
 namespace SGE
 {
 	IShader* ShaderManager::currentShader = NULL;
-	std::string ShaderManager::shaderFolder = "../../shaders/";
+	std::string ShaderManager::shaderFolder = "resources/shaders/";
 	std::map<std::string, IShader*> ShaderManager::shaders;
 
 	int ShaderManager::targetBufferWidth = 1;
@@ -11,7 +11,7 @@ namespace SGE
 
 	void ShaderManager::init()
 	{
-		setShaderFolder("../../resources/shaders/");
+		setShaderFolder("resources/shaders/");
 		currentShader = NULL;
 	}
 

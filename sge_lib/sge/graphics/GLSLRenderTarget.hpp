@@ -13,7 +13,7 @@
 
 namespace SGE
 {
-	class GLSLRenderTarget : public IRenderTarget
+	class Export GLSLRenderTarget : public IRenderTarget
 	{
 	public:
 		GLSLRenderTarget();

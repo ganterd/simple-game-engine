@@ -3,9 +3,11 @@
 
 #include <glm/glm.hpp>
 
+#include <sge/utils/export.hpp>
+
 namespace SGE
 {
-	class ILight
+	class Export ILight
 	{
 	private:
 		glm::vec4 position;

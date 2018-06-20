@@ -4,7 +4,7 @@
 
 namespace SGE
 {
-    class SFMLInputHandler : public Input
+	class Export SFMLInputHandler : public Input
     {
     protected:
         virtual void InternalUpdate();

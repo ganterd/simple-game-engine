@@ -18,6 +18,7 @@ namespace SGE
 		importer->importModel(file, scale, makeLeftHanded);
 		this->meshes = importer->getMeshes();
 		this->lights = importer->getLights();
+		return true;
 	}
 	
 	void Entity::draw()

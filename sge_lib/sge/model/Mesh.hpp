@@ -8,9 +8,11 @@
 #include <string.h>
 #include <vector>
 
+#include <sge/utils/export.hpp>
+
 namespace SGE
 {
-	class Mesh
+	class Export Mesh
 	{
 	private:
 		GLuint vbo;

@@ -10,7 +10,7 @@
 
 namespace SGE
 {
-	class ConfigManager
+	class Export ConfigManager
 	{
 	private:
 		static std::string filePath;

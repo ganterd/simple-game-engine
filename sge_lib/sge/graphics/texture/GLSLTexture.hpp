@@ -8,14 +8,14 @@
 
 namespace SGE
 {
-	class GLSLTexture : public ITexture
+	class Export GLSLTexture : public ITexture
 	{
 	public:
 		GLSLTexture();
 		~GLSLTexture();
 
-		void bindTexture();
-		void unbindTexture();
+		void bindTexture(){};
+		void unbindTexture(){};
 
 		static GLuint dataTypeToGLDataType(ITexture::DataType dataType);
 

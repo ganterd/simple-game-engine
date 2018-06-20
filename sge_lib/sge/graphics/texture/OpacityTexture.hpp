@@ -5,7 +5,7 @@
 
 namespace SGE
 {
-	class OpacityTexture : public ITexture
+	class Export OpacityTexture : public ITexture
 	{
 	public:
 		OpacityTexture();

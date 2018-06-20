@@ -11,7 +11,7 @@
 
 namespace SGE
 {
-	class SceneImporter
+	class Export SceneImporter
 	{
 	private:
 		const char* _readFile(const char* filePath);

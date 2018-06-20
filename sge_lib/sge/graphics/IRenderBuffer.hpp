@@ -5,7 +5,7 @@
 
 namespace SGE
 {
-	class IRenderBuffer : public ITexture
+	class Export IRenderBuffer : public ITexture
 	{
 	public:
 		enum BufferType

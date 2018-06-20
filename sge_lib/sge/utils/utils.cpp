@@ -1,5 +1,9 @@
 #include "utils.hpp"
 
+// Once off include of easyloggingcc
+#include <easylogging++.cc>
+INITIALIZE_EASYLOGGINGPP
+
 namespace SGE
 {
 	const char* Utils::readFile(const char* filePath){
@@ -23,5 +27,10 @@ namespace SGE
 		fclose(file);
 
 		return text;
+	}
+
+	el::base::type::StoragePointer Utils::getELStorage()
+	{
+		return el::base::elStorage;
 	}
 }

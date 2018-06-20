@@ -9,7 +9,7 @@
 
 namespace SGE
 {
-	class Entity
+	class Export Entity
 	{
 	private:
 		std::vector<Mesh*> meshes;

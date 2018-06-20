@@ -11,7 +11,7 @@
 
 namespace SGE
 {
-	class GLSLRenderBuffer : public IRenderBuffer
+	class Export GLSLRenderBuffer : public IRenderBuffer
 	{
 		public:
 			GLSLRenderBuffer(int width, int height, GLuint glFBO, IRenderBuffer::BufferType textureType, ITexture::DataType dataType, GLuint glColourAttachment);

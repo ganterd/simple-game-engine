@@ -13,7 +13,7 @@ namespace SGE
 {
 	namespace GraphicsManager
 	{
-		class OGLGraphicsManager: public IGraphicsManager
+		class Export OGLGraphicsManager : public IGraphicsManager
 		{
 		public:
 			OGLGraphicsManager(SGE::IDisplay*);

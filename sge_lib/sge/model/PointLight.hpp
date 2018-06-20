@@ -5,7 +5,7 @@
 
 namespace SGE
 {
-	class PointLight: public ILight
+	class Export PointLight : public ILight
 	{
 	};
 }

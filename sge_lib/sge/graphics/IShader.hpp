@@ -20,7 +20,7 @@
 
 namespace SGE
 {
-	class IShader
+	class Export IShader
 	{
 	protected:
 		int targetBufferWidth;

@@ -18,5 +18,6 @@ namespace SGE
 			t = "Texture (Other)";
 		
 		out << t;
+		return out;
 	}
 }

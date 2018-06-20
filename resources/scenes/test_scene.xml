@@ -2,7 +2,7 @@
 	<entities>
 		<entity name="Sponza">
 			<model scale="0.01">
-				<path>../../resources/models/sponza.dae</path>
+				<path>resources/models/sponza.dae</path>
 			</model>
 			<position>
 				<x>0</x>

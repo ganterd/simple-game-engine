@@ -7,7 +7,7 @@ namespace SGE
 {
 	namespace GraphicsManager
 	{
-		class IGraphicsManager
+		class Export IGraphicsManager
 		{
 		protected:
 			SGE::IDisplay* dm;

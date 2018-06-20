@@ -11,7 +11,7 @@ namespace SGE
 
 		int OGLGraphicsManager::init()
 		{
-			LOG(INFO) << " Initialising";
+			LOG(INFO) << "Initialising";
 			GLenum error = GL_NO_ERROR;
 
 			glMatrixMode( GL_PROJECTION );

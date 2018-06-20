@@ -1,7 +1,7 @@
 // Local Includes
 //---------------------------------------------------
-#include <easylogging++.h>
-INITIALIZE_EASYLOGGINGPP
+#include <easylogging++.cc>
+INITIALIZE_NULL_EASYLOGGINGPP
 
 #include <sge/configmanager/ConfigManager.hpp>
 #include <sge/display/DisplayManager.hpp>
@@ -57,7 +57,7 @@ void init()
 
 	/* Instantiate the scene object */
 	SceneImporter sceneImporter;
-	scene = sceneImporter.importSceneFromFile("../../resources/scenes/test_scene.xml");
+	scene = sceneImporter.importSceneFromFile("resources/scenes/test_scene.xml");
 	scene->camera->setAspectRatio((float)dm->size().width / (float)dm->size().height);
 
 	cameraControl = new CameraControl();
@@ -74,11 +74,25 @@ void exit()
 
 int main( int argc, char* args[] )
 {
-    el::Configurations conf("../../resources/logger.conf");
-    el::Loggers::reconfigureLogger("default", conf);
-    el::Loggers::reconfigureAllLoggers(conf);
+	el::Helpers::setStorage(SGE::Utils::getELStorage());
+	el::Configurations conf("resources/logger.conf");
+	el::Loggers::reconfigureLogger("default", conf);
+	el::Loggers::reconfigureAllLoggers(conf);
 
+	LOG(DEBUG) << "HERE";
+
+	for (int i = 1; i < argc; ++i)
+	{
+		std::string arg = args[i];
+		if (arg == "-c")
+		{
+			std::string configFile = args[i + 1];
+			ConfigManager::setConfigFile(configFile);
+		}
+	}
     ConfigManager::init();
+
+	
 
 	init();
 

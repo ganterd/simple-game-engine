@@ -22,7 +22,7 @@
 
 namespace SGE
 {
-	class ModelImporter
+	class Export ModelImporter
 	{
 	const aiScene* model;
 	std::vector<Mesh*> meshes;

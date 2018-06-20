@@ -12,7 +12,7 @@
 
 namespace SGE
 {
-    class Input
+	class Export Input
     {
     private:
         static Input* mInstance;

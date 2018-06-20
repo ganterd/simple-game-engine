@@ -9,7 +9,7 @@
 
 namespace SGE
 {
-	class ShaderManager
+	class Export ShaderManager
 	{
 	private:
 		static std::map<std::string, IShader*> shaders;

@@ -15,7 +15,7 @@ namespace SGE
 	
 	bool GLSLShader::loadFromFiles(std::string vFile, std::string fFile)
 	{
-		this->loadFromFiles(vFile, "", fFile);
+		return this->loadFromFiles(vFile, "", fFile);
 	}
 	
 	bool GLSLShader::loadFromFiles(std::string vFile, std::string gFile, std::string fFile)
@@ -50,6 +50,8 @@ namespace SGE
 		{
 			LOG(WARNING) << "Couldn't find shader variable '" << SGE_SHADER_BUFFER_HEIGHT << "'";
 		}
+
+		return true;
 	}
 	
 	const char* GLSLShader::readShaderCode(std::string file)

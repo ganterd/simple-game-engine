@@ -6,7 +6,7 @@
 
 namespace SGE
 {
-	class DisplayManager
+	class Export DisplayManager
 	{
 	private:
 		static SGE::IDisplay* m_CurrentDisplay;

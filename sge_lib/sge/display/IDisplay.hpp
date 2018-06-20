@@ -6,12 +6,12 @@
 
 namespace SGE
 {
-	typedef struct{
+	typedef Export struct{
 		int width;
 		int height;
 	} Size;
 
-	class IDisplay
+	class Export IDisplay
 	{
 	public:
 		enum Method

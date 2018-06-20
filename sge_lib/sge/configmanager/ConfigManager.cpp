@@ -2,7 +2,7 @@
 
 namespace SGE
 {
-	std::string ConfigManager::filePath("../../resources/configs/default.xml");
+	std::string ConfigManager::filePath("resources/configs/default.xml");
 	std::map<std::string, std::string> ConfigManager::values;
 	
 	void ConfigManager::setConfigFile(std::string file)
@@ -14,7 +14,7 @@ namespace SGE
 	{
 		if(ConfigManager::filePath == "")
 		{
-			filePath = "../../resources/configs/default.xml";
+			filePath = "resources/configs/default.xml";
 			LOG(DEBUG) << "Defaulted config file to " << filePath;			
 		}
 

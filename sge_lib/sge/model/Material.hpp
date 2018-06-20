@@ -3,11 +3,11 @@
 
 #include <vector>
 
-#include "ITexture.hpp"
+#include <sge/graphics/texture/ITexture.hpp>
 
 namespace SGE
 {
-	class Material
+	class Export Material
 	{
 	private:
 		std::vector<ITexture*> textures;

@@ -11,7 +11,7 @@
 
 namespace SGE
 {
-	class GLSLShader: public IShader
+	class Export GLSLShader : public IShader
 	{
 	protected:
 		void updateTargetBufferDimensions();

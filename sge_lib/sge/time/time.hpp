@@ -3,9 +3,11 @@
 
 #include <chrono>
 
+#include <sge/utils/export.hpp>
+
 namespace SGE
 {
-    class Time
+	class Export Time
     {
     friend class Scene;
     public:
