@@ -5,6 +5,7 @@
 
 #include <easylogging++.h>
 #include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp>
 
 #include <sge/display/IDisplay.hpp>
 

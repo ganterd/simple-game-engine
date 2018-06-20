@@ -13,6 +13,8 @@ namespace SGE
 		this->gBufferCount = 0;
 
 		this->initFBO();
+		addRenderBuffer(IRenderBuffer::BufferType::Color, ITexture::DataType::Float);
+		addRenderBuffer(IRenderBuffer::BufferType::Depth, ITexture::DataType::Float);
 	}
 
 	GLSLRenderTarget::~GLSLRenderTarget()
@@ -52,7 +54,7 @@ namespace SGE
 
 	void GLSLRenderTarget::unbind()
 	{
-		glBindRenderbuffer(GL_RENDERBUFFER, 0);
+		//glBindRenderbuffer(GL_RENDERBUFFER, 0);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 

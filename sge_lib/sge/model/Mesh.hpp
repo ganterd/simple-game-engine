@@ -16,6 +16,7 @@ namespace SGE
 		GLuint vbo;
 		GLuint nbo;
 		GLuint ibo;
+		GLuint vao;
 
 		int numVerts;
 		int numTris;
@@ -25,6 +26,8 @@ namespace SGE
 		unsigned int* iboData;
 
 	public:
+		Mesh();
+		
 		void renderGL();
 
 		void setVBOData(GLfloat* vboData, int numVerts);

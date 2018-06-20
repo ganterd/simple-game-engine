@@ -2,56 +2,20 @@
 
 namespace SGE
 {
+	Mesh::Mesh()
+	{
+		glGenVertexArrays(1, &vao);
+	}
+
 	void Mesh::renderGL()
 	{
-		/* Send VBO to GPU */
-		glEnableVertexAttribArray(0);
-		glBindBuffer(GL_ARRAY_BUFFER, vbo);
-		glVertexAttribPointer(
-		   0,
-		   3,
-		   GL_FLOAT,
-		   GL_FALSE,
-		   0,
-		   (void*)0
-		);
-
-		/* Send NBO to GPU */
-		glEnableVertexAttribArray(1);
-		glBindBuffer(GL_ARRAY_BUFFER, nbo);
-		glVertexAttribPointer(
-		   1,
-		   3,
-		   GL_FLOAT,
-		   GL_FALSE,
-		   0,
-		   (void*)0
-		);
-
-		/* Send IBO to GPU */
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-
-		/* Draw indexed VBO and NBO */
-		glDrawElements(
-			GL_TRIANGLES,
-			numTris * 3,
-			GL_UNSIGNED_INT,
-			(void*)0
-		);
-
-		/* Clean up */
-		glDisableVertexAttribArray(0);
-		glDisableVertexAttribArray(1);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		glBindVertexArray(vao);
+		glDrawElements(GL_TRIANGLES, numTris * 3, GL_UNSIGNED_INT, (void*)0);
 	}
 
 	void Mesh::setVBOData(GLfloat* vboData, int numVerts)
 	{
-		GLuint VertexArrayID;
-		glGenVertexArrays(1, &VertexArrayID);
-		glBindVertexArray(VertexArrayID);
-
+		glBindVertexArray(vao);
 		glGenBuffers(1, &vbo);
 
 		glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -62,12 +26,23 @@ namespace SGE
 			this->vboData,
 			GL_STATIC_DRAW
 		);
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(
+		   0,
+		   3,
+		   GL_FLOAT,
+		   GL_FALSE,
+		   0,
+		   (void*)0
+		);
 
 		this->numVerts = numVerts;
+		glBindVertexArray(0);
 	}
 
 	void Mesh::setNBOData(GLfloat* nboData, int numVerts)
 	{
+		glBindVertexArray(vao);
 		glGenBuffers(1, &nbo);
 		glBindBuffer(GL_ARRAY_BUFFER, nbo);
 		glBufferData(
@@ -76,10 +51,21 @@ namespace SGE
 			nboData,
 			GL_STATIC_DRAW
 		);
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(
+		   1,
+		   3,
+		   GL_FLOAT,
+		   GL_FALSE,
+		   0,
+		   (void*)0
+		);
+		glBindVertexArray(0);
 	}
 
 	void Mesh::setIBOData(unsigned int* iboData, int numTris)
 	{
+		glBindVertexArray(vao);
 		glGenBuffers(1, &ibo);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER,
@@ -89,5 +75,6 @@ namespace SGE
 		);
 		this->iboData = iboData;
 		this->numTris = numTris;
+		glBindVertexArray(0);
 	}
 }

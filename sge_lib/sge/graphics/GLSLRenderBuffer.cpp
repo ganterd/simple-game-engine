@@ -3,9 +3,9 @@
 namespace SGE
 {
 	GLSLRenderBuffer::GLSLRenderBuffer(
-			int width, 
-			int height, 
-			GLuint glFBO, 
+			int width,
+			int height,
+			GLuint glFBO,
 			IRenderBuffer::BufferType textureType,
 			ITexture::DataType dataType,
 			GLuint glColorAttachment
@@ -20,35 +20,35 @@ namespace SGE
 		this->m_glFrameBufferID = glFBO;
 		this->m_glTextureUnit = GL_TEXTURE0; // TODO: tmp
 		this->m_glColorAttachment = glColorAttachment;
-		
-		
+
+
 		LOG(INFO) << "Creating GLSLRenderBuffer (" << width << "x" << height << ")";
-		
+
 		glBindFramebuffer(GL_FRAMEBUFFER, glFBO);
-		
+
 		glGenRenderbuffers(1, &this->m_glRenderBufferID);
-		
+
 		glBindRenderbuffer(GL_RENDERBUFFER, this->m_glRenderBufferID);
 		glRenderbufferStorage(
-			GL_RENDERBUFFER, 
-			this->m_glRenderBufferType, 
-			this->m_width, 
+			GL_RENDERBUFFER,
+			this->m_glRenderBufferType,
+			this->m_width,
 			this->m_height
 		);
 		glFramebufferRenderbuffer(
-			GL_FRAMEBUFFER, 
-			this->m_glColorAttachment, 
-			GL_RENDERBUFFER, 
+			GL_FRAMEBUFFER,
+			this->m_glColorAttachment,
+			GL_RENDERBUFFER,
 			this->m_glRenderBufferID
 		);
-		
+
 		if(this->m_glColorAttachment != GL_DEPTH_ATTACHMENT)
 		{
 			glGenTextures(1, &this->m_glTextureID);
 			glBindTexture(GL_TEXTURE_2D, this->m_glTextureID);
 			glTexImage2D(
-				GL_TEXTURE_2D, 
-				0, 
+				GL_TEXTURE_2D,
+				0,
 				this->m_glRenderBufferType,
 				this->m_width,
 				this->m_height,
@@ -61,82 +61,89 @@ namespace SGE
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		
-		
+
+
 			glFramebufferTexture2D(
-				GL_FRAMEBUFFER, 
-				this->m_glColorAttachment, 
+				GL_FRAMEBUFFER,
+				this->m_glColorAttachment,
 				GL_TEXTURE_2D,
 				this->m_glTextureID,
 				0
 			);
 		}
+		else
+		{
+			glGenTextures(1, &m_glTextureID);
+			glBindTexture(GL_TEXTURE_2D, m_glTextureID);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32F, m_width, m_height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+			glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_glTextureID, 0);
+		}
 	}
-	
+
 	GLSLRenderBuffer::~GLSLRenderBuffer()
 	{
 		glDeleteTextures(1, &m_glTextureID);
 		glDeleteRenderbuffers(1, &m_glRenderBufferID);
 	}
-	
+
 	void GLSLRenderBuffer::setGLTextureType(GLuint glTextureType)
 	{
 		this->m_glRenderBufferType = glTextureType;
 	}
-	
+
 	GLuint GLSLRenderBuffer::getGLTextureType()
 	{
 		return this->m_glRenderBufferType;
 	}
-	
+
 	void GLSLRenderBuffer::setGLColorAttachment(GLuint glColorAttachment)
 	{
 		this->m_glColorAttachment = glColorAttachment;
 	}
-	
+
 	GLuint GLSLRenderBuffer::getGLColorAttachment()
 	{
 		return this->m_glColorAttachment;
 	}
-	
+
 	void GLSLRenderBuffer::setGLDataType(GLuint glDataType)
 	{
 		this->m_glDataType = glDataType;
 	}
-	
+
 	GLuint GLSLRenderBuffer::getGLDataType()
 	{
 		return this->m_glDataType;
 	}
-	
+
 	void GLSLRenderBuffer::bindBuffer()
 	{
 		glBindRenderbuffer(GL_RENDERBUFFER, this->m_glRenderBufferID);
 	}
-	
+
 	void GLSLRenderBuffer::unbindBuffer()
 	{
 		glBindRenderbuffer(GL_RENDERBUFFER, 0);
 	}
-	
+
 	void GLSLRenderBuffer::clear()
 	{
 		// TODO: Implement clear buffer
 	}
-	
+
 	void GLSLRenderBuffer::bindTexture()
 	{
 		glActiveTexture(this->m_glTextureUnit);
 		glEnable(GL_TEXTURE_2D);
 		glBindTexture(GL_TEXTURE_2D, this->m_glTextureID);
 	}
-	
+
 	void GLSLRenderBuffer::unbindTexture()
 	{
 		glActiveTexture(this->m_glTextureUnit);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
-	
+
 	GLuint GLSLRenderBuffer::_bufferTypeToGLInternalFormat(IRenderBuffer::BufferType type)
 	{
 		GLuint glRenderBufferType;
@@ -158,10 +165,10 @@ namespace SGE
 				LOG(WARNING) << "Unrecognised buffer type requested";
 				glRenderBufferType = GL_RGBA;
 		}
-		
+
 		return glRenderBufferType;
 	}
-	
+
 	bool GLSLRenderBuffer::checkFBOStatus()
 	{
 		GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);

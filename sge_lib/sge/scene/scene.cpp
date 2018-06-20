@@ -6,7 +6,9 @@ namespace SGE
 	{
 		camera = new Camera();
 		ShaderManager::init();
+		ShaderManager::loadShader("dl_pass");
 		Time::init();
+		overlayQuad = new OverlayQuad();
 	}
 
 	void Scene::addEntity(Entity* entity)
@@ -24,8 +26,15 @@ namespace SGE
 	void Scene::draw()
 	{
 		glEnable(GL_CULL_FACE);
-		glEnable(GL_DEPTH_TEST);
 		glCullFace(GL_BACK);
+
+		glDepthMask(GL_TRUE);
+		glEnable(GL_DEPTH_TEST);
+		glDepthFunc(GL_LESS);
+
+
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		IShader* shader = ShaderManager::getCurrentShader();
 		if(shader == NULL)
@@ -61,6 +70,9 @@ namespace SGE
 			}
 		}
 		lightScene();
+
+		//ShaderManager::useShader("dl_pass");
+		//overlayQuad->draw();
 	}
 
 	void Scene::lightScene()

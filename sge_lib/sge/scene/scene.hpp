@@ -9,6 +9,7 @@
 #include <sge/graphics/IShader.hpp>
 #include <sge/graphics/ShaderManager.hpp>
 #include <sge/scene/camera.hpp>
+#include <sge/scene/geometry/overlayquad.hpp>
 
 namespace SGE
 {
@@ -26,6 +27,7 @@ namespace SGE
 
 	public:
 		Camera* camera;
+		OverlayQuad* overlayQuad;
 
 		Scene();
 
