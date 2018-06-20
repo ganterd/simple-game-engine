@@ -10,7 +10,7 @@ varying vec3 fragNormal;
 
 void main()
 {
-	vec4 v = vec4(vPosition, 1);
+	vec4 v = vec4(vPosition, 1.0f);
 	gl_Position = modelViewProjection * v;
 	fragNormal = vNormal;
 }

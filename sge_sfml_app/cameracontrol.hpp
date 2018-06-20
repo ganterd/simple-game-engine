@@ -14,7 +14,7 @@ public:
 
     const float accelerationPerSecond = 4.0f;
     const float maxSpeedPerSecond = 4.0f;
-    const float decelerationPercentPerSecond = 0.9f;
+    const float decelerationPercentPerSecond = 0.999f;
     const float mouseScale = 0.01f;
 
     glm::vec3 mCurrentVelocity;

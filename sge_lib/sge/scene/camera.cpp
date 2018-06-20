@@ -6,7 +6,7 @@ namespace SGE
 	{
 		setFoV(45.0f);
 		setAspectRatio(4.0f / 3.0f);
-		setNearPlaneDistance(0.1);
+		setNearPlaneDistance(0.1f);
 		setFarPlaneDistance(1000.0f);
 
 		mPosition = glm::vec3(0.0f,-0.5f,5.0f);

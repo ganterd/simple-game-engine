@@ -51,6 +51,7 @@ SGE::SFMLInputHandler::SFMLInputHandler()
 	SFMLKeyMapping[Input::Key::Right] = sf::Keyboard::Right;
 	SFMLKeyMapping[Input::Key::Up] = sf::Keyboard::Up;
 	SFMLKeyMapping[Input::Key::Down] = sf::Keyboard::Down;
+    SFMLKeyMapping[Input::Key::LeftControl] = sf::Keyboard::LControl;
 
     sf::Vector2i p = sf::Mouse::getPosition();
     mMousePosition = glm::vec2((float)p.x, (float)p.y);
