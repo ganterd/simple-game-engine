@@ -22,7 +22,6 @@ namespace SGE
 	public:
 		SFMLDisplay(int w, int h, int x, int y, bool fullscreen);
 
-		bool createGLContext();
 		void setAsTarget();
 		void handleEvents();
 		void swapBuffers();

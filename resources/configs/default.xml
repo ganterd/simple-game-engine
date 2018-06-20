@@ -3,8 +3,6 @@
 	<window>
 		<width>1080</width>
 		<height>720</height>
-		<x>0</x>
-		<y>0</y>
 		<fullscreen>false</fullscreen>
 	</window>
 	<renderer>GL</renderer>

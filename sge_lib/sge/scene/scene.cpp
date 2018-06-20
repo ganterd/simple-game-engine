@@ -52,7 +52,7 @@ namespace SGE
 			glm::mat4 mvpMat = vpMat * entities[i]->getModelMat();
 
 			shader->setMVP(mvpMat);
-			entities[i]->draw();
+			//entities[i]->draw();
 		}
 
 		/* Gather lights. Don't use acceleration structure in case */
@@ -71,8 +71,10 @@ namespace SGE
 		}
 		lightScene();
 
-		//ShaderManager::useShader("dl_pass");
-		//overlayQuad->draw();
+		glDisable(GL_CULL_FACE);
+		glDisable(GL_DEPTH_TEST);
+		ShaderManager::useShader("dl_pass");
+		overlayQuad->draw();
 	}
 
 	void Scene::lightScene()

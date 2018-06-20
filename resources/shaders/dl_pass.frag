@@ -1,8 +1,9 @@
 #version 330 core
 
-varying vec3 fragPosition;
+in vec2 fragPosition;
 out vec4 color;
 
 void main(){
-    color = vec4(1.0f, 0.0f, 0.0f, 0.5f);
+    vec2 p = (fragPosition + vec2(1.0f)) * 0.5f;
+    color = vec4(p, 0.0f, 1.0f);
 }
