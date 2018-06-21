@@ -59,13 +59,24 @@ namespace SGE
 		{
 			/* Get textures */
 			aiMaterial* material = model->mMaterials[i];
-			this->extractMaterialTextures(material, aiTextureType_DIFFUSE);
-			this->extractMaterialTextures(material, aiTextureType_SPECULAR);
-			this->extractMaterialTextures(material, aiTextureType_AMBIENT);
-			this->extractMaterialTextures(material, aiTextureType_EMISSIVE);
-			this->extractMaterialTextures(material, aiTextureType_SHININESS);
-			this->extractMaterialTextures(material, aiTextureType_NORMALS);
-			this->extractMaterialTextures(material, aiTextureType_OPACITY);
+
+			aiString matName;
+			material->Get<aiString>(AI_MATKEY_NAME, matName);
+			LOG(DEBUG) << "  |- [" << i << "] '" << matName.C_Str() << "'";
+
+			for(int t = aiTextureType_DIFFUSE; t <= aiTextureType_UNKNOWN; ++t)
+			{
+				extractMaterialTextures(material, (aiTextureType)t);
+			}
+
+			// this->extractMaterialTextures(material, aiTextureType_DIFFUSE);
+			// this->extractMaterialTextures(material, aiTextureType_SPECULAR);
+			// this->extractMaterialTextures(material, aiTextureType_AMBIENT);
+			// this->extractMaterialTextures(material, aiTextureType_EMISSIVE);
+			// this->extractMaterialTextures(material, aiTextureType_SHININESS);
+			// this->extractMaterialTextures(material, aiTextureType_NORMALS);
+			// this->extractMaterialTextures(material, aiTextureType_OPACITY);
+			// this->extractMaterialTextures(material, aiTextureType_DISPLACEMENT);
 		}
 	}
 
@@ -80,32 +91,49 @@ namespace SGE
 			switch(type)
 			{
 				case aiTextureType_DIFFUSE:
+					LOG(INFO) << "   |- Diffuse: " << path.C_Str();
 					tex = new DiffuseTexture();
 					break;
 				case aiTextureType_SPECULAR:
-					LOG(WARNING) << "No handler for specular textures yet";
+					LOG(INFO) << "   |- Specular: " << path.C_Str();
 					break;
 				case aiTextureType_AMBIENT:
-					LOG(WARNING) << "No handler for ambient textures yet";
+					LOG(INFO) << "   |- Ambient: " << path.C_Str();
 					break;
 				case aiTextureType_EMISSIVE:
-					LOG(WARNING) << "No handler for emissive textures yet";
+					LOG(INFO) << "   |- Emissive: " << path.C_Str();
 					break;
-				case aiTextureType_SHININESS:
-					LOG(WARNING) << "No handler for shininess textures yet";
+				case aiTextureType_HEIGHT:
+					LOG(INFO) << "   |- Height: " << path.C_Str();
 					break;
 				case aiTextureType_NORMALS:
-					LOG(WARNING) << "No handler for normals textures yet";
+					LOG(INFO) << "   |- Normals: " << path.C_Str();
+					break;
+				case aiTextureType_SHININESS:
+					LOG(INFO) << "   |- Shininess: " << path.C_Str();
 					break;
 				case aiTextureType_OPACITY:
+					LOG(INFO) << "   |- Opacity: " << path.C_Str();
 					tex = new OpacityTexture();
 					break;
+				case aiTextureType_DISPLACEMENT:
+					LOG(INFO) << "   |- Displacement: " << path.C_Str();
+					break;
+				case aiTextureType_LIGHTMAP:
+					LOG(INFO) << "   |- Lightmap (AO): " << path.C_Str();
+					break;
+				case aiTextureType_REFLECTION:
+					LOG(INFO) << "   |- Reflection: " << path.C_Str();
+					break;
+				case aiTextureType_UNKNOWN:
+					LOG(WARNING) << "   |- Unknown texture type (" << path.C_Str() << ")";
+				default:
+					LOG(WARNING) << "   |- Unhandled texture type (" << path.C_Str() << ")";
 			}
 
 			if(tex)
 			{
 				tex->LoadFromFile(path.data);
-				LOG(INFO) << "     |-" << j << ": " << (*tex);
 			}
 		}
 
@@ -117,24 +145,24 @@ namespace SGE
 		LOG(INFO) << " |-Meshes: " << model->mNumMeshes ;
 
 		aiMatrix4x4 identity;
-		_nodeRecurse(model->mRootNode, identity);
+		_nodeRecurse(model->mRootNode, identity, scale);
 	}
 
-	void ModelImporter::_nodeRecurse(aiNode* n, const aiMatrix4x4& t)
+	void ModelImporter::_nodeRecurse(aiNode* n, const aiMatrix4x4& t, float scale)
 	{
 		aiMatrix4x4 currentTransform =  n->mTransformation * t;
 		for(unsigned int m = 0; m < n->mNumMeshes; ++m)
 		{
-			_processMesh(model->mMeshes[n->mMeshes[m]], currentTransform);
+			_processMesh(model->mMeshes[n->mMeshes[m]], currentTransform, scale);
 		}
 
 		for(unsigned int c = 0; c < n->mNumChildren; ++c)
 		{
-			_nodeRecurse(n->mChildren[c], currentTransform);
+			_nodeRecurse(n->mChildren[c], currentTransform, scale);
 		}
 	}
 
-	void ModelImporter::_processMesh(aiMesh* mesh, const aiMatrix4x4& m)
+	void ModelImporter::_processMesh(aiMesh* mesh, const aiMatrix4x4& m, float scale)
 	{
 		GLfloat* meshVertexData = new GLfloat[mesh->mNumVertices * 3];
 		GLfloat* meshNormalsData = new GLfloat[mesh->mNumVertices * 3];
@@ -142,7 +170,7 @@ namespace SGE
 		/* Direct copy VBO from mesh */
 		for(unsigned int j = 0; j < mesh->mNumVertices; ++j)
 		{
-			aiVector3D v = m * mesh->mVertices[j];
+			aiVector3D v = m * (mesh->mVertices[j] * scale);
 			meshVertexData[(j * 3) + 0] = v.x;
 			meshVertexData[(j * 3) + 1] = v.y;
 			meshVertexData[(j * 3) + 2] = v.z;
@@ -167,7 +195,7 @@ namespace SGE
 		resultMesh->setVBOData(meshVertexData, mesh->mNumVertices);
 		resultMesh->setNBOData(meshNormalsData, mesh->mNumVertices);
 		resultMesh->setIBOData(meshIndexData, mesh->mNumFaces);
-		LOG(DEBUG) << "   |-" << (*resultMesh);
+		//LOG(DEBUG) << "   |-" << (*resultMesh);
 		meshes.push_back(resultMesh);
 	}
 
