@@ -18,6 +18,7 @@ namespace SGE
 		sf::RenderWindow* window;
 
 		bool quit;
+		bool hasCursor;
 
 	public:
 		SFMLDisplay(int w, int h, int x, int y, bool fullscreen);
@@ -26,6 +27,7 @@ namespace SGE
 		void handleEvents();
 		void swapBuffers();
 		void exit();
+		void toggleGrabCursor();
 
 		bool wasQuitRequested();
 

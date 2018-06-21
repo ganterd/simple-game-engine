@@ -18,9 +18,18 @@ namespace SGE
 
 		window->setMouseCursorVisible(false);
 		window->setMouseCursorGrabbed(true);
+		hasCursor = true;
+
 		mWindowSize.width = w;
 		mWindowSize.height = h;
 		quit = false;
+	}
+
+	void SFMLDisplay::toggleGrabCursor()
+	{
+		hasCursor = !hasCursor;
+		window->setMouseCursorVisible(!hasCursor);
+		window->setMouseCursorGrabbed(hasCursor);
 	}
 
 	void SFMLDisplay::setAsTarget()

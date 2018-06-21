@@ -67,12 +67,15 @@ void SGE::SFMLInputHandler::InternalUpdate()
         return;
     }
 
-    glm::vec2 center(d->mWindowSize.width / 2,  d->mWindowSize.height / 2);
-    sf::Vector2i p = sf::Mouse::getPosition(*d->window);
-    glm::vec2 newMousePos = glm::vec2((float)p.x, (float)p.y);
-    mMouseDelta = newMousePos - center;
-    mMousePosition = center;
-    sf::Mouse::setPosition(sf::Vector2i((int)center.x, (int)center.y), *d->window);
+	if (d->hasCursor)
+	{
+		glm::vec2 center(d->mWindowSize.width / 2, d->mWindowSize.height / 2);
+		sf::Vector2i p = sf::Mouse::getPosition(*d->window);
+		glm::vec2 newMousePos = glm::vec2((float)p.x, (float)p.y);
+		mMouseDelta = newMousePos - center;
+		mMousePosition = center;
+		sf::Mouse::setPosition(sf::Vector2i((int)center.x, (int)center.y), *d->window);
+	}
 }
 
 bool SGE::SFMLInputHandler::InternalKeyPressed(Key k)

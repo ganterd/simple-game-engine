@@ -37,6 +37,8 @@ namespace SGE
 		Size size(){ return mWindowSize; };
 		virtual bool wasQuitRequested() = 0;
 
+		virtual void toggleGrabCursor() = 0;
+
 		// Callback functions
 		// -----------------------------------------------------------
 		virtual void onResize(void (*func)(Size)) = 0;

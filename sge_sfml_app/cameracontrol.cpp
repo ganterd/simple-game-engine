@@ -7,6 +7,11 @@ CameraControl::CameraControl()
 
 void CameraControl::update()
 {
+	if (SGE::Input::isKeyPressed(SGE::Input::Key::N0))
+	{
+		SGE::DisplayManager::getDisplayInstance()->toggleGrabCursor();
+	}
+
     glm::vec3 p = mCamera->getPosition();
     glm::vec3 f = mCamera->getForwardVector();
     glm::vec3 u = mCamera->getUpVector();

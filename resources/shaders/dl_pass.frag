@@ -3,8 +3,8 @@
 in vec2 fragPosition;
 out vec4 color;
 
-uniform sampler2D positionsTexture;
-uniform sampler2D normalsTexture;
+layout (binding = 0)uniform sampler2D positionsTexture;
+layout (binding = 1)uniform sampler2D normalsTexture;
 
 void main(){
     vec2 p = (fragPosition + vec2(1.0f)) * 0.5f;

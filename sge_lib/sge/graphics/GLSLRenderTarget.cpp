@@ -69,7 +69,7 @@ namespace SGE
 			attachment = GL_COLOR_ATTACHMENT0 + (GLuint)mColourAttachments.size();
 		}
 
-		IRenderBuffer* buffer = new GLSLRenderBuffer(
+		GLSLRenderBuffer* buffer = new GLSLRenderBuffer(
 			mBufferWidth,
 			mBufferHeight,
 			fbo,
@@ -86,7 +86,7 @@ namespace SGE
 			unsigned int* attachments = new unsigned int[mColourAttachments.size()];
 			for(int i = 0; i < mColourAttachments.size(); ++i)
 			{
-				attachments[i] = GL_COLOR_ATTACHMENT0 + i;
+				attachments[i] = ((GLSLRenderBuffer*)mColourAttachments[i])->getGLColorAttachment();
 			}
 			glDrawBuffers((int)mColourAttachments.size(), attachments);
 			delete[] attachments;

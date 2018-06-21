@@ -33,7 +33,7 @@ namespace SGE
 
 	void GLSLTexture::bindTexture(int textureUnit)
 	{
-		mTextureID = textureUnit;
+		mTextureUnit = textureUnit;
 		glActiveTexture(GL_TEXTURE0 + mTextureUnit);
 		glBindTexture(GL_TEXTURE_2D, mTextureID);
 	}
