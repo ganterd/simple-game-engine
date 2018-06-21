@@ -36,6 +36,13 @@ if(WIN32)
 	  COMMAND rmdir ${WINDOWS_CMAKE_BINARY_DIR}\\sge_sfml_app\\resources\\ /Q
 	  COMMAND mklink ${WINDOWS_CMAKE_BINARY_DIR}\\sge_sfml_app\\resources\\ ${WINDOWS_PROJECT_DIR}\\resources\\ /D
 	)
+else()
+	add_custom_target(LinkResources
+	  COMMAND echo ${CMAKE_BINARY_DIR}/resources/
+	  COMMAND echo ${PROJECT_SOURCE_DIR}/resources/
+	  COMMAND rm -f ${CMAKE_BINARY_DIR}/resources
+	  COMMAND ln -s ${PROJECT_SOURCE_DIR}/resources/ ${CMAKE_BINARY_DIR}
+	)
 endif()
 
 add_subdirectory(sge_lib)

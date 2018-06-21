@@ -45,15 +45,15 @@ endif()
 
 ##### SFML #####
 ExternalProject_Add(
-	external_sfml 
+	external_sfml
 	PREFIX ${PROJECT_SOURCE_DIR}/external/assimp/
-	GIT_REPOSITORY https://github.com/SFML/SFML.git 
+	GIT_REPOSITORY https://github.com/SFML/SFML.git
 	GIT_TAG 2.5.0
 	GIT_PROGRESS 1
-	CMAKE_ARGS 
+	CMAKE_ARGS
 		-DCMAKE_INSTALL_PREFIX=${PROJECT_SOURCE_DIR}/external/sfml/
 		-DSFML_BUILD_AUDIO=Off
-		-DSFML_BUILD_NETWORK=Off	
+		-DSFML_BUILD_NETWORK=Off
 		-DCMAKE_INSTALL_MESSAGE=LAZY
 )
 
@@ -65,7 +65,7 @@ ExternalProject_Add(
 	GIT_TAG 0.9.9.0
 	GIT_PROGRESS 1
 	CMAKE_ARGS
-		
+
 		-DCMAKE_INSTALL_PREFIX=${PROJECT_SOURCE_DIR}/external/glm/
 		-DCMAKE_INSTALL_MESSAGE=LAZY
 )
@@ -100,7 +100,7 @@ ExternalProject_Add(
 	PREFIX ${PROJECT_SOURCE_DIR}/external/glew/
 	URL https://sourceforge.net/projects/glew/files/glew/2.1.0/glew-2.1.0.zip
 	SOURCE_SUBDIR build/cmake/
-	#CONFIGURE_COMMAND ${CMAKE_COMMAND} 
+	#CONFIGURE_COMMAND ${CMAKE_COMMAND}
 	#	-DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
 	#        <SOURCE_DIR>/build/cmake # Tell CMake to use subdirectory as source.
 	CMAKE_ARGS
@@ -112,7 +112,7 @@ ExternalProject_Add(
 if(MSVC)
 	set(GLEW_LIBRARY optimized glew32 optimized libglew32 debug glew32d debug libglew32d)
 else()
-	set(GLEW_LIBRARY glew)
+	set(GLEW_LIBRARY GLEW)
 endif()
 
 include_directories(external/assimp/include)
@@ -134,22 +134,22 @@ if(WIN32)
 	  COMMAND cmake -E make_directory ${CMAKE_BINARY_DIR}/bin/Release
 	  COMMAND cmake -E make_directory ${CMAKE_BINARY_DIR}/bin/MinSizeRel
 	  COMMAND cmake -E make_directory ${CMAKE_BINARY_DIR}/bin/RelWithDebInfo
-	  
+
 	  COMMAND cmake -E copy_directory ${PROJECT_SOURCE_DIR}/external/glew/bin/ ${CMAKE_BINARY_DIR}/bin/Debug/
 	  COMMAND cmake -E copy_directory ${PROJECT_SOURCE_DIR}/external/assimp/bin/ ${CMAKE_BINARY_DIR}/bin/Debug/
 	  COMMAND cmake -E copy_directory ${PROJECT_SOURCE_DIR}/external/sfml/bin/ ${CMAKE_BINARY_DIR}/bin/Debug/
 	  COMMAND cmake -E copy_directory ${PROJECT_SOURCE_DIR}/external/tinyxml2/bin/ ${CMAKE_BINARY_DIR}/bin/Debug/
-	  
+
 	  COMMAND cmake -E copy_directory ${PROJECT_SOURCE_DIR}/external/glew/bin/ ${CMAKE_BINARY_DIR}/bin/Release/
 	  COMMAND cmake -E copy_directory ${PROJECT_SOURCE_DIR}/external/assimp/bin/ ${CMAKE_BINARY_DIR}/bin/Release/
 	  COMMAND cmake -E copy_directory ${PROJECT_SOURCE_DIR}/external/sfml/bin/ ${CMAKE_BINARY_DIR}/bin/Release/
 	  COMMAND cmake -E copy_directory ${PROJECT_SOURCE_DIR}/external/tinyxml2/bin/ ${CMAKE_BINARY_DIR}/bin/Release/
-	  
+
 	  COMMAND cmake -E copy_directory ${PROJECT_SOURCE_DIR}/external/glew/bin/ ${CMAKE_BINARY_DIR}/bin/MinSizeRel/
 	  COMMAND cmake -E copy_directory ${PROJECT_SOURCE_DIR}/external/assimp/bin/ ${CMAKE_BINARY_DIR}/bin/MinSizeRel/
 	  COMMAND cmake -E copy_directory ${PROJECT_SOURCE_DIR}/external/sfml/bin/ ${CMAKE_BINARY_DIR}/bin/MinSizeRel/
 	  COMMAND cmake -E copy_directory ${PROJECT_SOURCE_DIR}/external/tinyxml2/bin/ ${CMAKE_BINARY_DIR}/bin/MinSizeRel/
-	  
+
 	  COMMAND cmake -E copy_directory ${PROJECT_SOURCE_DIR}/external/glew/bin/ ${CMAKE_BINARY_DIR}/bin/RelWithDebInfo/
 	  COMMAND cmake -E copy_directory ${PROJECT_SOURCE_DIR}/external/assimp/bin/ ${CMAKE_BINARY_DIR}/bin/RelWithDebInfo/
 	  COMMAND cmake -E copy_directory ${PROJECT_SOURCE_DIR}/external/sfml/bin/ ${CMAKE_BINARY_DIR}/bin/RelWithDebInfo/
