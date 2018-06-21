@@ -10,6 +10,8 @@
 
 #include <sge/utils/export.hpp>
 
+#include <sge/graphics/material/material.hpp>
+
 namespace SGE
 {
 	class Export Mesh
@@ -18,6 +20,7 @@ namespace SGE
 		GLuint vbo;
 		GLuint nbo;
 		GLuint ibo;
+		GLuint uvbo;
 		GLuint vao;
 
 		int numVerts;
@@ -25,16 +28,21 @@ namespace SGE
 
 		GLfloat* vboData;
 		GLfloat* nboData;
+		GLfloat* uvData;
 		unsigned int* iboData;
+
+		Material* mMaterial;
 
 	public:
 		Mesh();
-		
+
 		void renderGL();
 
+		void setMaterial(Material* m);
 		void setVBOData(GLfloat* vboData, int numVerts);
 		void setNBOData(GLfloat* nboData, int numVerts);
 		void setIBOData(unsigned int* iboData, int numTris);
+		void setUVData(GLfloat* uvData, int numVerts);
 
 		friend std::ostream& operator<< (std::ostream &out, const Mesh &mesh)
 		{

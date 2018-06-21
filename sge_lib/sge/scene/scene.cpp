@@ -14,8 +14,9 @@ namespace SGE
 		int bufferWidth = DisplayManager::getDisplayInstance()->size().width;
 		int bufferHeight = DisplayManager::getDisplayInstance()->size().height;
 		renderTarget = new GLSLRenderTarget(bufferWidth, bufferHeight);
-		renderTarget->addRenderBuffer(IRenderBuffer::BufferType::Color, ITexture::DataType::Float);
-		renderTarget->addRenderBuffer(IRenderBuffer::BufferType::Color, ITexture::DataType::Float);
+		renderTarget->addRenderBuffer(IRenderBuffer::BufferType::Color, ITexture::DataType::Float); // Position g-buffer
+		renderTarget->addRenderBuffer(IRenderBuffer::BufferType::Color, ITexture::DataType::Float); // Normals g-buffer
+		renderTarget->addRenderBuffer(IRenderBuffer::BufferType::Color, ITexture::DataType::Float); // Albedo g-buffer
 		renderTarget->addRenderBuffer(IRenderBuffer::BufferType::Depth, ITexture::DataType::Float);
 	}
 
@@ -82,10 +83,12 @@ namespace SGE
 		glDisable(GL_DEPTH_TEST);
 		renderTarget->getRenderBuffer(0)->bindTexture(0);
 		renderTarget->getRenderBuffer(1)->bindTexture(1);
+		renderTarget->getRenderBuffer(2)->bindTexture(2);
 		ShaderManager::useShader("dl_pass");
 		overlayQuad->draw();
 		renderTarget->getRenderBuffer(0)->unbindTexture();
 		renderTarget->getRenderBuffer(1)->unbindTexture();
+		renderTarget->getRenderBuffer(2)->unbindTexture();
 	}
 
 	void Scene::lightScene()

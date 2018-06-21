@@ -58,31 +58,32 @@ namespace SGE
 		for(unsigned int i = 0; i < model->mNumMaterials; ++i)
 		{
 			/* Get textures */
+			SGE::Material* newMaterial = new SGE::Material();
 			aiMaterial* material = model->mMaterials[i];
 
 			aiString matName;
 			material->Get<aiString>(AI_MATKEY_NAME, matName);
 			LOG(DEBUG) << "  |- [" << i << "] '" << matName.C_Str() << "'";
 
+			std::vector<ITexture*> textures;
 			for(int t = aiTextureType_DIFFUSE; t <= aiTextureType_UNKNOWN; ++t)
 			{
-				extractMaterialTextures(material, (aiTextureType)t);
+				extractMaterialTextures(material, (aiTextureType)t, textures);
 			}
 
-			// this->extractMaterialTextures(material, aiTextureType_DIFFUSE);
-			// this->extractMaterialTextures(material, aiTextureType_SPECULAR);
-			// this->extractMaterialTextures(material, aiTextureType_AMBIENT);
-			// this->extractMaterialTextures(material, aiTextureType_EMISSIVE);
-			// this->extractMaterialTextures(material, aiTextureType_SHININESS);
-			// this->extractMaterialTextures(material, aiTextureType_NORMALS);
-			// this->extractMaterialTextures(material, aiTextureType_OPACITY);
-			// this->extractMaterialTextures(material, aiTextureType_DISPLACEMENT);
+			for(int t = 0; t < textures.size(); ++t)
+			{
+				newMaterial->addTexture(textures[t]);
+			}
+			mMaterials.push_back(newMaterial);
 		}
 	}
 
-	std::vector<ITexture*> ModelImporter::extractMaterialTextures(aiMaterial* mat, aiTextureType type)
-	{
-		std::vector<ITexture*> textures;
+	void ModelImporter::extractMaterialTextures(
+		aiMaterial* mat,
+		aiTextureType type,
+		std::vector<ITexture*>& textures
+	) {
 		aiString path;
 		for(unsigned int j = 0; j < mat->GetTextureCount(type); ++j)
 		{
@@ -134,10 +135,9 @@ namespace SGE
 			if(tex)
 			{
 				tex->LoadFromFile(path.data);
+				textures.push_back(tex);
 			}
 		}
-
-		return textures;
 	}
 
 	void ModelImporter::extractTriangles(float scale)
@@ -167,6 +167,7 @@ namespace SGE
 		GLfloat* meshVertexData = new GLfloat[mesh->mNumVertices * 3];
 		GLfloat* meshNormalsData = new GLfloat[mesh->mNumVertices * 3];
 
+
 		/* Direct copy VBO from mesh */
 		for(unsigned int j = 0; j < mesh->mNumVertices; ++j)
 		{
@@ -190,11 +191,24 @@ namespace SGE
 			meshIndexData[(j * 3) + 2] = mesh->mFaces[j].mIndices[2];
 		}
 
+		GLfloat* meshUVData = nullptr;
+		if(mesh->mNumUVComponents[0] > 0)
+		{
+			meshUVData = new GLfloat[mesh->mNumVertices * 2];
+			for(unsigned int j = 0; j < mesh->mNumVertices; ++j)
+			{
+				meshUVData[(j * 2) + 0] = mesh->mTextureCoords[0][j].x;
+				meshUVData[(j * 2) + 1] = mesh->mTextureCoords[0][j].y;
+			}
+		}
+
+
 		/* Create a local mesh */
 		SGE::Mesh* resultMesh = new SGE::Mesh();
 		resultMesh->setVBOData(meshVertexData, mesh->mNumVertices);
 		resultMesh->setNBOData(meshNormalsData, mesh->mNumVertices);
 		resultMesh->setIBOData(meshIndexData, mesh->mNumFaces);
+		resultMesh->setUVData(meshUVData, mesh->mNumVertices);
 		//LOG(DEBUG) << "   |-" << (*resultMesh);
 		meshes.push_back(resultMesh);
 	}

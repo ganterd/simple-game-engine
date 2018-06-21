@@ -2,12 +2,13 @@
 
 in vec3 vPosition;
 in vec3 vNormal;
-in vec3 vOther;
+in vec2 vTexCoord;
 
 uniform mat4 modelViewProjection;
 
 out vec3 fragNormal;
 out vec3 fragPosition;
+out vec2 fragTexCoord;
 
 void main()
 {
@@ -16,4 +17,5 @@ void main()
 
 	fragNormal = vNormal;
 	fragPosition = vPosition;
+	fragTexCoord = vTexCoord;
 }

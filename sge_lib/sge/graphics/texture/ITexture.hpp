@@ -40,6 +40,8 @@ namespace SGE
 		virtual void bindTexture(int textureUnit) = 0;
 		virtual void unbindTexture() = 0;
 
+		Type type(){ return m_type; };
+
 		void LoadFromFile(const char* path);
 
 		// TODO: Print size values

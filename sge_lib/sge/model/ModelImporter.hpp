@@ -27,11 +27,12 @@ namespace SGE
 	const aiScene* model;
 	std::vector<Mesh*> meshes;
 	std::vector<ILight*> lights;
+	std::vector<Material*> mMaterials;
 
 	private:
 		void printModelInfo();
 		void extractMaterials();
-		std::vector<ITexture*> extractMaterialTextures(aiMaterial* mat, aiTextureType type);
+		void extractMaterialTextures(aiMaterial* mat, aiTextureType type, std::vector<ITexture*>& textures);
 		void extractTriangles(float scale);
 		void _nodeRecurse(aiNode* n, const aiMatrix4x4& m, float scale = 1.0f);
 		void _processMesh(aiMesh*, const aiMatrix4x4& m, float scale = 1.0f);
@@ -45,6 +46,7 @@ namespace SGE
 
 		Export std::vector<Mesh*> getMeshes();
 		Export std::vector<ILight*> getLights();
+		Export std::vector<Material*> getMaterials(){ return mMaterials; };
 	};
 };
 
