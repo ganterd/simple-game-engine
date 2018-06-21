@@ -4,6 +4,9 @@
 #include <string>
 #include <iostream>
 
+#include <sge/utils/stb_image.h>
+
+
 #include <sge/utils/export.hpp>
 
 namespace SGE
@@ -16,12 +19,11 @@ namespace SGE
 	public:
 		enum Type
 		{
-			textureType_DIFFUSE,
-			textureType_SPECULAR,
-			textureType_SHININESS,
-			textureType_AMBIENT,
-			textureType_OPACITY,
-			textureType_OTHER
+			Diffuse,
+			Specular,
+			Normals,
+			Opacity,
+			Other
 		};
 
 		enum Format
@@ -42,10 +44,7 @@ namespace SGE
 
 		Type type(){ return m_type; };
 
-		void LoadFromFile(const char* path);
-
-		// TODO: Print size values
-		friend std::ostream& operator<<(std::ostream& out, const ITexture& tex);
+		virtual void loadFromFile(const std::string& path, Type type) = 0;
 
 	protected:
 		int m_width;

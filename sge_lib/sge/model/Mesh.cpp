@@ -9,6 +9,8 @@ namespace SGE
 
 	void Mesh::renderGL()
 	{
+		if(mMaterial)
+			mMaterial->bindAllTextures();
 		glBindVertexArray(vao);
 		glDrawElements(GL_TRIANGLES, numTris * 3, GL_UNSIGNED_INT, (void*)0);
 	}

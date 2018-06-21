@@ -4,6 +4,8 @@
 #include <GL/glew.h>
 #include <GL/glu.h>
 
+#include <easylogging++.h>
+
 #include <sge/graphics/texture/ITexture.hpp>
 
 namespace SGE
@@ -13,6 +15,8 @@ namespace SGE
 	public:
 		GLSLTexture();
 		~GLSLTexture();
+
+		virtual void loadFromFile(const std::string& path, Type type);
 
 		virtual void bindTexture(int textureUnit);
 		virtual void unbindTexture();

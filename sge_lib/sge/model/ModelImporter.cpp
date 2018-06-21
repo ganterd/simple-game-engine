@@ -31,6 +31,8 @@ namespace SGE
 			return false;
 		}
 
+		Utils::splitFilename(file, mDirectory, mFileName);
+
 		this->printModelInfo();
 
 		/* Initialise the Matrials for the model */
@@ -84,57 +86,61 @@ namespace SGE
 		aiTextureType type,
 		std::vector<ITexture*>& textures
 	) {
-		aiString path;
+		aiString p;
 		for(unsigned int j = 0; j < mat->GetTextureCount(type); ++j)
 		{
-			mat->GetTexture(type, j, &path);
+			mat->GetTexture(type, j, &p);
+			std::string path = mDirectory + "/" + std::string(p.C_Str());
 			ITexture* tex = NULL;
 			switch(type)
 			{
 				case aiTextureType_DIFFUSE:
-					LOG(INFO) << "   |- Diffuse: " << path.C_Str();
-					tex = new DiffuseTexture();
+					LOG(INFO) << "   |- Diffuse: " << path;
+					tex = TextureFactory::newTexture();
+					tex->loadFromFile(path, ITexture::Type::Diffuse);
 					break;
 				case aiTextureType_SPECULAR:
-					LOG(INFO) << "   |- Specular: " << path.C_Str();
+					LOG(INFO) << "   |- Specular: " << path;
 					break;
 				case aiTextureType_AMBIENT:
-					LOG(INFO) << "   |- Ambient: " << path.C_Str();
+					LOG(INFO) << "   |- Ambient: " << path;
 					break;
 				case aiTextureType_EMISSIVE:
-					LOG(INFO) << "   |- Emissive: " << path.C_Str();
+					LOG(INFO) << "   |- Emissive: " << path;
 					break;
 				case aiTextureType_HEIGHT:
-					LOG(INFO) << "   |- Height: " << path.C_Str();
+					LOG(INFO) << "   |- Height: " << path;
 					break;
 				case aiTextureType_NORMALS:
-					LOG(INFO) << "   |- Normals: " << path.C_Str();
+					LOG(INFO) << "   |- Normals: " << path;
+					tex = TextureFactory::newTexture();
+					tex->loadFromFile(path, ITexture::Type::Normals);
 					break;
 				case aiTextureType_SHININESS:
-					LOG(INFO) << "   |- Shininess: " << path.C_Str();
+					LOG(INFO) << "   |- Shininess: " << path;
 					break;
 				case aiTextureType_OPACITY:
-					LOG(INFO) << "   |- Opacity: " << path.C_Str();
-					tex = new OpacityTexture();
+					LOG(INFO) << "   |- Opacity: " << path;
+					tex = TextureFactory::newTexture();
+					tex->loadFromFile(path, ITexture::Type::Opacity);
 					break;
 				case aiTextureType_DISPLACEMENT:
-					LOG(INFO) << "   |- Displacement: " << path.C_Str();
+					LOG(INFO) << "   |- Displacement: " << path;
 					break;
 				case aiTextureType_LIGHTMAP:
-					LOG(INFO) << "   |- Lightmap (AO): " << path.C_Str();
+					LOG(INFO) << "   |- Lightmap (AO): " << path;
 					break;
 				case aiTextureType_REFLECTION:
-					LOG(INFO) << "   |- Reflection: " << path.C_Str();
+					LOG(INFO) << "   |- Reflection: " << path;
 					break;
 				case aiTextureType_UNKNOWN:
-					LOG(WARNING) << "   |- Unknown texture type (" << path.C_Str() << ")";
+					LOG(WARNING) << "   |- Unknown texture type (" << path << ")";
 				default:
-					LOG(WARNING) << "   |- Unhandled texture type (" << path.C_Str() << ")";
+					LOG(WARNING) << "   |- Unhandled texture type (" << path << ")";
 			}
 
 			if(tex)
 			{
-				tex->LoadFromFile(path.data);
 				textures.push_back(tex);
 			}
 		}
@@ -203,12 +209,14 @@ namespace SGE
 		}
 
 
+
 		/* Create a local mesh */
 		SGE::Mesh* resultMesh = new SGE::Mesh();
 		resultMesh->setVBOData(meshVertexData, mesh->mNumVertices);
 		resultMesh->setNBOData(meshNormalsData, mesh->mNumVertices);
 		resultMesh->setIBOData(meshIndexData, mesh->mNumFaces);
 		resultMesh->setUVData(meshUVData, mesh->mNumVertices);
+		resultMesh->setMaterial(mMaterials[mesh->mMaterialIndex]);
 		//LOG(DEBUG) << "   |-" << (*resultMesh);
 		meshes.push_back(resultMesh);
 	}

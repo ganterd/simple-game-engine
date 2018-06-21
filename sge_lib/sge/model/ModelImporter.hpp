@@ -10,13 +10,13 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
+#include <sge/utils/utils.hpp>
 #include <sge/model/ILight.hpp>
 #include <sge/model/PointLight.hpp>
 #include <sge/model/Mesh.hpp>
 
 #include <sge/graphics/texture/ITexture.hpp>
-#include <sge/graphics/texture/DiffuseTexture.hpp>
-#include <sge/graphics/texture/OpacityTexture.hpp>
+#include <sge/graphics/texture/texturefactory.hpp>
 
 
 
@@ -25,6 +25,8 @@ namespace SGE
 	class ModelImporter
 	{
 	const aiScene* model;
+	std::string mFileName;
+	std::string mDirectory;
 	std::vector<Mesh*> meshes;
 	std::vector<ILight*> lights;
 	std::vector<Material*> mMaterials;

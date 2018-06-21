@@ -38,7 +38,7 @@ namespace SGE
 
 		void renderGL();
 
-		void setMaterial(Material* m);
+		void setMaterial(Material* m){ mMaterial = m; };
 		void setVBOData(GLfloat* vboData, int numVerts);
 		void setNBOData(GLfloat* nboData, int numVerts);
 		void setIBOData(unsigned int* iboData, int numTris);
