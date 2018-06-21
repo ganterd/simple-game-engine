@@ -87,5 +87,7 @@ namespace SGE
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glGenerateMipmap(GL_TEXTURE_2D);
 		stbi_image_free(data);
+
+		m_type = type;
 	}
 }

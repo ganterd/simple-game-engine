@@ -12,7 +12,8 @@ namespace SGE
 		settings.stencilBits = 8;
 		settings.antialiasingLevel = 2;
 
-		window = new sf::RenderWindow(sf::VideoMode(w, h), "Window", sf::Style::Close, settings);
+
+		window = new sf::RenderWindow(sf::VideoMode(w, h), "Window", fullscreen ? sf::Style::Fullscreen : sf::Style::Close, settings);
 		if( window == NULL )
 			LOG(FATAL) << "Window could not be created";
 
