@@ -56,6 +56,22 @@ ExternalProject_Add(
 		-DSFML_BUILD_NETWORK=Off
 		-DCMAKE_INSTALL_MESSAGE=LAZY
 )
+if(WIN32)
+	set(SFML_LIBRARIES
+		optimized sfml-window
+		optimized sfml-graphics
+		optimized sfml-system
+		debug sfml-window-d
+		debug sfml-graphics-d
+		debug sfml-system-d
+	)
+else()
+	set(SFML_LIBRARIES
+		sfml-window
+		sfml-graphics
+		sfml-system
+	)
+endif()
 
 ##### GLM #####
 ExternalProject_Add(
@@ -81,6 +97,15 @@ ExternalProject_Add(
 		-DCMAKE_INSTALL_PREFIX=${PROJECT_SOURCE_DIR}/external/tinyxml2/
 		-DCMAKE_INSTALL_MESSAGE=LAZY
 )
+
+if(WIN32)
+	set(TINYXML2_LIBRARY
+		optimized tinyxml2
+		debug tinyxml2d
+	)
+else()
+	set(TINYXML2_LIBRARY tinyxml2)
+endif()
 
 ##### EasyLogging++ #####
 ExternalProject_Add(

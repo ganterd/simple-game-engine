@@ -23,7 +23,7 @@ add_definitions(-DSGE_BUILDING)
 
 add_library(
 	sge_lib SHARED
-	#${SGE_LIB_HEADERS} 
+	#${SGE_LIB_HEADERS}
 	${SGE_LIB_SOURCES}
 )
 add_dependencies(
@@ -36,16 +36,9 @@ add_dependencies(
 )
 #message("GLEW: " ${GLEW_LIBRARY} "...")
 target_link_libraries( sge_lib
-	optimized sfml-window
-	optimized sfml-graphics
-	optimized sfml-system
-	debug sfml-window-d
-	debug sfml-graphics-d
-	debug sfml-system-d
+    ${SFML_LIBRARIES}
 	${ASSIMP_LIBRARY}
-	#pthread
-	optimized tinyxml2
-	debug tinyxml2d
+	${TINYXML2_LIBRARY}
 	${GLEW_LIBRARY}
 	${OPENGL_LIBRARIES} ${GLUT_LIBRARY}
 )

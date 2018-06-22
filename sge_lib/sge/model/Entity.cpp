@@ -23,6 +23,20 @@ namespace SGE
 		return true;
 	}
 
+	void Entity::attachScript(ObjectScript* script)
+	{
+		mAttachedScripts.push_back(script);
+		script->mEntity = this;
+	}
+
+	void Entity::update()
+	{
+		for(int i = 0; i < mAttachedScripts.size(); ++i)
+		{
+			mAttachedScripts[i]->update();
+		}
+	}
+
 	void Entity::draw()
 	{
 		for(int i = 0; i < this->meshes.size(); ++i)

@@ -176,7 +176,7 @@ namespace SGE
 		GLfloat* meshVertexData = new GLfloat[mesh->mNumVertices * 3];
 		GLfloat* meshNormalsData = new GLfloat[mesh->mNumVertices * 3];
 		GLfloat* meshTangentsData = new GLfloat[mesh->mNumVertices * 3];
-
+		SGE::Mesh* resultMesh = new SGE::Mesh();
 
 		/* Direct copy VBO from mesh */
 		for(unsigned int j = 0; j < mesh->mNumVertices; ++j)
@@ -186,15 +186,28 @@ namespace SGE
 			meshVertexData[(j * 3) + 0] = v.x;
 			meshVertexData[(j * 3) + 1] = v.y;
 			meshVertexData[(j * 3) + 2] = v.z;
+		}
+		resultMesh->setVBOData(meshVertexData, mesh->mNumVertices);
 
-
-			meshNormalsData[(j * 3) + 0] = mesh->mNormals[j].x;
-			meshNormalsData[(j * 3) + 1] = mesh->mNormals[j].y;
-			meshNormalsData[(j * 3) + 2] = mesh->mNormals[j].z;
-
-			meshTangentsData[(j * 3) + 0] = mesh->mTangents[j].x;
-			meshTangentsData[(j * 3) + 1] = mesh->mTangents[j].y;
-			meshTangentsData[(j * 3) + 2] = mesh->mTangents[j].z;
+		if(mesh->HasNormals())
+		{
+			for(unsigned int j = 0; j < mesh->mNumVertices; ++j)
+			{
+				meshNormalsData[(j * 3) + 0] = mesh->mNormals[j].x;
+				meshNormalsData[(j * 3) + 1] = mesh->mNormals[j].y;
+				meshNormalsData[(j * 3) + 2] = mesh->mNormals[j].z;
+			}
+			resultMesh->setNBOData(meshNormalsData, mesh->mNumVertices);
+		}
+		if(mesh->HasTangentsAndBitangents())
+		{
+			for(unsigned int j = 0; j < mesh->mNumVertices; ++j)
+			{
+				meshTangentsData[(j * 3) + 0] = mesh->mTangents[j].x;
+				meshTangentsData[(j * 3) + 1] = mesh->mTangents[j].y;
+				meshTangentsData[(j * 3) + 2] = mesh->mTangents[j].z;
+			}
+			resultMesh->setTangentsData(meshTangentsData, mesh->mNumVertices);
 		}
 
 		/* Extract the VBI from faces */
@@ -205,27 +218,26 @@ namespace SGE
 			meshIndexData[(j * 3) + 1] = mesh->mFaces[j].mIndices[1];
 			meshIndexData[(j * 3) + 2] = mesh->mFaces[j].mIndices[2];
 		}
+		resultMesh->setIBOData(meshIndexData, mesh->mNumFaces);
 
-		GLfloat* meshUVData = nullptr;
-		if(mesh->mNumUVComponents[0] > 0)
+		resultMesh->setNBOData(meshNormalsData, mesh->mNumVertices);
+
+		if(mesh->HasTextureCoords(0))
 		{
+			GLfloat* meshUVData = nullptr;
 			meshUVData = new GLfloat[mesh->mNumVertices * 2];
 			for(unsigned int j = 0; j < mesh->mNumVertices; ++j)
 			{
 				meshUVData[(j * 2) + 0] = mesh->mTextureCoords[0][j].x;
 				meshUVData[(j * 2) + 1] = mesh->mTextureCoords[0][j].y;
 			}
+			resultMesh->setUVData(meshUVData, mesh->mNumVertices);
 		}
 
 		/* Create a local mesh */
-		SGE::Mesh* resultMesh = new SGE::Mesh();
-		resultMesh->setVBOData(meshVertexData, mesh->mNumVertices);
-		resultMesh->setNBOData(meshNormalsData, mesh->mNumVertices);
-		resultMesh->setTangentsData(meshTangentsData, mesh->mNumVertices);
-		resultMesh->setIBOData(meshIndexData, mesh->mNumFaces);
-		resultMesh->setUVData(meshUVData, mesh->mNumVertices);
 		resultMesh->setMaterial(mMaterials[mesh->mMaterialIndex]);
-		//LOG(DEBUG) << "   |-" << (*resultMesh);
+
+
 		meshes.push_back(resultMesh);
 	}
 

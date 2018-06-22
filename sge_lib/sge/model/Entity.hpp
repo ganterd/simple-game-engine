@@ -7,6 +7,8 @@
 #include "Mesh.hpp"
 #include "ModelImporter.hpp"
 
+#include <sge/scripting/objectscript.hpp>
+
 namespace SGE
 {
 	class Entity
@@ -15,6 +17,7 @@ namespace SGE
 		std::vector<Mesh*> meshes;
 		std::vector<ILight*> lights;
 		std::vector<Material*> mMaterials;
+		std::vector<ObjectScript*> mAttachedScripts;
 		glm::mat4 modelMat;
 		glm::vec3 position;
 
@@ -26,6 +29,7 @@ namespace SGE
 		Export bool loadFromFile(std::string file);
 		Export bool loadFromFile(std::string file, float scale, bool makeLeftHanded);
 
+		Export void update();
 		Export void draw();
 
 		Export void setPositionX(float);
@@ -38,6 +42,8 @@ namespace SGE
 
 		Export glm::mat4 getModelMat();
 		Export std::vector<ILight*> getLights();
+
+		Export void attachScript(ObjectScript* script);
 	};
 }
 

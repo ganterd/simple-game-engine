@@ -31,6 +31,12 @@ namespace SGE
 		Time::tick();
 		Input::update();
 		camera->update();
+
+		int entities_count = (int)entities.size();
+		for(int i = 0; i < entities_count; ++i)
+		{
+			entities[i]->update();
+		}
 	}
 
 	void Scene::draw()

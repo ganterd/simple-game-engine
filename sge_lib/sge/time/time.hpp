@@ -13,6 +13,7 @@ namespace SGE
     public:
         typedef std::chrono::time_point<std::chrono::system_clock> TimePoint;
         Export static double getDelta(){ return mTickDelta; };
+		Export static double gameTime(){ return mCurrentGameTime; };
 
     private:
 

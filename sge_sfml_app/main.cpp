@@ -10,7 +10,8 @@ INITIALIZE_NULL_EASYLOGGINGPP
 #include <sge/graphics/ShaderManager.hpp>
 #include <sge/graphics/OGLGraphicsManager.hpp>
 
-#include "cameracontrol.hpp"
+#include "gamescripts/cameracontrol.hpp"
+#include "gamescripts/demolightscripts.hpp"
 
 // Function Prototypes
 //---------------------------------------------------
@@ -18,7 +19,7 @@ INITIALIZE_NULL_EASYLOGGINGPP
 const int DEFAULT_SCREEN_WIDTH = 600;
 const int DEFAULT_SCREEN_HEIGHT = 600;
 
-using namespace SGE; 
+using namespace SGE;
 
 SGE::IDisplay* dm;
 GraphicsManager::IGraphicsManager* gm;
@@ -63,6 +64,11 @@ void init()
 	cameraControl = new CameraControl();
 	cameraControl->mCamera = scene->camera;
 
+	Entity* cube = new Entity();
+	cube->loadFromFile("resources/models/cube.obj");
+	cube->attachScript(new DemoLightsScript());
+	scene->addEntity(cube);
+
 	ShaderManager::loadShader("normals");
 	ShaderManager::loadShader("depth");
 }
@@ -92,7 +98,7 @@ int main( int argc, char* args[] )
 	}
     ConfigManager::init();
 
-	
+
 
 	init();
 
