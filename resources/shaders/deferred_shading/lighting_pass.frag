@@ -3,10 +3,11 @@
 in vec2 fragPosition;
 out vec4 outColour;
 
-uniform sampler2D positionsTexture;
-uniform sampler2D specularTexture;
-uniform sampler2D normalsTexture;
-uniform sampler2D albedoTexture;
+layout (binding = 0) uniform sampler2D positionsTexture;
+layout (binding = 1) uniform sampler2D specularTexture;
+layout (binding = 2) uniform sampler2D normalsTexture;
+layout (binding = 3) uniform sampler2D albedoTexture;
+layout (binding = 4) uniform sampler2D emmisiveTexture;
 
 uniform vec3 cameraPosition;
 
@@ -27,7 +28,7 @@ void main(){
     vec3 diffuse = vec3(texture(albedoTexture, p));
 
     //vec3 lightPosition = vec3(0.0f, 2.0f, 0.0f);
-    vec3 finalColour = vec3(0.0f);
+    vec3 finalColour = vec3(texture(emmisiveTexture, p));
     for(int i = 0; i < numLights; ++i)
     {
         PointLight light = pointLights[i];

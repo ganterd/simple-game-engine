@@ -8,6 +8,7 @@ namespace SGE
 		ShaderManager::init();
 		ShaderManager::loadShader("deferred_shading/geometry_pass");
 		ShaderManager::loadShader("deferred_shading/lighting_pass");
+		ShaderManager::loadShader("deferred_shading/debug_light");
 		Time::init();
 		overlayQuad = new OverlayQuad();
 
@@ -19,6 +20,10 @@ namespace SGE
 		renderTarget->addRenderBuffer(IRenderBuffer::BufferType::Position, ITexture::DataType::Float); // Normals g-buffer
 		renderTarget->addRenderBuffer(IRenderBuffer::BufferType::Position, ITexture::DataType::Float); // Position g-buffer
 		renderTarget->addRenderBuffer(IRenderBuffer::BufferType::Depth, ITexture::DataType::Float);
+		renderTarget->addRenderBuffer(IRenderBuffer::BufferType::Color, ITexture::DataType::Float); // emmisiveGBuffer g-buffer
+
+		lightDebugModel = new Entity();
+		lightDebugModel->loadFromFile("resources/models/cube/cube.obj");
 	}
 
 	void Scene::addEntity(Entity* entity)
@@ -56,23 +61,27 @@ namespace SGE
 
 		ShaderManager::useShader("deferred_shading/geometry_pass");
 		IShader* shader = ShaderManager::getCurrentShader();
-		glm::mat4 vpMat = this->camera->getVPMat();
 
 		/* Draw the meshes */
 		// TODO: Use acceleration structure
 		int entities_count = (int)entities.size();
 		renderTarget->bind();
 		renderTarget->clear();
+
+		shader->setVariable("viewProjectionMatrix", camera->getVPMat());
 		for(int i = 0; i < entities_count; ++i)
 		{
-			glm::mat4 mvpMat = vpMat * entities[i]->getModelMat();
-			shader->setMVP(mvpMat);
 			entities[i]->draw(shader);
 		}
-		renderTarget->unbind();
+
 
 		/* Gather lights. Don't use acceleration structure in case */
 		/* lights are accidentally culled */
+		ShaderManager::useShader("deferred_shading/debug_light");
+		shader = ShaderManager::getCurrentShader();
+		renderTarget->bind();
+		shader->setVariable("viewProjectionMatrix", camera->getVPMat());
+
 		std::vector<SceneLight> sceneLights;
 		for(int i = 0; i < entities_count; ++i)
 		{
@@ -94,8 +103,14 @@ namespace SGE
 				sceneLight.colour.b = c.b;
 				sceneLight.colour.a = l->getIntensity();
 				sceneLights.push_back(sceneLight);
+
+				shader->setVariable("lightColour", c);
+				lightDebugModel->setPosition(glm::vec3(p.x, p.y, p.z));
+				lightDebugModel->draw(shader);
 			}
 		}
+
+		renderTarget->unbind();
 
 		glDisable(GL_CULL_FACE);
 		glDisable(GL_DEPTH_TEST);
@@ -123,11 +138,13 @@ namespace SGE
 		renderTarget->getRenderBuffer(1)->bindTexture(1); // Specular g-buffer
 		renderTarget->getRenderBuffer(2)->bindTexture(2); // Normals g-buffer
 		renderTarget->getRenderBuffer(3)->bindTexture(3); // Position g-buffer
+		renderTarget->getRenderBuffer(4)->bindTexture(4); // Position g-buffer
 		overlayQuad->draw();
 		renderTarget->getRenderBuffer(0)->unbindTexture();
 		renderTarget->getRenderBuffer(1)->unbindTexture();
 		renderTarget->getRenderBuffer(2)->unbindTexture();
 		renderTarget->getRenderBuffer(3)->unbindTexture();
+		renderTarget->getRenderBuffer(4)->unbindTexture();
 
 		glDeleteBuffers(1, &sceneLightsSSBO);
 	}

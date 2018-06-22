@@ -3,6 +3,7 @@
 #include <cmath>
 
 #include <sge/scripting/objectscript.hpp>
+#include <sge/model/ILight.hpp>
 #include <sge/time/time.hpp>
 
 class DemoLightsScript : public SGE::ObjectScript
@@ -23,8 +24,16 @@ public:
     {
         mEntity->setPosition(
             sin(SGE::Time::gameTime() + mOffset) * mRadius * (mReverse ? -1.0f : 1.0f),
-            0.0f,
+            (sin((SGE::Time::gameTime() + mOffset * 3) * 0.01f) + 1.0f) * 1.0f,
             cos(SGE::Time::gameTime() + mOffset) * mRadius
         );
+
+        SGE::ILight* light = mEntity->getLight(0);
+        light->setColor(glm::vec3(
+            (sin((SGE::Time::gameTime() + mOffset) * 0.1f) + 1.0f) * 0.5f,
+            (sin((SGE::Time::gameTime() + mOffset * 2) * 0.1f) + 1.0f) * 0.5f,
+            (sin((SGE::Time::gameTime() + mOffset * 3) * 0.1f) + 1.0f) * 0.5f
+        ));
+        light->setIntensity((sin((SGE::Time::gameTime() + mOffset) * 0.01f) + 1.0f) * 0.1f);
     }
 };

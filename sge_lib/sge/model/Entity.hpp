@@ -46,6 +46,7 @@ namespace SGE
 
 		Export void addLight(ILight* l);
 		Export std::vector<ILight*> getLights();
+		Export ILight* getLight(int lightIndex);
 
 		Export void attachScript(ObjectScript* script);
 	};

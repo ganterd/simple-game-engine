@@ -5,7 +5,7 @@ layout (location = 1) in vec3 vNormal;
 layout (location = 2) in vec2 vTexCoord;
 layout (location = 3) in vec3 vTangent;
 
-uniform mat4 modelViewProjection;
+uniform mat4 viewProjectionMatrix;
 uniform mat4 modelMatrix;
 
 out vec3 fragNormal;
@@ -16,7 +16,7 @@ out mat3 normalMapTransform;
 void main()
 {
 	vec4 v = vec4(vPosition, 1);
-	gl_Position = modelViewProjection * v;
+	gl_Position = viewProjectionMatrix * modelMatrix * v;
 
 	fragNormal = vec3(modelMatrix * vec4(vNormal, 0.0f));
 	fragPosition = vec3(modelMatrix * vec4(vPosition, 1.0f));

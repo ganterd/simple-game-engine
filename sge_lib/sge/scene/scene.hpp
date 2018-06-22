@@ -28,6 +28,7 @@ namespace SGE
 		Camera* camera;
 		OverlayQuad* overlayQuad;
 		GLSLRenderTarget* renderTarget;
+		Entity* lightDebugModel;
 
 		Scene();
 

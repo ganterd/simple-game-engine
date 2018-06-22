@@ -64,12 +64,15 @@ void init()
 	cameraControl = new CameraControl();
 	cameraControl->mCamera = scene->camera;
 
-	const int numLights = 10;
+	const int numLights = 100;
+	const float maxRadius = 6.0f;
 	for(int i = 0; i < numLights; ++i)
 	{
 		float offset = (float)(rand() % 1000) / 1.1233120f;
+		float radius = ((float)(rand() % 1000) / 1000.0f) * maxRadius;
 		Entity* light = new Entity();
-		light->attachScript(new DemoLightsScript((float)(i) * 0.5f, i % 2 == 0, offset));
+		//light->loadFromFile("resources/models/cube/cube.obj");
+		light->attachScript(new DemoLightsScript(radius, i % 2 == 0, offset));
 		light->addLight(new ILight());
 		scene->addEntity(light);
 	}

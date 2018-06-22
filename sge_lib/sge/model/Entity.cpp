@@ -105,4 +105,10 @@ namespace SGE
 	{
 		return this->lights;
 	}
+
+	ILight* Entity::getLight(int lightIndex)
+	{
+		// Not my fault if you index wrong...
+		return lights[lightIndex];
+	}
 }
