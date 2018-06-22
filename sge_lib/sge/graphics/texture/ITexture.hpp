@@ -6,7 +6,6 @@
 
 #include <sge/utils/stb_image.h>
 
-
 #include <sge/utils/export.hpp>
 
 namespace SGE

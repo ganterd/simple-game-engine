@@ -102,6 +102,8 @@ namespace SGE
 					break;
 				case aiTextureType_SPECULAR:
 					LOG(INFO) << "   |- Specular: " << path;
+					tex = TextureFactory::newTexture();
+					tex->loadFromFile(path, ITexture::Type::Specular);
 					break;
 				case aiTextureType_AMBIENT:
 					LOG(INFO) << "   |- Ambient: " << path;

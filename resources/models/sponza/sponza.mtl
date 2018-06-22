@@ -79,8 +79,9 @@ newmtl 16___Default
 	Kd 0.5880 0.5880 0.5880
 	Ks 0.0000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
-	map_Ka textures/gi_flag.tga
-	map_Kd textures/gi_flag.tga
+	map_Ka textures/sponza_fabric_diff.tga
+	map_Kd textures/sponza_fabric_diff.tga
+	map_Ks textures/sponza_fabric_spec.tga
 
 newmtl bricks
 	Ns 10.0000
@@ -96,7 +97,7 @@ newmtl bricks
 	map_Ka textures/spnza_bricks_a_diff.tga
 	map_Kd textures/spnza_bricks_a_diff.tga
 	map_Ks textures/spnza_bricks_a_spec.tga
-	map_Kn textures/spnza_bricks_a_diff.tga
+	map_Kn textures/spnza_bricks_a_ddn.tga
 	bump textures/spnza_bricks_a_diff.tga
 
 newmtl arch

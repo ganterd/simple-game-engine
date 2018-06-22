@@ -25,13 +25,20 @@ void SGE::Material::bindAllTextures()
         switch(mTextures[i]->type())
         {
         case ITexture::Type::Diffuse:
+            shader->setVariable("albedoTexture", 0);
             mTextures[i]->bindTexture(0);
             break;
-        case ITexture::Type::Normals:
+        case ITexture::Type::Specular:
+            shader->setVariable("specularTexture", 1);
             mTextures[i]->bindTexture(1);
             break;
-        case ITexture::Type::Opacity:
+        case ITexture::Type::Normals:
+            shader->setVariable("normalsTexture", 2);
             mTextures[i]->bindTexture(2);
+            break;
+        case ITexture::Type::Opacity:
+            shader->setVariable("opacityTexture", 3);
+            mTextures[i]->bindTexture(3);
             break;
         }
     }

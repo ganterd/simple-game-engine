@@ -3,9 +3,10 @@
 in vec2 fragPosition;
 out vec4 color;
 
-layout (binding = 0)uniform sampler2D positionsTexture;
-layout (binding = 1)uniform sampler2D normalsTexture;
-layout (binding = 2)uniform sampler2D uvTexture;
+uniform sampler2D positionsTexture;
+uniform sampler2D specularTexture;
+uniform sampler2D normalsTexture;
+uniform sampler2D albedoTexture;
 
 void main(){
     vec2 p = (fragPosition + vec2(1.0f)) * 0.5f;
@@ -13,11 +14,11 @@ void main(){
     {
         if(p.x < 0.5f)
         {
-            color = texture(uvTexture, p * 2.0f);
+            color = texture(albedoTexture, p * 2.0f);
         }
         else
         {
-            color = vec4(0.3f,0.3f,0.3f,1.0f);
+            color = texture(specularTexture, (p - vec2(0.5f, 0.0f)) * 2.0f);
         }
     }
     else

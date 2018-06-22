@@ -15,6 +15,7 @@ namespace SGE
 		int bufferHeight = DisplayManager::getDisplayInstance()->size().height;
 		renderTarget = new GLSLRenderTarget(bufferWidth, bufferHeight);
 		renderTarget->addRenderBuffer(IRenderBuffer::BufferType::Color, ITexture::DataType::Float); // Position g-buffer
+		renderTarget->addRenderBuffer(IRenderBuffer::BufferType::Color, ITexture::DataType::Float); // Specular g-buffer
 		renderTarget->addRenderBuffer(IRenderBuffer::BufferType::Color, ITexture::DataType::Float); // Normals g-buffer
 		renderTarget->addRenderBuffer(IRenderBuffer::BufferType::Color, ITexture::DataType::Float); // Albedo g-buffer
 		renderTarget->addRenderBuffer(IRenderBuffer::BufferType::Depth, ITexture::DataType::Float);
@@ -84,14 +85,23 @@ namespace SGE
 
 		glDisable(GL_CULL_FACE);
 		glDisable(GL_DEPTH_TEST);
-		renderTarget->getRenderBuffer(0)->bindTexture(0);
-		renderTarget->getRenderBuffer(1)->bindTexture(1);
-		renderTarget->getRenderBuffer(2)->bindTexture(2);
+
 		ShaderManager::useShader("dl_pass");
+		shader = ShaderManager::getCurrentShader();
+		shader->setVariable("positionsTexture", 0);
+		shader->setVariable("specularTexture", 1);
+		shader->setVariable("normalsTexture", 2);
+		shader->setVariable("albedoTexture", 3);
+		renderTarget->getRenderBuffer(0)->bindTexture(0); // Position g-buffer
+		renderTarget->getRenderBuffer(1)->bindTexture(1); // Specular g-buffer
+		renderTarget->getRenderBuffer(2)->bindTexture(2); // Normals g-buffer
+		renderTarget->getRenderBuffer(3)->bindTexture(3); // Albedo g-buffer
+
 		overlayQuad->draw();
 		renderTarget->getRenderBuffer(0)->unbindTexture();
 		renderTarget->getRenderBuffer(1)->unbindTexture();
 		renderTarget->getRenderBuffer(2)->unbindTexture();
+		renderTarget->getRenderBuffer(3)->unbindTexture();
 	}
 
 	void Scene::lightScene()
