@@ -14,10 +14,10 @@ namespace SGE
 		int bufferWidth = DisplayManager::getDisplayInstance()->size().width;
 		int bufferHeight = DisplayManager::getDisplayInstance()->size().height;
 		renderTarget = new GLSLRenderTarget(bufferWidth, bufferHeight);
-		renderTarget->addRenderBuffer(IRenderBuffer::BufferType::Color, ITexture::DataType::Float); // Position g-buffer
+		renderTarget->addRenderBuffer(IRenderBuffer::BufferType::Color, ITexture::DataType::Float); // Albedo g-buffer
 		renderTarget->addRenderBuffer(IRenderBuffer::BufferType::Color, ITexture::DataType::Float); // Specular g-buffer
 		renderTarget->addRenderBuffer(IRenderBuffer::BufferType::Color, ITexture::DataType::Float); // Normals g-buffer
-		renderTarget->addRenderBuffer(IRenderBuffer::BufferType::Color, ITexture::DataType::Float); // Albedo g-buffer
+		renderTarget->addRenderBuffer(IRenderBuffer::BufferType::Color, ITexture::DataType::Float); // Position g-buffer
 		renderTarget->addRenderBuffer(IRenderBuffer::BufferType::Depth, ITexture::DataType::Float);
 	}
 
@@ -51,7 +51,6 @@ namespace SGE
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -67,9 +66,8 @@ namespace SGE
 		for(int i = 0; i < entities_count; ++i)
 		{
 			glm::mat4 mvpMat = vpMat * entities[i]->getModelMat();
-
 			shader->setMVP(mvpMat);
-			entities[i]->draw();
+			entities[i]->draw(shader);
 		}
 		renderTarget->unbind();
 
@@ -94,15 +92,14 @@ namespace SGE
 
 		ShaderManager::useShader("dl_pass");
 		shader = ShaderManager::getCurrentShader();
-		shader->setVariable("positionsTexture", 0);
+		shader->setVariable("albedoTexture", 0);
 		shader->setVariable("specularTexture", 1);
 		shader->setVariable("normalsTexture", 2);
-		shader->setVariable("albedoTexture", 3);
-		renderTarget->getRenderBuffer(0)->bindTexture(0); // Position g-buffer
+		shader->setVariable("positionsTexture", 3);
+		renderTarget->getRenderBuffer(0)->bindTexture(0); // Albedo g-buffer
 		renderTarget->getRenderBuffer(1)->bindTexture(1); // Specular g-buffer
 		renderTarget->getRenderBuffer(2)->bindTexture(2); // Normals g-buffer
-		renderTarget->getRenderBuffer(3)->bindTexture(3); // Albedo g-buffer
-
+		renderTarget->getRenderBuffer(3)->bindTexture(3); // Position g-buffer
 		overlayQuad->draw();
 		renderTarget->getRenderBuffer(0)->unbindTexture();
 		renderTarget->getRenderBuffer(1)->unbindTexture();

@@ -45,6 +45,13 @@ namespace SGE
 		}
 	}
 
+	void Entity::draw(IShader* shader)
+	{
+		shader->setVariable("modelMatrix", modelMat);
+		for(int i = 0; i < this->meshes.size(); ++i)
+			this->meshes[i]->renderGL();
+	}
+
 	void Entity::setPositionX(float x)
 	{
 		this->setPosition(glm::vec3(x, this->position.y, this->position.z));

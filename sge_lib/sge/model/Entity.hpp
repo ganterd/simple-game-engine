@@ -7,6 +7,7 @@
 #include "Mesh.hpp"
 #include "ModelImporter.hpp"
 
+#include <sge/graphics/ShaderManager.hpp>
 #include <sge/scripting/objectscript.hpp>
 
 namespace SGE
@@ -31,6 +32,7 @@ namespace SGE
 
 		Export void update();
 		Export void draw();
+		Export void draw(IShader* shader);
 
 		Export void setPositionX(float);
 		Export void setPositionY(float);

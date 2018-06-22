@@ -13,10 +13,10 @@ uniform sampler2D opacityTexture;
 uniform bool hasNormalMap;
 uniform bool hasOpacityMap;
 
-layout (location = 0) out vec4 positionGBuffer;
+layout (location = 0) out vec4 albedoGBuffer;
 layout (location = 1) out vec4 specularGBuffer;
 layout (location = 2) out vec4 normalGBuffer;
-layout (location = 3) out vec4 albedoGBuffer;
+layout (location = 3) out vec4 positionGBuffer;
 
 void main(){
     vec3 normal = fragNormal;

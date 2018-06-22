@@ -96,6 +96,12 @@ namespace SGE
 		glUniform3f(getUniformLocation(name), value.x, value.y, value.z);
 	}
 
+
+	void GLSLShader::setVariable(std::string name, glm::mat4 value)
+	{
+		glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, &value[0][0]);
+	}
+
 	const char* GLSLShader::readShaderCode(std::string file)
 	{
 		if(file.empty())

@@ -12,7 +12,8 @@ public:
     {
         mEntity->setPosition(
             sin(SGE::Time::gameTime()) * 2.0f,
-            0.0f, 0.0f
+            0.0f,
+            cos(SGE::Time::gameTime()) * 2.0f
         );
     }
 };
