@@ -96,6 +96,7 @@ namespace SGE
 		shader->setVariable("specularTexture", 1);
 		shader->setVariable("normalsTexture", 2);
 		shader->setVariable("positionsTexture", 3);
+		shader->setVariable("cameraPosition", camera->getPosition());
 		renderTarget->getRenderBuffer(0)->bindTexture(0); // Albedo g-buffer
 		renderTarget->getRenderBuffer(1)->bindTexture(1); // Specular g-buffer
 		renderTarget->getRenderBuffer(2)->bindTexture(2); // Normals g-buffer

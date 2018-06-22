@@ -9,8 +9,8 @@ namespace SGE
 		this->nearPlane = 0.01f;
 		this->farPlane = 1000.0f;
 
-		mPosition = glm::vec3(0.0f,-0.5f,5.0f);
-		mForwardVector = glm::vec3(0, 0, -1);
+		mPosition = glm::vec3(3.0f,2.0f,0.0f);
+		mForwardVector = glm::vec3(1, 0, 0);
 		mUpVector = glm::vec3(0,1,0);
 	}
 

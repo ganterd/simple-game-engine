@@ -83,14 +83,14 @@ namespace SGE
 		glBindTexture(GL_TEXTURE_2D, mTextureID);
 		//glTexImage2D(GL_TEXTURE_2D,	0, m_glRenderBufferType, width, height, 0, this->m_glRenderBufferType, m_glDataType, NULL);
 		glTexImage2D(GL_TEXTURE_2D,	0, GL_RGBA, width, height, 0, glType, GL_UNSIGNED_BYTE, data);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 		// If the texture is power-of-two, generate mipmaps
 		if(width == height && (width & (width - 1)) == 0)
-		{
 			glGenerateMipmap(GL_TEXTURE_2D);
-		}
+
 		stbi_image_free(data);
 
 		m_type = type;

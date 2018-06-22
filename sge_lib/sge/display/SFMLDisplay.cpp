@@ -10,7 +10,6 @@ namespace SGE
 		sf::ContextSettings settings;
 		settings.depthBits = 24;
 		settings.stencilBits = 8;
-		settings.antialiasingLevel = 2;
 
 
 		window = new sf::RenderWindow(sf::VideoMode(w, h), "Window", fullscreen ? sf::Style::Fullscreen : sf::Style::Close, settings);
