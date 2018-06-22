@@ -6,7 +6,7 @@ namespace SGE
 			int width,
 			int height,
 			GLuint glFBO,
-			IRenderBuffer::BufferType textureType,
+			IRenderBuffer::BufferType bufferType,
 			ITexture::DataType dataType,
 			GLuint glColorAttachment
 	)
@@ -15,57 +15,61 @@ namespace SGE
 		mTexture->m_width = width;
 		mTexture->m_height = height;
 		mTexture->m_dataType = dataType;
-
-		this->m_bufferType = textureType;
-		this->m_glRenderBufferType = _bufferTypeToGLInternalFormat(this->m_bufferType);
-
-		this->m_glDataType = GLSLTexture::dataTypeToGLDataType(mTexture->m_dataType);
 		this->m_glFrameBufferID = glFBO;
 		this->m_glColorAttachment = glColorAttachment;
+		this->m_bufferType = bufferType;
 
+		GLuint glInternalFormat;
+		GLuint glFormat;
+		GLuint glDataType;
+		switch(bufferType)
+		{
+			case BufferType::Color:
+				glInternalFormat = GL_RGB;
+				glFormat = GL_RGB;
+				glDataType = GL_UNSIGNED_BYTE;
+				LOG(DEBUG) << "Adding colour buffer";
+				break;
+			case BufferType::Normal:
+				glInternalFormat = GL_RGB16F;
+				glFormat = GL_RGB;
+				glDataType = GL_FLOAT;
+				LOG(DEBUG) << "Adding normals buffer";
+				break;
+			case BufferType::Position:
+				glInternalFormat = GL_RGB32F;
+				glFormat = GL_RGB;
+				glDataType = GL_FLOAT;
+				LOG(DEBUG) << "Adding positions buffer";
+				break;
+			case BufferType::Depth:
+				glInternalFormat = GL_DEPTH24_STENCIL8;
+				glFormat = GL_DEPTH_STENCIL;
+				glDataType = GL_UNSIGNED_INT_24_8;
+				LOG(DEBUG) << "Adding depth and stencil buffer";
+				break;
+			default:
+				LOG(WARNING) << "Unrecognised buffer type requested";
+				glInternalFormat = GL_RGB;
+				glFormat = GL_RGB;
+				glDataType = GL_UNSIGNED_BYTE;
+		}
+
+		glGenTextures(1, (GLuint*)&mTexture->mTextureID);
+		glBindTexture(GL_TEXTURE_2D, mTexture->mTextureID);
+		glTexImage2D(GL_TEXTURE_2D,	0, glInternalFormat, width, height, 0, glFormat, glDataType, NULL);
 		if(this->m_glColorAttachment != GL_DEPTH_ATTACHMENT)
 		{
-			glGenTextures(1, (GLuint*)&mTexture->mTextureID);
-			glBindTexture(GL_TEXTURE_2D, mTexture->mTextureID);
-			//glTexImage2D(GL_TEXTURE_2D,	0, m_glRenderBufferType, width, height, 0, this->m_glRenderBufferType, m_glDataType, NULL);
-			glTexImage2D(GL_TEXTURE_2D,	0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-			//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
 			glFramebufferTexture2D(GL_FRAMEBUFFER, m_glColorAttachment, GL_TEXTURE_2D, mTexture->mTextureID, 0);
 		}
 		else
 		{
-			glGenTextures(1, (GLuint*)&mTexture->mTextureID);
-			glBindTexture(GL_TEXTURE_2D, mTexture->mTextureID);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, width, height, 0, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, NULL);
 			glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, mTexture->mTextureID, 0);
 		}
 
-
-
 		LOG(INFO) << "Creating GLSLRenderBuffer (" << width << "x" << height << ")";
-
-
-		// glGenRenderbuffers(1, &this->m_glRenderBufferID);
-		//
-		// glBindRenderbuffer(GL_RENDERBUFFER, this->m_glRenderBufferID);
-		// glRenderbufferStorage(
-		// 	GL_RENDERBUFFER,
-		// 	this->m_glRenderBufferType,
-		// 	this->m_width,
-		// 	this->m_height
-		// );
-		// glFramebufferRenderbuffer(
-		// 	GL_FRAMEBUFFER,
-		// 	this->m_glColorAttachment,
-		// 	GL_RENDERBUFFER,
-		// 	this->m_glRenderBufferID
-		// );
-
-
 	}
 
 	GLSLRenderBuffer::~GLSLRenderBuffer()
@@ -125,13 +129,13 @@ namespace SGE
 		switch(type)
 		{
 			case BufferType::Color:
-				glRenderBufferType = GL_RGBA;
+				glRenderBufferType = GL_RGB;
 				break;
 			case BufferType::Normal:
-				glRenderBufferType = GL_RGBA16F;
+				glRenderBufferType = GL_RGB16F;
 				break;
 			case BufferType::Position:
-				glRenderBufferType = GL_RGBA32F;
+				glRenderBufferType = GL_RGB32F;
 				break;
 			case BufferType::Depth:
 				glRenderBufferType = GL_DEPTH_COMPONENT24;

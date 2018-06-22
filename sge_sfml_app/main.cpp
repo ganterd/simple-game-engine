@@ -65,7 +65,7 @@ void init()
 	cameraControl->mCamera = scene->camera;
 
 	Entity* cube = new Entity();
-	cube->loadFromFile("resources/models/cube.obj");
+	cube->loadFromFile("resources/models/cube/cube.obj");
 	cube->attachScript(new DemoLightsScript());
 	scene->addEntity(cube);
 
@@ -99,9 +99,7 @@ int main( int argc, char* args[] )
     ConfigManager::init();
 
 
-
 	init();
-
 	while(!quit)
 		main_loop();
 

@@ -6,8 +6,8 @@ namespace SGE
 	{
 		camera = new Camera();
 		ShaderManager::init();
-		ShaderManager::loadShader("dl_pass");
-		ShaderManager::loadShader("dl/geometry_pass");
+		ShaderManager::loadShader("deferred_shading/geometry_pass");
+		ShaderManager::loadShader("deferred_shading/lighting_pass");
 		Time::init();
 		overlayQuad = new OverlayQuad();
 
@@ -16,8 +16,8 @@ namespace SGE
 		renderTarget = new GLSLRenderTarget(bufferWidth, bufferHeight);
 		renderTarget->addRenderBuffer(IRenderBuffer::BufferType::Color, ITexture::DataType::Float); // Albedo g-buffer
 		renderTarget->addRenderBuffer(IRenderBuffer::BufferType::Color, ITexture::DataType::Float); // Specular g-buffer
-		renderTarget->addRenderBuffer(IRenderBuffer::BufferType::Color, ITexture::DataType::Float); // Normals g-buffer
-		renderTarget->addRenderBuffer(IRenderBuffer::BufferType::Color, ITexture::DataType::Float); // Position g-buffer
+		renderTarget->addRenderBuffer(IRenderBuffer::BufferType::Position, ITexture::DataType::Float); // Normals g-buffer
+		renderTarget->addRenderBuffer(IRenderBuffer::BufferType::Position, ITexture::DataType::Float); // Position g-buffer
 		renderTarget->addRenderBuffer(IRenderBuffer::BufferType::Depth, ITexture::DataType::Float);
 	}
 
@@ -54,7 +54,7 @@ namespace SGE
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		ShaderManager::useShader("dl/geometry_pass");
+		ShaderManager::useShader("deferred_shading/geometry_pass");
 		IShader* shader = ShaderManager::getCurrentShader();
 		glm::mat4 vpMat = this->camera->getVPMat();
 
@@ -90,7 +90,7 @@ namespace SGE
 		glDisable(GL_CULL_FACE);
 		glDisable(GL_DEPTH_TEST);
 
-		ShaderManager::useShader("dl_pass");
+		ShaderManager::useShader("deferred_shading/lighting_pass");
 		shader = ShaderManager::getCurrentShader();
 		shader->setVariable("albedoTexture", 0);
 		shader->setVariable("specularTexture", 1);

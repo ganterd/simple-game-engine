@@ -79,7 +79,7 @@ namespace SGE
 		);
 		mRenderBuffers.push_back(buffer);
 
-		if(bufferType == IRenderBuffer::BufferType::Color)
+		if(bufferType != IRenderBuffer::BufferType::Depth)
 		{
 			LOG(DEBUG) << "New colour attachment [" << attachment << "]";
 			mColourAttachments.push_back(buffer);

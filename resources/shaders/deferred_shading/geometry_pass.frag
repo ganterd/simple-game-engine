@@ -9,14 +9,17 @@ uniform sampler2D albedoTexture;
 uniform sampler2D specularTexture;
 uniform sampler2D normalsTexture;
 uniform sampler2D opacityTexture;
+uniform sampler2D emmisiveTexture;
 
 uniform bool hasNormalMap;
 uniform bool hasOpacityMap;
+uniform bool hasEmmisiveTexture;
 
 layout (location = 0) out vec4 albedoGBuffer;
 layout (location = 1) out vec4 specularGBuffer;
 layout (location = 2) out vec4 normalGBuffer;
 layout (location = 3) out vec4 positionGBuffer;
+layout (location = 4) out vec4 emmisiveGBuffer;
 
 void main(){
     vec3 normal = fragNormal;
