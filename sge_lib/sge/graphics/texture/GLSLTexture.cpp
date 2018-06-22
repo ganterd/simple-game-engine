@@ -57,7 +57,7 @@ namespace SGE
 			LOG(ERROR) << "Couldn't load texture: " << path;
 			return;
 		}
-		LOG(INFO) << "Texture " << path << " loaded [" << width << "x" << height << "x" << channels << "]";
+		//LOG(INFO) << "Texture " << path << " loaded [" << width << "x" << height << "x" << channels << "]";
 
 		GLuint glType;
 		switch(channels)

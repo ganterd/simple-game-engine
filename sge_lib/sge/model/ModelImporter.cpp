@@ -21,6 +21,7 @@ namespace SGE
 			aiProcess_Triangulate |
 			aiProcess_JoinIdenticalVertices |
 			aiProcess_FlipUVs |
+			aiProcess_CalcTangentSpace |
 			(makeLeftHanded ? aiProcess_MakeLeftHanded : 0)
 		);
 
@@ -172,12 +173,14 @@ namespace SGE
 	{
 		GLfloat* meshVertexData = new GLfloat[mesh->mNumVertices * 3];
 		GLfloat* meshNormalsData = new GLfloat[mesh->mNumVertices * 3];
+		GLfloat* meshTangentsData = new GLfloat[mesh->mNumVertices * 3];
 
 
 		/* Direct copy VBO from mesh */
 		for(unsigned int j = 0; j < mesh->mNumVertices; ++j)
 		{
-			aiVector3D v = m * (mesh->mVertices[j] * scale);
+			//aiVector3D v = m * (mesh->mVertices[j] * scale);
+			aiVector3D v = mesh->mVertices[j] * scale;
 			meshVertexData[(j * 3) + 0] = v.x;
 			meshVertexData[(j * 3) + 1] = v.y;
 			meshVertexData[(j * 3) + 2] = v.z;
@@ -186,6 +189,10 @@ namespace SGE
 			meshNormalsData[(j * 3) + 0] = mesh->mNormals[j].x;
 			meshNormalsData[(j * 3) + 1] = mesh->mNormals[j].y;
 			meshNormalsData[(j * 3) + 2] = mesh->mNormals[j].z;
+
+			meshTangentsData[(j * 3) + 0] = mesh->mTangents[j].x;
+			meshTangentsData[(j * 3) + 1] = mesh->mTangents[j].y;
+			meshTangentsData[(j * 3) + 2] = mesh->mTangents[j].z;
 		}
 
 		/* Extract the VBI from faces */
@@ -208,12 +215,11 @@ namespace SGE
 			}
 		}
 
-
-
 		/* Create a local mesh */
 		SGE::Mesh* resultMesh = new SGE::Mesh();
 		resultMesh->setVBOData(meshVertexData, mesh->mNumVertices);
 		resultMesh->setNBOData(meshNormalsData, mesh->mNumVertices);
+		resultMesh->setTangentsData(meshTangentsData, mesh->mNumVertices);
 		resultMesh->setIBOData(meshIndexData, mesh->mNumFaces);
 		resultMesh->setUVData(meshUVData, mesh->mNumVertices);
 		resultMesh->setMaterial(mMaterials[mesh->mMaterialIndex]);

@@ -30,6 +30,9 @@ namespace SGE
 		const char* readShaderCode(std::string file);
 		GLuint loadShader(const char* shaderCode, GLuint shaderType, GLuint targetProgram);
 
+		std::map<std::string, GLuint> mUniformsMap;
+		GLuint getUniformLocation(std::string name);
+
 	public:
 		GLSLShader();
 		~GLSLShader();
@@ -41,6 +44,12 @@ namespace SGE
 		void disable();
 
 		void setMVP(glm::mat4 mvpMat);
+
+		virtual void setVariable(std::string name, bool value);
+		virtual void setVariable(std::string name, int value);
+		virtual void setVariable(std::string name, float value);
+		virtual void setVariable(std::string name, glm::vec2 value);
+		virtual void setVariable(std::string name, glm::vec3 value);
 	};
 }
 

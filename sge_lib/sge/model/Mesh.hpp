@@ -17,10 +17,6 @@ namespace SGE
 	class Export Mesh
 	{
 	private:
-		GLuint vbo;
-		GLuint nbo;
-		GLuint ibo;
-		GLuint uvbo;
 		GLuint vao;
 
 		int numVerts;
@@ -28,6 +24,7 @@ namespace SGE
 
 		GLfloat* vboData;
 		GLfloat* nboData;
+		GLfloat* tangentsData;
 		GLfloat* uvData;
 		unsigned int* iboData;
 
@@ -41,6 +38,7 @@ namespace SGE
 		void setMaterial(Material* m){ mMaterial = m; };
 		void setVBOData(GLfloat* vboData, int numVerts);
 		void setNBOData(GLfloat* nboData, int numVerts);
+		void setTangentsData(GLfloat* tangentsData, int numVerts);
 		void setIBOData(unsigned int* iboData, int numTris);
 		void setUVData(GLfloat* uvData, int numVerts);
 

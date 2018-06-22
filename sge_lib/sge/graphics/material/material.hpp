@@ -3,6 +3,7 @@
 #include <vector>
 
 #include <sge/graphics/texture/ITexture.hpp>
+#include <sge/graphics/ShaderManager.hpp>
 
 namespace SGE
 {
@@ -11,11 +12,16 @@ namespace SGE
     private:
         std::vector<ITexture*> mTextures;
 
+        bool hasNormalMap;
+        bool hasOpacityMap;
+
     public:
-        void addTexture(ITexture* t){ mTextures.push_back(t); };
+        Material();
+
+        void addTexture(ITexture* t);
         int numTextures(){ return (int)mTextures.size(); };
 
         void bindAllTextures();
-        void bindTexture(int t);
+        void unbindAllTextures();
     };
 }
