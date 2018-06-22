@@ -20,7 +20,7 @@ namespace SGE
 		model = importer.ReadFile(file,
 			aiProcess_Triangulate |
 			aiProcess_JoinIdenticalVertices |
-			//aiProcess_FlipWindingOrder |
+			aiProcess_FlipUVs |
 			(makeLeftHanded ? aiProcess_MakeLeftHanded : 0)
 		);
 

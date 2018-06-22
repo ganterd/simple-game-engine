@@ -1,296 +1,385 @@
-# 3ds Max Wavefront OBJ Exporter v0.94b - (c)2007 guruware
-# File Created: 09.08.2011 00:15:24
+# 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
+# File Created: 20.08.2010 18:13:43
 
-newmtl sp_00_luk_mali
-	Ns 50.0000
+newmtl leaf
+	Ns 10.0000
 	Ni 1.5000
 	d 1.0000
-	Tr 1.0000
-	Tf 1.0000 1.0000 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
 	illum 2
-	Ka 0.0000 0.0000 0.0000
-	Kd 0.7451 0.7098 0.6745
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
 	Ks 0.0000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
-	map_Ka sponzaMaps/sp_luk.JPG
-	map_Kd sponzaMaps/sp_luk.JPG
-	map_bump sponzaMaps/sp_luk.JPG
-	bump sponzaMaps/sp_luk.JPG
+	map_Ka textures/sponza_thorn_diff.tga
+	map_Kd textures/sponza_thorn_diff.tga
+	map_d textures/sponza_thorn_mask.tga
+	map_bump textures/sponza_thorn_ddn.tga
+	bump textures/sponza_thorn_ddn.tga
 
-newmtl sp_svod_kapitel
-	Ns 50.0000
+newmtl vase_round
+	Ns 10.0000
 	Ni 1.5000
 	d 1.0000
-	Tr 1.0000
-	Tf 1.0000 1.0000 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
 	illum 2
-	Ka 0.0000 0.0000 0.0000
-	Kd 0.7137 0.7059 0.6588
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
 	Ks 0.0000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
-	map_Ka sponzaMaps/00_skap.JPG
-	map_Kd sponzaMaps/00_skap.JPG
-	map_bump sponzaMaps/00_skap.JPG
-	bump sponzaMaps/00_skap.JPG
+	map_Ka textures/vase_round.tga
+	map_Kd textures/vase_round.tga
+	map_bump textures/vase_round_ddn.tga
+	bump textures/vase_round_ddn.tga
 
-newmtl sp_01_stub_baza_
-	Ns 20.0000
+newmtl Material__57
+	Ns 10.0000
 	Ni 1.5000
 	d 1.0000
-	Tr 1.0000
-	Tf 1.0000 1.0000 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
 	illum 2
-	Ka 0.0000 0.0000 0.0000
-	Kd 0.7843 0.7843 0.7843
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka textures/vase_plant.tga
+	map_Kd textures/vase_plant.tga
+	map_d textures/vase_plant_mask.tga
+
+newmtl Material__298
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka textures/background.tga
+	map_Kd textures/background.tga
+	map_bump textures/background_ddn.tga
+	bump textures/background_ddn.tga
+
+newmtl 16___Default
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka textures/gi_flag.tga
+	map_Kd textures/gi_flag.tga
+
+newmtl bricks
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka textures/spnza_bricks_a_diff.tga
+	map_Kd textures/spnza_bricks_a_diff.tga
+	map_bump textures/spnza_bricks_a_diff.tga
+	bump textures/spnza_bricks_a_diff.tga
+
+newmtl arch
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka textures/sponza_arch_diff.tga
+	map_Kd textures/sponza_arch_diff.tga
+
+newmtl ceiling
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka textures/sponza_ceiling_a_diff.tga
+	map_Kd textures/sponza_ceiling_a_diff.tga
+
+newmtl column_a
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka textures/sponza_column_a_diff.tga
+	map_Kd textures/sponza_column_a_diff.tga
+	map_bump textures/sponza_column_a_ddn.tga
+	bump textures/sponza_column_a_ddn.tga
+
+newmtl floor
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka textures/sponza_floor_a_diff.tga
+	map_Kd textures/sponza_floor_a_diff.tga
+
+newmtl column_c
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka textures/sponza_column_c_diff.tga
+	map_Kd textures/sponza_column_c_diff.tga
+	map_bump textures/sponza_column_c_ddn.tga
+	bump textures/sponza_column_c_ddn.tga
+
+newmtl details
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka textures/sponza_details_diff.tga
+	map_Kd textures/sponza_details_diff.tga
+
+newmtl column_b
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka textures/sponza_column_b_diff.tga
+	map_Kd textures/sponza_column_b_diff.tga
+	map_bump textures/sponza_column_b_ddn.tga
+	bump textures/sponza_column_b_ddn.tga
+
+newmtl Material__47
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
 	Ks 0.0000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
 
-newmtl sp_01_stub_kut
-	Ns 50.0000
+newmtl flagpole
+	Ns 10.0000
 	Ni 1.5000
 	d 1.0000
-	Tr 1.0000
-	Tf 1.0000 1.0000 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
 	illum 2
-	Ka 0.0000 0.0000 0.0000
-	Kd 0.7373 0.7098 0.6706
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
 	Ks 0.0000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
-	map_Ka sponzaMaps/01_STUB.JPG
-	map_Kd sponzaMaps/01_STUB.JPG
-	map_bump sponzaMaps/01_STUB.JPG
-	bump sponzaMaps/01_STUB.JPG
+	map_Ka textures/sponza_flagpole_diff.tga
+	map_Kd textures/sponza_flagpole_diff.tga
 
-newmtl sp_00_stup
-	Ns 50.0000
+newmtl fabric_e
+	Ns 10.0000
 	Ni 1.5000
 	d 1.0000
-	Tr 1.0000
-	Tf 1.0000 1.0000 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
 	illum 2
-	Ka 0.0000 0.0000 0.0000
-	Kd 0.7373 0.7098 0.6706
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
 	Ks 0.0000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
-	map_Ka sponzaMaps/01_STUB.JPG
-	map_Kd sponzaMaps/01_STUB.JPG
-	map_bump sponzaMaps/01_STUB.JPG
-	bump sponzaMaps/01_STUB.JPG
+	map_Ka textures/sponza_fabric_green_diff.tga
+	map_Kd textures/sponza_fabric_green_diff.tga
 
-newmtl sp_01_stub_baza
-	Ns 50.0000
+newmtl fabric_d
+	Ns 10.0000
 	Ni 1.5000
 	d 1.0000
-	Tr 1.0000
-	Tf 1.0000 1.0000 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
 	illum 2
-	Ka 0.0000 0.0000 0.0000
-	Kd 0.8000 0.7843 0.7490
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
 	Ks 0.0000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
-	map_Ka sponzaMaps/01_S_ba.JPG
-	map_Kd sponzaMaps/01_S_ba.JPG
-	map_bump sponzaMaps/01_S_ba.JPG
-	bump sponzaMaps/01_S_ba.JPG
+	map_Ka textures/sponza_fabric_blue_diff.tga
+	map_Kd textures/sponza_fabric_blue_diff.tga
 
-newmtl sp_01_stub
-	Ns 50.0000
+newmtl fabric_a
+	Ns 10.0000
 	Ni 1.5000
 	d 1.0000
-	Tr 1.0000
-	Tf 1.0000 1.0000 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
 	illum 2
-	Ka 0.0000 0.0000 0.0000
-	Kd 0.7373 0.7098 0.6706
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
 	Ks 0.0000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
-	map_Ka sponzaMaps/01_STUB.JPG
-	map_Kd sponzaMaps/01_STUB.JPG
-	map_bump sponzaMaps/01_STUB.JPG
-	bump sponzaMaps/01_STUB.JPG
+	map_Ka textures/sponza_fabric_diff.tga
+	map_Kd textures/sponza_fabric_diff.tga
 
-newmtl sp_01_stup
-	Ns 50.0000
+newmtl fabric_g
+	Ns 10.0000
 	Ni 1.5000
 	d 1.0000
-	Tr 1.0000
-	Tf 1.0000 1.0000 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
 	illum 2
-	Ka 0.0000 0.0000 0.0000
-	Kd 0.8275 0.8000 0.7686
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
 	Ks 0.0000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
-	map_Ka sponzaMaps/x01_st.JPG
-	map_Kd sponzaMaps/x01_st.JPG
+	map_Ka textures/sponza_curtain_blue_diff.tga
+	map_Kd textures/sponza_curtain_blue_diff.tga
 
-newmtl sp_vijenac
-	Ns 50.0000
+newmtl fabric_c
+	Ns 10.0000
 	Ni 1.5000
 	d 1.0000
-	Tr 1.0000
-	Tf 1.0000 1.0000 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
 	illum 2
-	Ka 0.0000 0.0000 0.0000
-	Kd 0.7137 0.7059 0.6588
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
 	Ks 0.0000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
-	map_Ka sponzaMaps/00_skap.JPG
-	map_Kd sponzaMaps/00_skap.JPG
-	map_bump sponzaMaps/00_skap.JPG
-	bump sponzaMaps/00_skap.JPG
+	map_Ka textures/sponza_curtain_diff.tga
+	map_Kd textures/sponza_curtain_diff.tga
 
-newmtl sp_00_pod
-	Ns 50.0000
+newmtl fabric_f
+	Ns 10.0000
 	Ni 1.5000
 	d 1.0000
-	Tr 1.0000
-	Tf 1.0000 1.0000 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
 	illum 2
-	Ka 0.0000 0.0000 0.0000
-	Kd 0.6275 0.5725 0.5608
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
 	Ks 0.0000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
-	map_Ka sponzaMaps/KAMEN.JPG
-	map_Kd sponzaMaps/KAMEN.JPG
-	map_bump sponzaMaps/KAMEN.JPG
-	bump sponzaMaps/KAMEN.JPG
+	map_Ka textures/sponza_curtain_green_diff.tga
+	map_Kd textures/sponza_curtain_green_diff.tga
 
-newmtl sp_00_svod
-	Ns 0.0000
+newmtl chain
+	Ns 10.0000
 	Ni 1.5000
 	d 1.0000
-	Tr 1.0000
-	Tf 1.0000 1.0000 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
 	illum 2
-	Ka 0.0000 0.0000 0.0000
-	Kd 0.9412 0.8667 0.7373
-	Ks 0.0340 0.0323 0.0293
-	Ke 0.0000 0.0000 0.0000
-
-newmtl sp_02_reljef
-	Ns 50.0000
-	Ni 1.5000
-	d 1.0000
-	Tr 1.0000
-	Tf 1.0000 1.0000 1.0000
-	illum 2
-	Ka 0.0000 0.0000 0.0000
-	Kd 0.5294 0.4980 0.4902
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
 	Ks 0.0000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
-	map_Ka sponzaMaps/reljef.JPG
-	map_Kd sponzaMaps/reljef.JPG
-	map_bump sponzaMaps/reljef.JPG
-	bump sponzaMaps/reljef.JPG
+	map_Ka textures/chain_texture.tga
+	map_Kd textures/chain_texture.tga
+	map_d textures/chain_texture_mask.tga
+	map_bump textures/chain_texture_ddn.tga
+	bump textures/chain_texture_ddn.tga
 
-newmtl sp_01_luk_a
-	Ns 50.0000
+newmtl vase_hanging
+	Ns 10.0000
 	Ni 1.5000
 	d 1.0000
-	Tr 1.0000
-	Tf 1.0000 1.0000 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
 	illum 2
-	Ka 0.0000 0.0000 0.0000
-	Kd 0.7451 0.7098 0.6745
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
 	Ks 0.0000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
-	map_Ka sponzaMaps/sp_luk.JPG
-	map_Kd sponzaMaps/sp_luk.JPG
-	map_bump sponzaMaps/sp_luk.JPG
-	bump sponzaMaps/sp_luk.JPG
+	map_Ka textures/vase_hanging.tga
+	map_Kd textures/vase_hanging.tga
 
-newmtl sp_zid_vani
-	Ns 50.0000
+newmtl vase
+	Ns 10.0000
 	Ni 1.5000
 	d 1.0000
-	Tr 1.0000
-	Tf 1.0000 1.0000 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
 	illum 2
-	Ka 0.0000 0.0000 0.0000
-	Kd 0.6275 0.5725 0.5608
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
 	Ks 0.0000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
-	map_Ka sponzaMaps/KAMEN.JPG
-	map_Kd sponzaMaps/KAMEN.JPG
-	map_bump sponzaMaps/KAMEN.JPG
-	bump sponzaMaps/KAMEN.JPG
+	map_Ka textures/vase_dif.tga
+	map_Kd textures/vase_dif.tga
 
-newmtl sp_01_stup_baza
-	Ns 50.0000
+newmtl Material__25
+	Ns 10.0000
 	Ni 1.5000
 	d 1.0000
-	Tr 1.0000
-	Tf 1.0000 1.0000 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
 	illum 2
-	Ka 0.0000 0.0000 0.0000
-	Kd 0.8000 0.7843 0.7490
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
 	Ks 0.0000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
-	map_Ka sponzaMaps/01_S_ba.JPG
-	map_Kd sponzaMaps/01_S_ba.JPG
-	map_bump sponzaMaps/01_S_ba.JPG
-	bump sponzaMaps/01_S_ba.JPG
+	map_Ka textures/lion.tga
+	map_Kd textures/lion.tga
+	map_bump textures/lion_ddn.tga
+	bump textures/lion_ddn.tga
 
-newmtl sp_00_zid
-	Ns 50.0000
+newmtl roof
+	Ns 10.0000
 	Ni 1.5000
 	d 1.0000
-	Tr 1.0000
-	Tf 1.0000 1.0000 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
 	illum 2
-	Ka 0.0000 0.0000 0.0000
-	Kd 0.6275 0.5725 0.5608
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
 	Ks 0.0000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
-	map_Ka sponzaMaps/KAMEN.JPG
-	map_Kd sponzaMaps/KAMEN.JPG
-	map_bump sponzaMaps/KAMEN.JPG
-	bump sponzaMaps/KAMEN.JPG
-
-newmtl sp_00_prozor
-	Ns 50.0000
-	Ni 1.5000
-	d 1.0000
-	Tr 1.0000
-	Tf 1.0000 1.0000 1.0000
-	illum 2
-	Ka 0.0000 0.0000 0.0000
-	Kd 1.0000 1.0000 1.0000
-	Ks 0.0000 0.0000 0.0000
-	Ke 0.0000 0.0000 0.0000
-	map_Ka sponzaMaps/prozor1.JPG
-	map_Kd sponzaMaps/prozor1.JPG
-	map_bump sponzaMaps/prozor1.JPG
-	bump sponzaMaps/prozor1.JPG
-
-newmtl sp_00_vrata_krug
-	Ns 20.0000
-	Ni 1.5000
-	d 1.0000
-	Tr 1.0000
-	Tf 1.0000 1.0000 1.0000
-	illum 2
-	Ka 0.0000 0.0000 0.0000
-	Kd 0.7843 0.7843 0.7843
-	Ks 0.0000 0.0000 0.0000
-	Ke 0.0000 0.0000 0.0000
-	map_Ka sponzaMaps/vrata_kr.JPG
-	map_Kd sponzaMaps/vrata_kr.JPG
-	map_bump sponzaMaps/vrata_kr.JPG
-	bump sponzaMaps/vrata_kr.JPG
-
-newmtl sp_00_vrata_kock
-	Ns 20.0000
-	Ni 1.5000
-	d 1.0000
-	Tr 1.0000
-	Tf 1.0000 1.0000 1.0000
-	illum 2
-	Ka 0.0000 0.0000 0.0000
-	Kd 0.7843 0.7843 0.7843
-	Ks 0.0000 0.0000 0.0000
-	Ke 0.0000 0.0000 0.0000
-	map_Ka sponzaMaps/vrata_ko.JPG
-	map_Kd sponzaMaps/vrata_ko.JPG
-	map_bump sponzaMaps/vrata_ko.JPG
-	bump sponzaMaps/vrata_ko.JPG
+	map_Ka textures/sponza_roof_diff.tga
+	map_Kd textures/sponza_roof_diff.tga
