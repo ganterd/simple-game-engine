@@ -64,10 +64,15 @@ void init()
 	cameraControl = new CameraControl();
 	cameraControl->mCamera = scene->camera;
 
-	Entity* cube = new Entity();
-	cube->loadFromFile("resources/models/cube/cube.obj");
-	cube->attachScript(new DemoLightsScript());
-	scene->addEntity(cube);
+	const int numLights = 10;
+	for(int i = 0; i < numLights; ++i)
+	{
+		float offset = (float)(rand() % 1000) / 1.1233120f;
+		Entity* light = new Entity();
+		light->attachScript(new DemoLightsScript((float)(i) * 0.5f, i % 2 == 0, offset));
+		light->addLight(new ILight());
+		scene->addEntity(light);
+	}
 
 	ShaderManager::loadShader("normals");
 	ShaderManager::loadShader("depth");

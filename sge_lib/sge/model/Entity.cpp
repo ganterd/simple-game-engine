@@ -95,6 +95,12 @@ namespace SGE
 		return this->modelMat;
 	}
 
+	void Entity::addLight(ILight* l)
+	{
+		l->mParent = this;
+		lights.push_back(l);
+	}
+
 	std::vector<ILight*> Entity::getLights()
 	{
 		return this->lights;

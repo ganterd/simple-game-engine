@@ -43,6 +43,8 @@ namespace SGE
 		Export glm::vec3 getPosition();
 
 		Export glm::mat4 getModelMat();
+
+		Export void addLight(ILight* l);
 		Export std::vector<ILight*> getLights();
 
 		Export void attachScript(ObjectScript* script);

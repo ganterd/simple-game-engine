@@ -73,25 +73,47 @@ namespace SGE
 
 		/* Gather lights. Don't use acceleration structure in case */
 		/* lights are accidentally culled */
-		sceneLights.empty();
+		std::vector<SceneLight> sceneLights;
 		for(int i = 0; i < entities_count; ++i)
 		{
 			std::vector<ILight*> entityLights = entities[i]->getLights();
 			for(int j = 0; j < entityLights.size(); ++j)
 			{
-				SceneLight l;
-				l.light = entityLights[j];
-				l.modelMat = entities[i]->getModelMat();
-				sceneLights.push_back(l);
+				ILight* l = entityLights[j];
+				glm::vec3 lightPosition = l->getPosition();
+				glm::vec4 p(lightPosition.x, lightPosition.y, lightPosition.z, 1.0f);
+				p = l->mParent->getModelMat() * p;
+
+				glm::vec3 c = l->getColor();
+
+
+				SceneLight sceneLight;
+				sceneLight.position = p;
+				sceneLight.colour.r = c.r;
+				sceneLight.colour.g = c.g;
+				sceneLight.colour.b = c.b;
+				sceneLight.colour.a = l->getIntensity();
+				sceneLights.push_back(sceneLight);
 			}
 		}
-		lightScene();
 
 		glDisable(GL_CULL_FACE);
 		glDisable(GL_DEPTH_TEST);
 
 		ShaderManager::useShader("deferred_shading/lighting_pass");
 		shader = ShaderManager::getCurrentShader();
+
+		int numLights = sceneLights.size();
+		shader->setVariable("numLights", numLights);
+
+		GLuint sceneLightsSSBO;
+		glGenBuffers(1, &sceneLightsSSBO);
+		glBindBuffer(GL_SHADER_STORAGE_BUFFER, sceneLightsSSBO);
+		glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(SceneLight) * numLights, &sceneLights[0], GL_DYNAMIC_COPY);
+		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 9, sceneLightsSSBO);
+		glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+
+
 		shader->setVariable("albedoTexture", 0);
 		shader->setVariable("specularTexture", 1);
 		shader->setVariable("normalsTexture", 2);
@@ -106,13 +128,7 @@ namespace SGE
 		renderTarget->getRenderBuffer(1)->unbindTexture();
 		renderTarget->getRenderBuffer(2)->unbindTexture();
 		renderTarget->getRenderBuffer(3)->unbindTexture();
-	}
 
-	void Scene::lightScene()
-	{
-		for(int i = 0; i < sceneLights.size(); ++i)
-		{
-			//shader->setLightPosition(sceneLights[i].light->getPosition());
-		}
+		glDeleteBuffers(1, &sceneLightsSSBO);
 	}
 }

@@ -19,11 +19,10 @@ namespace SGE
 		std::vector<Entity*> entities;
 		ShaderManager* shaderManager;
 
-		typedef struct{
-			ILight* light;
-			glm::mat4 modelMat;
-		} SceneLight;
-		std::vector<SceneLight> sceneLights;
+		struct SceneLight{
+			glm::vec4 position; // Note: Keep as vec4, because OpenGL will align the buffer to vec4
+			glm::vec4 colour;
+		};
 
 	public:
 		Camera* camera;

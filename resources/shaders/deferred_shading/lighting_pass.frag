@@ -10,6 +10,15 @@ uniform sampler2D albedoTexture;
 
 uniform vec3 cameraPosition;
 
+struct PointLight {
+  vec4 position;
+  vec4 colour;
+};
+layout(std430, binding = 9) buffer PointLightsBuffer{ PointLight pointLights[]; };
+uniform int numLights;
+
+
+
 void main(){
     vec2 p = (fragPosition + vec2(1.0f)) * 0.5f;
     vec3 position = vec3(texture(positionsTexture, p));
@@ -17,31 +26,33 @@ void main(){
     vec3 specular = vec3(texture(specularTexture, p));
     vec3 diffuse = vec3(texture(albedoTexture, p));
 
-    vec3 lightPosition = vec3(0.0f, 2.0f, 0.0f);
-    vec3 lightColour = vec3(1.0f, 1.0f, 1.0f);
-    float lightPower = 3.0f;
+    //vec3 lightPosition = vec3(0.0f, 2.0f, 0.0f);
+    vec3 finalColour = vec3(0.0f);
+    for(int i = 0; i < numLights; ++i)
+    {
+        PointLight light = pointLights[i];
+        vec3 lightPosition = vec3(light.position);
+        vec3 lightColour = vec3(light.colour);
+        float lightPower = light.colour.w;
 
-    vec3 viewDirection = normalize(cameraPosition - position);
-    vec3 lightDirection = lightPosition - position;
-    float lightDistance = length(lightDirection);
-    lightDirection = normalize(lightDirection);
+        vec3 viewDirection = normalize(cameraPosition - position);
+        vec3 lightDirection = lightPosition - position;
+        float lightDistance = length(lightDirection);
+        lightDirection = normalize(lightDirection);
 
-    /* Diffuse term */
-    float lambertian = clamp(dot(normal, lightDirection), 0.0f, 1.0f);
-    float falloff = lightPower / lightDistance;
-    diffuse = diffuse * lambertian * lightColour * falloff;
+        /* Diffuse term */
+        float lambertian = clamp(dot(normal, lightDirection), 0.0f, 1.0f);
+        float falloff = lightPower / lightDistance;
+        vec3 diffuseTerm = diffuse * lambertian * lightColour * falloff;
 
-    /* Specular term */
-    vec3 halfVector = normalize(viewDirection + lightDirection);
-    float specularLambertian = clamp(dot(normal, halfVector), 0.0f, 1.0f);
-    float specularIntensity = pow(specularLambertian, 16.0f);
-    specular = specular * specularIntensity * falloff;
-    //specular = vec3(specularIntensity);
+        /* Specular term */
+        vec3 halfVector = normalize(viewDirection + lightDirection);
+        float specularLambertian = clamp(dot(normal, halfVector), 0.0f, 1.0f);
+        float specularIntensity = pow(specularLambertian, 16.0f);
+        vec3 specularTerm = specular * lightColour * specularIntensity * falloff;
 
-
-    //finalColour = vec4(position * normal * specular * diffuse, 1.0f);
-
-    vec3 finalColour = diffuse + specular;
+        finalColour += diffuseTerm + specularTerm;
+    }
     outColour = vec4(finalColour, 1.0f);
     //finalColour = vec4(vec3(falloff), 1.0f);
     //finalColour = vec4(vec3(position) * 0.5f, 1.0f);
