@@ -181,8 +181,8 @@ namespace SGE
 		/* Direct copy VBO from mesh */
 		for(unsigned int j = 0; j < mesh->mNumVertices; ++j)
 		{
-			//aiVector3D v = m * (mesh->mVertices[j] * scale);
-			aiVector3D v = mesh->mVertices[j] * scale;
+			aiVector3D v = m * (mesh->mVertices[j] * scale);
+			//aiVector3D v = mesh->mVertices[j] * scale;
 			meshVertexData[(j * 3) + 0] = v.x;
 			meshVertexData[(j * 3) + 1] = v.y;
 			meshVertexData[(j * 3) + 2] = v.z;

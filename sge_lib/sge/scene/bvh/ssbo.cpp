@@ -1,16 +1,20 @@
 #include <sge/scene/bvh/ssbo.hpp>
 
-struct SGE::RT::SSBO::BVHNode* SGE::RT::SSBO::allocatedNodes = nullptr;
-struct SGE::RT::SSBO::Tri* SGE::RT::SSBO::allocatedTris = nullptr;
-GLuint SGE::RT::SSBO::attachedTrisSSBO = -1;
-GLuint SGE::RT::SSBO::attachedBVHNodesSSBO = -1;
+SGE::RT::BVHSSBO::BVHSSBO()
+{
+    allocatedNodes = nullptr;
+    allocatedTris = nullptr;
+    attachedTrisSSBO = -1;
+    attachedBVHNodesSSBO = -1;
+}
 
-void SGE::RT::SSBO::toSSBO(BVH* bvh, GLuint nodesLoc, GLuint trisLoc)
+void SGE::RT::BVHSSBO::toSSBO(BVH* bvh)
 {
     /* 1: Extract nodes in simple format */
     if(allocatedNodes)
         delete[] allocatedNodes;
-    allocatedNodes = new struct SSBO::BVHNode[bvh->mCurrentlyAllocatedNodes];
+    allocatedNodes = new struct BVHSSBO::BVHNode[bvh->mCurrentlyAllocatedNodes];
+    allocatedNodes[0].parentIdx = -1;
     for(int i = 0; i < bvh->mCurrentlyAllocatedNodes; ++i)
     {
         Node n = bvh->mAllocatedNodes[i];
@@ -28,18 +32,58 @@ void SGE::RT::SSBO::toSSBO(BVH* bvh, GLuint nodesLoc, GLuint trisLoc)
         {
             allocatedNodes[nodeIdx].leftIdx = n.mLeft->mNodeIndex;
             allocatedNodes[nodeIdx].rightIdx = n.mRight->mNodeIndex;
+            allocatedNodes[n.mLeft->mNodeIndex].parentIdx = i;
+            allocatedNodes[n.mRight->mNodeIndex].parentIdx = i;
         }
     }
 
-    GLuint sceneLightsSSBO;
+    /* 2: Extract tris in simple format */
+    if(allocatedTris)
+        delete[] allocatedTris;
+    size_t totalTris = bvh->mExtractedTris.size();
+    allocatedTris = new struct BVHSSBO::Tri[totalTris];
+    for(int i = 0; i < totalTris; ++i)
+    {
+        RT::Tri tri = bvh->mExtractedTris[i];
+        BVHSSBO::Tri newTri;
+        newTri.v0 = tri.mV0;
+        newTri.v1 = tri.mV1;
+        newTri.v2 = tri.mV2;
+        allocatedTris[tri.mTriIndex] = newTri;
+    }
+
+    /* 3: Transfer BVH nodes to SSBO */
     glGenBuffers(1, &attachedBVHNodesSSBO);
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, attachedBVHNodesSSBO);
-    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(struct SSBO::BVHNode) * bvh->mCurrentlyAllocatedNodes, &allocatedNodes[0], GL_DYNAMIC_COPY);
-    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, nodesLoc, attachedBVHNodesSSBO);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(struct BVHSSBO::BVHNode) * bvh->mCurrentlyAllocatedNodes, &allocatedNodes[0], GL_DYNAMIC_COPY);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 11, attachedBVHNodesSSBO);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+
+    /* 4: Transfer Tris to SSBO */
+    glGenBuffers(1, &attachedTrisSSBO);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, attachedTrisSSBO);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(struct BVHSSBO::Tri) * totalTris, &allocatedTris[0], GL_DYNAMIC_COPY);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 10, attachedTrisSSBO);
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 }
 
-void SGE::RT::SSBO::freeSSBO()
+void SGE::RT::BVHSSBO::bind(GLuint nodesLoc, GLuint trisLoc)
+{
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, attachedBVHNodesSSBO);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, nodesLoc, attachedBVHNodesSSBO);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, attachedTrisSSBO);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, trisLoc, attachedTrisSSBO);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+}
+
+void SGE::RT::BVHSSBO::unbind()
+{
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+}
+
+void SGE::RT::BVHSSBO::freeSSBO()
 {
     glDeleteBuffers(1, &attachedBVHNodesSSBO);
     glDeleteBuffers(1, &attachedTrisSSBO);

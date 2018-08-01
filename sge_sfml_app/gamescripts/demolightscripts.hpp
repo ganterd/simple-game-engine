@@ -23,17 +23,15 @@ public:
     void update()
     {
         mEntity->setPosition(
-            sin(SGE::Time::gameTime() + mOffset) * mRadius * (mReverse ? -1.0f : 1.0f),
-            (sin((SGE::Time::gameTime() + mOffset * 3) * 0.01f) + 1.0f) * 1.0f,
-            cos(SGE::Time::gameTime() + mOffset) * mRadius
+            -1.7f,
+            1.4,
+            0.65
         );
 
         SGE::ILight* light = mEntity->getLight(0);
         light->setColor(glm::vec3(
-            (sin((SGE::Time::gameTime() + mOffset) * 0.1f) + 1.0f) * 0.5f,
-            (sin((SGE::Time::gameTime() + mOffset * 2) * 0.1f) + 1.0f) * 0.5f,
-            (sin((SGE::Time::gameTime() + mOffset * 3) * 0.1f) + 1.0f) * 0.5f
+            1.0f, 1.0f, 1.0f
         ));
-        light->setIntensity((sin((SGE::Time::gameTime() + mOffset) * 0.01f) + 1.0f) * 0.1f);
+        light->setIntensity(3.0f);
     }
 };

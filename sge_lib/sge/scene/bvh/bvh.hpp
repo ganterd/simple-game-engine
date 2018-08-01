@@ -57,7 +57,6 @@ namespace SGE
         class BVH
         {
         public:
-
             int mNumBins;
             Node* mRoot;
             Entity* mTargetSceneRoot;
@@ -80,6 +79,7 @@ namespace SGE
             AABB** totalCentroidAABBRight;
             int** totalPrimitivesRight;
 
+            std::vector<Tri> mExtractedTris;
             Node* mAllocatedNodes;
             size_t mCurrentlyAllocatedNodes;
 

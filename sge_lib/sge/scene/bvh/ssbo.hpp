@@ -7,29 +7,36 @@ namespace SGE
 {
     namespace RT
     {
-        class SSBO
+        class BVHSSBO
         {
         public:
             struct Tri{
                 glm::vec4 v0;
                 glm::vec4 v1;
                 glm::vec4 v2;
+                glm::vec4 pad;
             };
 
             struct BVHNode {
-                int leftIdx;
-                int rightIdx;
-                bool isLeaf;
                 glm::vec4 aabbMin;
                 glm::vec4 aabbMax;
+                int leftIdx;
+                int rightIdx;
+                int isLeaf;
+                int parentIdx;
             };
 
-            static GLuint attachedBVHNodesSSBO;
-            static GLuint attachedTrisSSBO;
-            static struct SSBO::BVHNode* allocatedNodes;
-            static struct SSBO::Tri* allocatedTris;
-            static void toSSBO(BVH* bvh, GLuint bvhNodesLoc, GLuint trisLoc);
-            static void freeSSBO();
+            GLuint attachedBVHNodesSSBO;
+            GLuint attachedTrisSSBO;
+            struct BVHSSBO::BVHNode* allocatedNodes;
+            struct BVHSSBO::Tri* allocatedTris;
+
+            BVHSSBO();
+
+            void toSSBO(BVH* bvh);
+            void bind(GLuint nodesLoc, GLuint trisLoc);
+            void unbind();
+            void freeSSBO();
         };
     }
 }

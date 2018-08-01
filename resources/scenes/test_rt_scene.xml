@@ -1,0 +1,14 @@
+<scene name="Test Scene">
+	<entities>
+		<entity name="Sponza">
+			<model scale="1">
+				<path>resources/models/test.obj</path>
+			</model>
+			<position>
+				<x>0</x>
+				<y>-1</y>
+				<z>0</z>
+			</position>
+		</entity>
+	</entities>
+</scene>

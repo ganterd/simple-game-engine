@@ -44,8 +44,19 @@ void main_loop()
 	scene->update();
 	cameraControl->update();
 
+
+	cameraControl->mCamera->lookAt(glm::vec3(0.0f, 0.0f, 0.0f));
+	cameraControl->mCamera->setPosition(glm::vec3(3.0f, 0.0f, 2.0f));
+
+
+	glFinish();
+	Timer drawTimer;
+	drawTimer.start();
 	scene->draw();
 	dm->swapBuffers();
+	glFinish();
+	drawTimer.stop();
+	//std::cout << "Frame time: " << drawTimer.getTime() << "s" << std::endl;
 }
 
 void init()
@@ -58,18 +69,18 @@ void init()
 
 	/* Instantiate the scene object */
 	SceneImporter sceneImporter;
-	scene = sceneImporter.importSceneFromFile("resources/scenes/test_scene.xml");
+	scene = sceneImporter.importSceneFromFile("resources/scenes/test_rt_scene.xml");
 	scene->camera->setAspectRatio((float)dm->size().width / (float)dm->size().height);
 
 	cameraControl = new CameraControl();
 	cameraControl->mCamera = scene->camera;
 
-	const int numLights = 100;
-	const float maxRadius = 6.0f;
+	const int numLights = 1;
+	const float maxRadius = 3.0f;
 	for(int i = 0; i < numLights; ++i)
 	{
-		float offset = (float)(rand() % 1000) / 1.1233120f;
-		float radius = ((float)(rand() % 1000) / 1000.0f) * maxRadius;
+		float offset = 0;
+		float radius = maxRadius;
 		Entity* light = new Entity();
 		//light->loadFromFile("resources/models/cube/cube.obj");
 		light->attachScript(new DemoLightsScript(radius, i % 2 == 0, offset));

@@ -11,6 +11,7 @@
 #include <sge/scene/camera.hpp>
 #include <sge/scene/geometry/overlayquad.hpp>
 #include <sge/scene/bvh/bvh.hpp>
+#include <sge/scene/bvh/ssbo.hpp>
 
 namespace SGE
 {
@@ -32,6 +33,7 @@ namespace SGE
 		GLSLRenderTarget* renderTarget;
 		Entity* lightDebugModel;
 		RT::BVH mBVH;
+		RT::BVHSSBO mBVHSSBO;
 
 		Scene();
 

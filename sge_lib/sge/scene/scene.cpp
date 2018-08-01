@@ -43,6 +43,7 @@ namespace SGE
 		if(mBVH.mTargetSceneRoot != mRootEntity)
 		{
 			mBVH.construct(mRootEntity);
+			mBVHSSBO.toSSBO(&mBVH);
 		}
 	}
 
@@ -117,6 +118,7 @@ namespace SGE
 		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 9, sceneLightsSSBO);
 		glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 
+		mBVHSSBO.bind(11, 10);
 
 		shader->setVariable("albedoTexture", 0);
 		shader->setVariable("specularTexture", 1);
