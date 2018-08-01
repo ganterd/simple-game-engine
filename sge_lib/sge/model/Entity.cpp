@@ -23,6 +23,11 @@ namespace SGE
 		return true;
 	}
 
+	void Entity::addChild(Entity* n)
+	{
+		mChildren.push_back(n);
+	}
+
 	void Entity::attachScript(ObjectScript* script)
 	{
 		mAttachedScripts.push_back(script);
@@ -35,6 +40,8 @@ namespace SGE
 		{
 			mAttachedScripts[i]->update();
 		}
+		for(int c = 0; c < mChildren.size(); ++c)
+			mChildren[c]->update();
 	}
 
 	void Entity::draw()
@@ -45,11 +52,15 @@ namespace SGE
 		}
 	}
 
-	void Entity::draw(IShader* shader)
+	void Entity::draw(IShader* shader, glm::mat4 currentMat)
 	{
-		shader->setVariable("modelMatrix", modelMat);
+		currentMat *= modelMat;
+		shader->setVariable("modelMatrix", currentMat);
 		for(int i = 0; i < this->meshes.size(); ++i)
 			this->meshes[i]->renderGL();
+
+		for(int i = 0; i < mChildren.size(); ++i)
+			mChildren[i]->draw(shader, currentMat);
 	}
 
 	void Entity::setPositionX(float x)

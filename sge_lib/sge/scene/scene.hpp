@@ -10,6 +10,7 @@
 #include <sge/graphics/ShaderManager.hpp>
 #include <sge/scene/camera.hpp>
 #include <sge/scene/geometry/overlayquad.hpp>
+#include <sge/scene/bvh/bvh.hpp>
 
 namespace SGE
 {
@@ -17,6 +18,7 @@ namespace SGE
 	{
 	private:
 		std::vector<Entity*> entities;
+		Entity* mRootEntity;
 		ShaderManager* shaderManager;
 
 		struct SceneLight{
@@ -29,6 +31,7 @@ namespace SGE
 		OverlayQuad* overlayQuad;
 		GLSLRenderTarget* renderTarget;
 		Entity* lightDebugModel;
+		RT::BVH mBVH;
 
 		Scene();
 
@@ -36,6 +39,8 @@ namespace SGE
 		void update();
 		void draw();
 		void lightScene();
+		std::vector<SceneLight> extractLights();
+		void recursiveExtractLights(Entity* n, glm::mat4 mat, std::vector<SceneLight>& l);
 	};
 }
 

@@ -24,11 +24,13 @@ namespace SGE
 
 		lightDebugModel = new Entity();
 		lightDebugModel->loadFromFile("resources/models/cube/cube.obj");
+
+		mRootEntity = new Entity();
 	}
 
 	void Scene::addEntity(Entity* entity)
 	{
-		this->entities.push_back(entity);
+		mRootEntity->addChild(entity);
 	}
 
 	void Scene::update()
@@ -37,10 +39,10 @@ namespace SGE
 		Input::update();
 		camera->update();
 
-		int entities_count = (int)entities.size();
-		for(int i = 0; i < entities_count; ++i)
+		mRootEntity->update();
+		if(mBVH.mTargetSceneRoot != mRootEntity)
 		{
-			entities[i]->update();
+			mBVH.construct(mRootEntity);
 		}
 	}
 
@@ -69,10 +71,7 @@ namespace SGE
 		renderTarget->clear();
 
 		shader->setVariable("viewProjectionMatrix", camera->getVPMat());
-		for(int i = 0; i < entities_count; ++i)
-		{
-			entities[i]->draw(shader);
-		}
+		mRootEntity->draw(shader);
 
 
 		/* Gather lights. Don't use acceleration structure in case */
@@ -82,34 +81,24 @@ namespace SGE
 		renderTarget->bind();
 		shader->setVariable("viewProjectionMatrix", camera->getVPMat());
 
-		std::vector<SceneLight> sceneLights;
-		for(int i = 0; i < entities_count; ++i)
-		{
-			std::vector<ILight*> entityLights = entities[i]->getLights();
-			for(int j = 0; j < entityLights.size(); ++j)
-			{
-				ILight* l = entityLights[j];
-				glm::vec3 lightPosition = l->getPosition();
-				glm::vec4 p(lightPosition.x, lightPosition.y, lightPosition.z, 1.0f);
-				p = l->mParent->getModelMat() * p;
-
-				glm::vec3 c = l->getColor();
-
-
-				SceneLight sceneLight;
-				sceneLight.position = p;
-				sceneLight.colour.r = c.r;
-				sceneLight.colour.g = c.g;
-				sceneLight.colour.b = c.b;
-				sceneLight.colour.a = l->getIntensity();
-				sceneLights.push_back(sceneLight);
-
-				shader->setVariable("lightColour", c);
-				lightDebugModel->setPosition(glm::vec3(p.x, p.y, p.z));
-				lightDebugModel->draw(shader);
-			}
-		}
-
+		std::vector<SceneLight> sceneLights = extractLights();
+		// for(int i = 0; i < sceneLights.size(); ++i)
+		// {
+		// 	glm::vec3 c(
+		// 		sceneLights[i].colour.x,
+		// 		sceneLights[i].colour.y,
+		// 		sceneLights[i].colour.z
+		// 	);
+		// 	shader->setVariable("lightColour", c);
+		//
+		// 	glm::vec3 p(
+		// 		sceneLights[i].position.x,
+		// 		sceneLights[i].position.y,
+		// 		sceneLights[i].position.z
+		// 	);
+		// 	lightDebugModel->setPosition(p);
+		// 	lightDebugModel->draw(shader);
+		// }
 		renderTarget->unbind();
 
 		glDisable(GL_CULL_FACE);
@@ -147,5 +136,41 @@ namespace SGE
 		renderTarget->getRenderBuffer(4)->unbindTexture();
 
 		glDeleteBuffers(1, &sceneLightsSSBO);
+	}
+
+	std::vector<Scene::SceneLight> Scene::extractLights()
+	{
+		std::vector<SceneLight> sceneLights;
+		recursiveExtractLights(mRootEntity, glm::mat4(1.0f), sceneLights);
+		return sceneLights;
+	}
+
+	void Scene::recursiveExtractLights(Entity* n, glm::mat4 mat, std::vector<Scene::SceneLight>& sceneLights)
+	{
+		mat *= n->modelMat;
+		std::vector<ILight*> entityLights = n->getLights();
+		for(int j = 0; j < entityLights.size(); ++j)
+		{
+			ILight* l = entityLights[j];
+			glm::vec3 lightPosition = l->getPosition();
+			glm::vec4 p(lightPosition.x, lightPosition.y, lightPosition.z, 1.0f);
+			p = mat * p;
+
+			glm::vec3 c = l->getColor();
+
+
+			SceneLight sceneLight;
+			sceneLight.position = p;
+			sceneLight.colour.r = c.r;
+			sceneLight.colour.g = c.g;
+			sceneLight.colour.b = c.b;
+			sceneLight.colour.a = l->getIntensity();
+			sceneLights.push_back(sceneLight);
+		}
+
+		for(int i = 0; i < n->mChildren.size(); ++i)
+		{
+			recursiveExtractLights(n->mChildren[i], mat, sceneLights);
+		}
 	}
 }

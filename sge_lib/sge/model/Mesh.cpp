@@ -5,6 +5,7 @@ namespace SGE
 	Mesh::Mesh()
 	{
 		glGenVertexArrays(1, &vao);
+		uvData = nullptr;
 	}
 
 	void Mesh::renderGL()

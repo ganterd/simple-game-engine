@@ -16,7 +16,7 @@ namespace SGE
 {
 	class Export Mesh
 	{
-	private:
+	public:
 		GLuint vao;
 
 		int numVerts;
@@ -30,7 +30,6 @@ namespace SGE
 
 		Material* mMaterial;
 
-	public:
 		Mesh();
 
 		void renderGL();

@@ -14,8 +14,9 @@ namespace SGE
 {
 	class Entity
 	{
-	private:
+	public:
 		std::vector<Mesh*> meshes;
+		std::vector<Entity*> mChildren;
 		std::vector<ILight*> lights;
 		std::vector<Material*> mMaterials;
 		std::vector<ObjectScript*> mAttachedScripts;
@@ -24,15 +25,17 @@ namespace SGE
 
 		void updateTranslationMatrix();
 
-	public:
+
 		Export Entity();
 
 		Export bool loadFromFile(std::string file);
 		Export bool loadFromFile(std::string file, float scale, bool makeLeftHanded);
 
+		Export void addChild(Entity* n);
+
 		Export void update();
 		Export void draw();
-		Export void draw(IShader* shader);
+		Export void draw(IShader* shader, glm::mat4 parentMat = glm::mat4(1.0f));
 
 		Export void setPositionX(float);
 		Export void setPositionY(float);
