@@ -9,18 +9,26 @@ namespace SGE
 		ShaderManager::loadShader("deferred_shading/geometry_pass");
 		ShaderManager::loadShader("deferred_shading/lighting_pass");
 		ShaderManager::loadShader("deferred_shading/debug_light");
+		ShaderManager::loadShader("deferred_shading/blit");
 		Time::init();
 		overlayQuad = new OverlayQuad();
 
 		int bufferWidth = DisplayManager::getDisplayInstance()->size().width;
 		int bufferHeight = DisplayManager::getDisplayInstance()->size().height;
 		renderTarget = new GLSLRenderTarget(bufferWidth, bufferHeight);
-		renderTarget->addRenderBuffer(IRenderBuffer::BufferType::Color, ITexture::DataType::Float); // Albedo g-buffer
-		renderTarget->addRenderBuffer(IRenderBuffer::BufferType::Color, ITexture::DataType::Float); // Specular g-buffer
-		renderTarget->addRenderBuffer(IRenderBuffer::BufferType::Position, ITexture::DataType::Float); // Normals g-buffer
 		renderTarget->addRenderBuffer(IRenderBuffer::BufferType::Position, ITexture::DataType::Float); // Position g-buffer
 		renderTarget->addRenderBuffer(IRenderBuffer::BufferType::Depth, ITexture::DataType::Float);
-		renderTarget->addRenderBuffer(IRenderBuffer::BufferType::Color, ITexture::DataType::Float); // emmisiveGBuffer g-buffer
+
+		cachedFrames[0] = new GLSLRenderTarget(bufferWidth, bufferHeight);
+		cachedFrames[0]->addRenderBuffer(IRenderBuffer::BufferType::Color, ITexture::DataType::Float);
+		cachedFrames[0]->addRenderBuffer(IRenderBuffer::BufferType::Depth, ITexture::DataType::Float);
+		cachedFrames[0]->clear();
+
+		cachedFrames[1] = new GLSLRenderTarget(bufferWidth, bufferHeight);
+		cachedFrames[1]->addRenderBuffer(IRenderBuffer::BufferType::Color, ITexture::DataType::Float);
+		cachedFrames[1]->addRenderBuffer(IRenderBuffer::BufferType::Depth, ITexture::DataType::Float);
+		cachedFrames[1]->clear();
+		currentFrame = 0;
 
 		lightDebugModel = new Entity();
 		lightDebugModel->loadFromFile("resources/models/cube/cube.obj");
@@ -83,23 +91,6 @@ namespace SGE
 		shader->setVariable("viewProjectionMatrix", camera->getVPMat());
 
 		std::vector<SceneLight> sceneLights = extractLights();
-		// for(int i = 0; i < sceneLights.size(); ++i)
-		// {
-		// 	glm::vec3 c(
-		// 		sceneLights[i].colour.x,
-		// 		sceneLights[i].colour.y,
-		// 		sceneLights[i].colour.z
-		// 	);
-		// 	shader->setVariable("lightColour", c);
-		//
-		// 	glm::vec3 p(
-		// 		sceneLights[i].position.x,
-		// 		sceneLights[i].position.y,
-		// 		sceneLights[i].position.z
-		// 	);
-		// 	lightDebugModel->setPosition(p);
-		// 	lightDebugModel->draw(shader);
-		// }
 		renderTarget->unbind();
 
 		glDisable(GL_CULL_FACE);
@@ -120,25 +111,35 @@ namespace SGE
 
 		mBVHSSBO.bind(11, 10);
 
-		shader->setVariable("albedoTexture", 0);
-		shader->setVariable("specularTexture", 1);
-		shader->setVariable("normalsTexture", 2);
-		shader->setVariable("positionsTexture", 3);
+		int fromBuffer = currentFrame % 2;
+		int toBuffer = (currentFrame + 1) % 2;
+		shader->setVariable("positionsTexture", 0);
+		shader->setVariable("cachedFrame", 1);
 		shader->setVariable("cameraPosition", camera->getPosition());
 		shader->setVariable("gameTime", (float)Time::gameTime());
-		renderTarget->getRenderBuffer(0)->bindTexture(0); // Albedo g-buffer
-		renderTarget->getRenderBuffer(1)->bindTexture(1); // Specular g-buffer
-		renderTarget->getRenderBuffer(2)->bindTexture(2); // Normals g-buffer
-		renderTarget->getRenderBuffer(3)->bindTexture(3); // Position g-buffer
-		renderTarget->getRenderBuffer(4)->bindTexture(4); // Position g-buffer
+		shader->setVariable("frames", currentFrame);
+
+		renderTarget->getRenderBuffer(0)->bindTexture(0); // Position g-buffer
+		cachedFrames[toBuffer]->bind();
+		cachedFrames[fromBuffer]->getRenderBuffer(0)->bindTexture(1); // Position g-buffer
 		overlayQuad->draw();
 		renderTarget->getRenderBuffer(0)->unbindTexture();
-		renderTarget->getRenderBuffer(1)->unbindTexture();
-		renderTarget->getRenderBuffer(2)->unbindTexture();
-		renderTarget->getRenderBuffer(3)->unbindTexture();
-		renderTarget->getRenderBuffer(4)->unbindTexture();
+		cachedFrames[fromBuffer]->getRenderBuffer(0)->unbindTexture(); // Position g-buffer
+		cachedFrames[toBuffer]->unbind();
+		//pingPongFrame++;
 
 		glDeleteBuffers(1, &sceneLightsSSBO);
+
+
+		/* Blit rendertarget to framebuffer */
+		ShaderManager::useShader("deferred_shading/blit");
+		shader = ShaderManager::getCurrentShader();
+		shader->setVariable("colourFrame", 0);
+		cachedFrames[toBuffer]->getRenderBuffer(0)->bindTexture(0);
+		overlayQuad->draw();
+		cachedFrames[toBuffer]->getRenderBuffer(0)->unbindTexture();
+
+		currentFrame++;
 	}
 
 	std::vector<Scene::SceneLight> Scene::extractLights()

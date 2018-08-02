@@ -4,13 +4,11 @@ in vec2 fragPosition;
 out vec4 outColour;
 
 layout (binding = 0) uniform sampler2D positionsTexture;
-layout (binding = 1) uniform sampler2D specularTexture;
-layout (binding = 2) uniform sampler2D normalsTexture;
-layout (binding = 3) uniform sampler2D albedoTexture;
-layout (binding = 4) uniform sampler2D emmisiveTexture;
+layout (binding = 1) uniform sampler2D previousCast;
 
 uniform vec3 cameraPosition;
 uniform float gameTime;
+uniform int frames;
 
 struct PointLight {
   vec4 position;
@@ -38,6 +36,7 @@ struct RayHit
     float distance;
     vec3 position;
     vec3 normal;
+    vec3 tangent;
     int nodesTested;
     int trisTested;
     int hits;
@@ -158,6 +157,7 @@ bool testTri(in int triIdx, in const Ray ray, inout RayHit hit)
 	hit.distance = d;
     hit.position = ray.origin + ray.direction * d;
     hit.normal = normalize(cross(edge1, edge2));
+    hit.tangent = edge1;
 	return true;
 }
 
@@ -223,47 +223,60 @@ bool occluded(in vec3 a, in vec3 b)
     return false;
 }
 
-vec3 lightHit(in const RayHit hit, in const PointLight light)
+vec3 lightHit(in const RayHit hit)
 {
     vec3 colour = vec3(0.0f);
 
-    float lightRadius = 0.1f;
-    int lightSamples = 4;
-    for(int i = 0; i < lightSamples; ++i)
+    float lightRadius = 0.5f;
+    int lightSamples = 1;
+
+    for(int l = 0; l < numLights; ++l)
     {
-        float rx = random(vec2(fragPosition.xy * gameTime));
-        float ry = random(vec2(fragPosition.xy * gameTime + 0.1f));
-        float rz = random(vec2(fragPosition.xy * gameTime + 0.2f));
-        vec3 randomOffset = vec3(rx, ry, rz);
-        randomOffset *= 2.0f;
-        randomOffset -= vec3(1.0f);
-        randomOffset *= lightRadius;
-
-        vec3 lightPosition = vec3(light.position) + randomOffset;
-        vec3 lightDirection = lightPosition - hit.position;
-        float lightDistance = length(lightPosition - hit.position);
-        lightDirection = normalize(lightDirection);
-
-
-        if(!occluded(hit.position + lightDirection * 0.0001f, lightPosition))
+        PointLight light = pointLights[l];
+        for(int i = 0; i < lightSamples; ++i)
         {
-            float lightPower = light.colour.w;
-            float falloff = lightPower / lightDistance;
-            float lambertian = clamp(dot(hit.normal, lightDirection), 0.0f, 1.0f);
-            vec3 diffuseTerm = vec3(0.8f, 0.8f, 0.8f) * falloff * vec3(light.colour) * lambertian;
-            colour += diffuseTerm * (1.0f / lightSamples);
+            float rx = random(vec2(fragPosition.xy * gameTime));
+            float ry = random(vec2(fragPosition.xy * gameTime + 0.1f));
+            float rz = random(vec2(fragPosition.xy * gameTime + 0.2f));
+            vec3 randomOffset = vec3(rx, ry, rz);
+            randomOffset *= 2.0f;
+            randomOffset -= vec3(1.0f);
+            randomOffset *= lightRadius;
+
+            vec3 lightPosition = vec3(light.position) + randomOffset;
+            vec3 lightDirection = lightPosition - hit.position;
+            float lightDistance = length(lightPosition - hit.position);
+            lightDirection = normalize(lightDirection);
+
+
+            if(!occluded(hit.position + lightDirection * 0.0001f, lightPosition))
+            {
+                float lightPower = light.colour.w;
+                float falloff = lightPower / lightDistance;
+                float lambertian = clamp(dot(hit.normal, lightDirection), 0.0f, 1.0f);
+                vec3 diffuseTerm = vec3(0.8f, 0.8f, 0.8f) * falloff * vec3(light.colour) * lambertian;
+                colour += diffuseTerm * (1.0f / lightSamples);
+            }
         }
     }
     return colour;
+}
+
+vec3 CosineSampleHemisphere(float u1, float u2)
+{
+    float r = sqrt(u1);
+    float theta = 2.0f * 3.142f * u2;
+
+    float x = r * cos(theta);
+    float y = r * sin(theta);
+
+    return vec3(x, y, sqrt(max(0.0f, 1.0f - u1)));
 }
 
 void main()
 {
     vec2 p = (fragPosition + vec2(1.0f)) * 0.5f;
     vec3 position = vec3(texture(positionsTexture, p));
-    vec3 normal = vec3(texture(normalsTexture, p));
-    vec3 specular = vec3(texture(specularTexture, p));
-    vec3 diffuse = vec3(texture(albedoTexture, p));
 
 
     vec3 lightPosition = vec3(pointLights[0].position);
@@ -276,14 +289,42 @@ void main()
     hit.hits = 0;
     hit.distance = 1.0 / 0.0; // Infinity
 
-    int nodesTested = 0;
-
+    int bounces = 1;
+    int currentBounce = 0;
+    float currentBounceWeight = 1.0f;
     vec3 finalColour;
-    if(traverse(ray, hit))
+    for(int currentBounce = 0; currentBounce <= bounces; ++currentBounce)
     {
-        vec3 samplePoint = ray.direction * hit.distance * 0.999f + ray.origin;
-        finalColour = lightHit(hit, pointLights[0]);
+        hit.hits = 0;
+        hit.distance = 1.0 / 0.0; // Infinity
+
+        if(traverse(ray, hit))
+        {
+            hit.position = ray.direction * hit.distance + ray.origin - ray.direction * 0.01f;
+
+            finalColour += lightHit(hit) * currentBounceWeight;
+
+            float rx = random(vec2(fragPosition.xy * gameTime));
+            float ry = random(vec2(fragPosition.xy * gameTime + 0.1f));
+            vec3 randomHemisphereVector = CosineSampleHemisphere(rx, ry);
+
+            ray.origin = hit.position;
+            vec3 biTangent = cross(hit.normal, hit.tangent);
+            mat3 normalTransform = mat3(hit.tangent, biTangent, hit.normal);
+            ray.direction = normalize(normalTransform * randomHemisphereVector);
+
+            currentBounceWeight *= 1.0f / (2.0f * 3.142f);
+        }
+        else
+        {
+            break;
+        }
     }
 
+    if(frames > 0)
+    {
+        finalColour += vec3(texture(previousCast, p)) * float(frames - 1);
+        finalColour /= float(frames);
+    }
     outColour = vec4(finalColour, 1.0f);
 }

@@ -37,17 +37,15 @@ void main_loop()
 		LOG(INFO) << "Quit requested";
 		return;
 	}
-
+	
 	dm->setAsTarget();
 	gm->clearBuffer();
 	ShaderManager::useShader("depth");
 	scene->update();
 	cameraControl->update();
 
-
-	cameraControl->mCamera->lookAt(glm::vec3(0.0f, 0.0f, 0.0f));
-	cameraControl->mCamera->setPosition(glm::vec3(3.0f, 0.0f, 2.0f));
-
+	cameraControl->mCamera->lookAt(glm::vec3(-1.0f, -0.2f, 0.5f));
+	cameraControl->mCamera->setPosition(glm::vec3(1.4f, -0.1f, 2.6f));
 
 	glFinish();
 	Timer drawTimer;
@@ -56,7 +54,7 @@ void main_loop()
 	dm->swapBuffers();
 	glFinish();
 	drawTimer.stop();
-	//std::cout << "Frame time: " << drawTimer.getTime() << "s" << std::endl;
+	std::cout << "Iteration time: " << drawTimer.getTime() << "s" << std::endl;
 }
 
 void init()
@@ -75,18 +73,30 @@ void init()
 	cameraControl = new CameraControl();
 	cameraControl->mCamera = scene->camera;
 
-	const int numLights = 1;
-	const float maxRadius = 3.0f;
-	for(int i = 0; i < numLights; ++i)
-	{
-		float offset = 0;
-		float radius = maxRadius;
-		Entity* light = new Entity();
-		//light->loadFromFile("resources/models/cube/cube.obj");
-		light->attachScript(new DemoLightsScript(radius, i % 2 == 0, offset));
-		light->addLight(new ILight());
-		scene->addEntity(light);
-	}
+	Entity* keyLightEntity = new Entity();
+	ILight* keyLight = new ILight();
+	keyLight->setIntensity(1.0f);
+	keyLight->setColor(glm::vec3(0.3f, 0.3f, 1.0f));
+	keyLightEntity->setPosition(glm::vec3(0.2f, 1.0f, 3.0f));
+	keyLightEntity->addLight(keyLight);
+	scene->addEntity(keyLightEntity);
+
+	Entity* detailLightEntity = new Entity();
+	ILight* detailLight = new ILight();
+	detailLightEntity->setPosition(glm::vec3(2.0f, 1.0f, 0.0f));
+	detailLight->setIntensity(0.1f);
+	detailLight->setColor(glm::vec3(1.0f, 1.0f, 1.0f));
+	detailLightEntity->addLight(detailLight);
+	scene->addEntity(detailLightEntity);
+
+	Entity* backLightEntity = new Entity();
+	ILight* backLight = new ILight();
+	backLightEntity->setPosition(glm::vec3(-1.9f, 0.8f, 0.0f));
+	backLight->setIntensity(1.6f);
+	backLight->setColor(glm::vec3(1.0f, 1.0f, 1.0f));
+	backLightEntity->addLight(backLight);
+	scene->addEntity(backLightEntity);
+
 
 	ShaderManager::loadShader("normals");
 	ShaderManager::loadShader("depth");

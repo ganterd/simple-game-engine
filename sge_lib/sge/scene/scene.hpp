@@ -31,6 +31,8 @@ namespace SGE
 		Camera* camera;
 		OverlayQuad* overlayQuad;
 		GLSLRenderTarget* renderTarget;
+		GLSLRenderTarget* cachedFrames[2];
+		int currentFrame;
 		Entity* lightDebugModel;
 		RT::BVH mBVH;
 		RT::BVHSSBO mBVHSSBO;
