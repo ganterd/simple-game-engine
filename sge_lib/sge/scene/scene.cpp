@@ -7,9 +7,7 @@ namespace SGE
 		camera = new Camera();
 		mRootEntity = new Entity();
 		ShaderManager::init();
-		ShaderManager::loadShader("deferred_shading/geometry_pass");
-		ShaderManager::loadShader("deferred_shading/lighting_pass");
-		ShaderManager::loadShader("deferred_shading/debug_light");
+		
 		Time::init();
 		overlayQuad = new OverlayQuad();
 
@@ -60,7 +58,7 @@ namespace SGE
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		ShaderManager::useShader("deferred_shading/geometry_pass");
+		ShaderManager::useShader("deferredShadingGeometryPass");
 		IShader* shader = ShaderManager::getCurrentShader();
 
 		/* Draw the meshes */
@@ -74,19 +72,25 @@ namespace SGE
 
 
 		/* Gather lights. */
-		ShaderManager::useShader("deferred_shading/debug_light");
+		ShaderManager::useShader("deferredShadingDebugLightPass");
 		shader = ShaderManager::getCurrentShader();
 		renderTarget->bind();
 		shader->setVariable("viewProjectionMatrix", camera->getVPMat());
 
 		std::vector<SceneLight> sceneLights = extractLights();
+		for(SceneLight l : sceneLights)
+		{
+			shader->setVariable("lightColour", glm::vec3(l.colour.r, l.colour.y, l.colour.z));
+			lightDebugModel->setPosition(l.position);
+			lightDebugModel->draw(shader);
+		}
 
 		renderTarget->unbind();
 
 		glDisable(GL_CULL_FACE);
 		glDisable(GL_DEPTH_TEST);
 
-		ShaderManager::useShader("deferred_shading/lighting_pass");
+		ShaderManager::useShader("deferredShadingLightingPass");
 		shader = ShaderManager::getCurrentShader();
 
 		int numLights = sceneLights.size();

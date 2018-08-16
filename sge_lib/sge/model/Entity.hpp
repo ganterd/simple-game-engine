@@ -7,7 +7,7 @@
 #include "Mesh.hpp"
 #include "ModelImporter.hpp"
 
-#include <sge/graphics/ShaderManager.hpp>
+#include <sge/graphics/shaders/ShaderManager.hpp>
 #include <sge/scripting/objectscript.hpp>
 
 namespace SGE

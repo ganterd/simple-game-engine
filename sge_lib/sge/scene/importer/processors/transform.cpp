@@ -24,9 +24,6 @@ namespace SGE
                     float x = std::stof(xCString);
                     float y = std::stof(yCString);
                     float z = std::stof(zCString);
-
-                    std::cout << "ROTATION" << x <<"," << y <<"," << z << std::endl;
-
                     entity->setRotation(x, y, z);
                 }
             }
@@ -46,7 +43,6 @@ namespace SGE
                     float x = std::stof(xCString);
                     float y = std::stof(yCString);
                     float z = std::stof(zCString);
-
                     entity->setPosition(glm::vec3(x, y, z));
                 }
             }

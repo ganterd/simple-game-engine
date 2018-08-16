@@ -69,7 +69,7 @@ namespace SGE
 			glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, mTexture->mTextureID, 0);
 		}
 
-		LOG(INFO) << "Creating GLSLRenderBuffer (" << width << "x" << height << ")";
+		LOG(DEBUG) << "Creating GLSLRenderBuffer (" << width << "x" << height << ")";
 	}
 
 	GLSLRenderBuffer::~GLSLRenderBuffer()

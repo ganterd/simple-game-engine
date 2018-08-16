@@ -26,7 +26,6 @@ namespace SGE
     void Processors::registerProcessor(std::string targetNodes, ImportProcessor* processor)
     {
         Processors* ins = Processors::getInstance();
-        std::cout << "Registering processor for '" << targetNodes << "'" << std::endl;
         ins->mProcessors[targetNodes] = processor;
     }
 

@@ -6,6 +6,8 @@ namespace SGE
 	{
 		//this->renderTarget = new GLSLRenderTarget();
 		//LOG(DEBUG) << "Created render target [" << this->renderTarget << "]";
+
+		shaderID = glCreateProgram();
 	}
 
 	GLSLShader::~GLSLShader()
@@ -18,39 +20,69 @@ namespace SGE
 		return this->loadFromFiles(vFile, "", fFile);
 	}
 
-	bool GLSLShader::loadFromFiles(std::string vFile, std::string gFile, std::string fFile)
+	bool GLSLShader::addShaderFile(std::string shaderFile, ShaderType shaderType)
 	{
-		LOG(INFO) << "Loading shaders";
-		LOG(INFO) << " |- Vert: " << vFile;
-		LOG(INFO) << " |- Geom: " << gFile;
-		LOG(INFO) << " |- Frag: " << fFile;
-
-		this->shaderID = glCreateProgram();
-		loadShader(readShaderCode(vFile), GL_VERTEX_SHADER, this->shaderID);
-		loadShader(readShaderCode(gFile), GL_GEOMETRY_SHADER, this->shaderID);
-		loadShader(readShaderCode(fFile), GL_FRAGMENT_SHADER, this->shaderID);
-		glLinkProgram(this->shaderID);
-
-
-		// TODO: Re-do the whole shader variables thing. Gets a bit messy
-		this->locMVP = glGetUniformLocation(this->shaderID, SGE_MVP_SHADER_MAT);
-		if(this->locMVP == -1)
+		GLuint glShaderType;
+		const char* sType = "unknown";
+		switch(shaderType)
 		{
-			LOG(WARNING) << "Couldn't find shader variable '" << SGE_MVP_SHADER_MAT << "'";
+			case Vertex:
+				glShaderType = GL_VERTEX_SHADER;
+				sType = "vertex";
+				break;
+			case Fragment:
+				glShaderType = GL_FRAGMENT_SHADER;
+				sType = "fragment";
+				break;
+			case Geometry:
+				glShaderType = GL_GEOMETRY_SHADER;
+				sType = "geometry";
+				break;
 		}
+		LOG(DEBUG) << "Loading " << sType << " shader [" << shaderFile << "]";
 
-		this->locBufferWidth = glGetUniformLocation(this->shaderID, SGE_SHADER_BUFFER_WIDTH);
-		if(this->locBufferWidth == -1)
+		const char* shaderCode = readShaderCode(shaderFile);
+
+		if(shaderCode == NULL)
+			return false;
+
+		loadShader(shaderCode, glShaderType, shaderID);
+
+		delete[] shaderCode;
+
+		return link();
+	}
+
+	bool GLSLShader::loadFromFiles(
+		std::string vertShaderFile,
+		std::string geomShaderFile,
+		std::string fragShaderFile
+	){
+		addShaderFile(vertShaderFile, ShaderType::Vertex);
+		addShaderFile(geomShaderFile, ShaderType::Geometry);
+		addShaderFile(fragShaderFile, ShaderType::Fragment);
+		return true;
+	}
+
+	bool GLSLShader::link()
+	{
+		glLinkProgram(shaderID);
+
+		GLint linked = 0;
+		glGetProgramiv(shaderID, GL_LINK_STATUS, &linked);
+		if (linked == GL_FALSE)
 		{
-			LOG(WARNING) << "Couldn't find shader variable '" << SGE_SHADER_BUFFER_WIDTH << "'";
-		}
+			GLint logLength = 0;
+			glGetProgramiv(shaderID, GL_INFO_LOG_LENGTH, &logLength);
+			GLchar* errorString = new GLchar[logLength];
+			glGetProgramInfoLog(shaderID, logLength, &logLength, errorString);
 
-		this->locBufferHeight = glGetUniformLocation(this->shaderID, SGE_SHADER_BUFFER_HEIGHT);
-		if(this->locBufferHeight == -1)
-		{
-			LOG(WARNING) << "Couldn't find shader variable '" << SGE_SHADER_BUFFER_HEIGHT << "'";
-		}
+			LOG(ERROR) << "Couldn't link shader: " << errorString << std::endl;
 
+			glDeleteShader(shaderID);
+			//delete[] errorString;
+			return false;
+		}
 		return true;
 	}
 
@@ -153,8 +185,8 @@ namespace SGE
 	void GLSLShader::enable()
 	{
 		glUseProgram(this->shaderID);
-		glUniform1f(this->locBufferWidth, (float)targetBufferWidth);
-		glUniform1f(this->locBufferHeight, (float)targetBufferHeight);
+		//glUniform1f(this->locBufferWidth, (float)targetBufferWidth);
+		//glUniform1f(this->locBufferHeight, (float)targetBufferHeight);
 
 		//if(this->renderTarget == NULL)
 		//	LOG(ERROR) << "Shader has no render target!";

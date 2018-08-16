@@ -3,7 +3,7 @@
 #include <vector>
 
 #include <sge/graphics/texture/ITexture.hpp>
-#include <sge/graphics/ShaderManager.hpp>
+#include <sge/graphics/shaders/ShaderManager.hpp>
 
 namespace SGE
 {

@@ -63,6 +63,8 @@ namespace SGE
 			scene->addEntity(entities[i]);
 		}
 
+		processShaders(root);
+
 		LOG(DEBUG) << "Finished parsing scene";
 		return scene;
 	}
@@ -79,6 +81,54 @@ namespace SGE
 		}
 
 		return std::string(nameAttr->Value());
+	}
+
+	void SceneImporter::processShaders(const tinyxml2::XMLElement* root)
+	{
+		LOG(DEBUG) << "Getting shaders...";
+
+		const tinyxml2::XMLElement* shadersNode = root->FirstChildElement("shaders");
+		if(shadersNode == NULL)
+		{
+			LOG(WARNING) << "Scene has no shaders listed";
+			return;
+		}
+
+		const tinyxml2::XMLElement* shaderNode = shadersNode->FirstChildElement("shader");
+		if(shaderNode == NULL)
+		{
+			LOG(WARNING) << "Scene has no shaders listed!";
+			return;
+		}
+
+		for(; shaderNode; shaderNode = shaderNode->NextSiblingElement("shader"))
+		{
+			IShader* shader = new GLSLShader();
+
+			const char* shaderName = shaderNode->Attribute("name");
+
+			for(
+				const tinyxml2::XMLElement* shaderFileNode = shaderNode->FirstChildElement();
+				shaderFileNode;
+				shaderFileNode = shaderFileNode->NextSiblingElement()
+			)
+			{
+				std::string shaderFileType = shaderFileNode->Name();
+				std::string shaderFilePath = shaderFileNode->GetText();
+
+				IShader::ShaderType shaderType;
+				if(shaderFileType == "vert")
+					shaderType = IShader::Vertex;
+				if(shaderFileType == "geom")
+					shaderType = IShader::Geometry;
+				if(shaderFileType == "frag")
+					shaderType = IShader::Fragment;
+
+				shader->addShaderFile(shaderFilePath, shaderType);
+			}
+
+			ShaderManager::addShader(shaderName, shader);
+		}
 	}
 
 	std::vector<Entity*> SceneImporter::_getSceneEntities(const tinyxml2::XMLElement* root)
@@ -145,5 +195,5 @@ namespace SGE
 		return entity;
 	}
 
-	
+
 }

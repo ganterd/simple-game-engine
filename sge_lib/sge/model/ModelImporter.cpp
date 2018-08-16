@@ -50,14 +50,14 @@ namespace SGE
 
 	void ModelImporter::printModelInfo()
 	{
-		LOG(INFO) << " |-Textures: " << model->mNumTextures;
-		LOG(INFO) << " |-Cameras: " << model->mNumCameras;
-		LOG(INFO) << " |-Animations: " << model->mNumAnimations;
+		LOG(DEBUG) << " |-Textures: " << model->mNumTextures;
+		LOG(DEBUG) << " |-Cameras: " << model->mNumCameras;
+		LOG(DEBUG) << " |-Animations: " << model->mNumAnimations;
 	}
 
 	void ModelImporter::extractMaterials()
 	{
-		LOG(INFO) << " |-Materials: " << model->mNumMaterials;
+		LOG(DEBUG) << " |-Materials: " << model->mNumMaterials;
 		for(unsigned int i = 0; i < model->mNumMaterials; ++i)
 		{
 			/* Get textures */
@@ -96,45 +96,45 @@ namespace SGE
 			switch(type)
 			{
 				case aiTextureType_DIFFUSE:
-					LOG(INFO) << "   |- Diffuse: " << path;
+					LOG(DEBUG) << "   |- Diffuse: " << path;
 					tex = TextureFactory::newTexture();
 					tex->loadFromFile(path, ITexture::Type::Diffuse);
 					break;
 				case aiTextureType_SPECULAR:
-					LOG(INFO) << "   |- Specular: " << path;
+					LOG(DEBUG) << "   |- Specular: " << path;
 					tex = TextureFactory::newTexture();
 					tex->loadFromFile(path, ITexture::Type::Specular);
 					break;
 				case aiTextureType_AMBIENT:
-					LOG(INFO) << "   |- Ambient: " << path;
+					LOG(DEBUG) << "   |- Ambient: " << path;
 					break;
 				case aiTextureType_EMISSIVE:
-					LOG(INFO) << "   |- Emissive: " << path;
+					LOG(DEBUG) << "   |- Emissive: " << path;
 					break;
 				case aiTextureType_HEIGHT:
-					LOG(INFO) << "   |- Height: " << path;
+					LOG(DEBUG) << "   |- Height: " << path;
 					break;
 				case aiTextureType_NORMALS:
-					LOG(INFO) << "   |- Normals: " << path;
+					LOG(DEBUG) << "   |- Normals: " << path;
 					tex = TextureFactory::newTexture();
 					tex->loadFromFile(path, ITexture::Type::Normals);
 					break;
 				case aiTextureType_SHININESS:
-					LOG(INFO) << "   |- Shininess: " << path;
+					LOG(DEBUG) << "   |- Shininess: " << path;
 					break;
 				case aiTextureType_OPACITY:
-					LOG(INFO) << "   |- Opacity: " << path;
+					LOG(DEBUG) << "   |- Opacity: " << path;
 					tex = TextureFactory::newTexture();
 					tex->loadFromFile(path, ITexture::Type::Opacity);
 					break;
 				case aiTextureType_DISPLACEMENT:
-					LOG(INFO) << "   |- Displacement: " << path;
+					LOG(DEBUG) << "   |- Displacement: " << path;
 					break;
 				case aiTextureType_LIGHTMAP:
-					LOG(INFO) << "   |- Lightmap (AO): " << path;
+					LOG(DEBUG) << "   |- Lightmap (AO): " << path;
 					break;
 				case aiTextureType_REFLECTION:
-					LOG(INFO) << "   |- Reflection: " << path;
+					LOG(DEBUG) << "   |- Reflection: " << path;
 					break;
 				case aiTextureType_UNKNOWN:
 					LOG(WARNING) << "   |- Unknown texture type (" << path << ")";
@@ -151,7 +151,7 @@ namespace SGE
 
 	void ModelImporter::extractTriangles(float scale)
 	{
-		LOG(INFO) << " |-Meshes: " << model->mNumMeshes ;
+		LOG(DEBUG) << " |-Meshes: " << model->mNumMeshes ;
 
 		aiMatrix4x4 identity;
 		_nodeRecurse(model->mRootNode, identity, scale);
@@ -234,17 +234,14 @@ namespace SGE
 			resultMesh->setUVData(meshUVData, mesh->mNumVertices);
 		}
 
-		/* Create a local mesh */
-		std::cout << "Mesh '" << mesh->mName.C_Str() << "' Material: " << mesh->mMaterialIndex << std::endl;
 		resultMesh->setMaterial(mMaterials[mesh->mMaterialIndex]);
-
 
 		meshes.push_back(resultMesh);
 	}
 
 	void ModelImporter::extractLights()
 	{
-		LOG(INFO) << " |-Lights: " << model->mNumLights ;
+		LOG(DEBUG) << " |-Lights: " << model->mNumLights ;
 		for(unsigned int i = 0; i < model->mNumLights; ++i)
 		{
 			LOG(DEBUG) << "   |-Light " << i ;

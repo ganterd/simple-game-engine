@@ -6,7 +6,7 @@
 
 #include <easylogging++.h>
 
-#include <sge/graphics/IShader.hpp>
+#include <sge/graphics/shaders/IShader.hpp>
 #include <sge/graphics/GLSLRenderTarget.hpp>
 
 namespace SGE
@@ -37,8 +37,10 @@ namespace SGE
 		GLSLShader();
 		~GLSLShader();
 
+		bool addShaderFile(std::string shaderFile, ShaderType shaderType);
 		bool loadFromFiles(std::string vFile, std::string fFile);
 		bool loadFromFiles(std::string vFile, std::string fFile, std::string gFile);
+		bool link();
 
 		void enable();
 		void disable();

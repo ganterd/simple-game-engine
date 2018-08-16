@@ -20,8 +20,7 @@ namespace SGE
 		std::vector<Entity*> _getSceneEntities(const tinyxml2::XMLElement* root);
 		Entity* _getEntity(const tinyxml2::XMLElement* entityNode);
 
-		void _processModelComponent(const tinyxml2::XMLElement* modelNode, Entity* parentEntity);
-		void _processLightComponent(const tinyxml2::XMLElement* modelNode, Entity* parentEntity);
+		void processShaders(const tinyxml2::XMLElement* root);
 
 	public:
 		Scene* importSceneFromFile(std::string sceneFile);

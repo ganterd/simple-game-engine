@@ -36,10 +36,6 @@ namespace SGE
         }
 
     public:
-        Processors()
-        {
-            std::cout << "Instantiating...." << std::endl;
-        }
 
         static void registerProcessor(std::string targetNodes, ImportProcessor* processor);
         static void listRegisteredProcessors();

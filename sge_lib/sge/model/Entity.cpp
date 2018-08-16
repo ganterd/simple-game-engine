@@ -90,7 +90,6 @@ namespace SGE
 
 	void Entity::setRotation(float x, float y, float z)
 	{
-		std::cout << "Setting Local Roation to " << x << ", " << y << ", " << z << std::endl;
 		mLocalRotation = glm::vec3(x, y, z);
 		updateTranslationMatrix();
 	}
@@ -98,7 +97,6 @@ namespace SGE
 	void Entity::updateTranslationMatrix()
 	{
 		glm::mat4 mat(1.0f);
-		std::cout << "ROTATING " << mLocalRotation.x << ", " << mLocalRotation.y << ", " << mLocalRotation.z << std::endl;
 		mat = glm::rotate(mat, mLocalRotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
 		mat = glm::rotate(mat, mLocalRotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
 		mat = glm::rotate(mat, mLocalRotation.z, glm::vec3(0.0f, 0.0f, 1.0f));

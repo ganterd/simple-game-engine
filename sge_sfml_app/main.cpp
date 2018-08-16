@@ -7,7 +7,7 @@ INITIALIZE_NULL_EASYLOGGINGPP
 #include <sge/display/DisplayManager.hpp>
 #include <sge/scene/scene.hpp>
 #include <sge/scene/importer/sceneimporter.hpp>
-#include <sge/graphics/ShaderManager.hpp>
+#include <sge/graphics/shaders/ShaderManager.hpp>
 #include <sge/graphics/OGLGraphicsManager.hpp>
 
 #include "gamescripts/cameracontrol.hpp"
@@ -77,10 +77,8 @@ int main( int argc, char* args[] )
 {
 	el::Helpers::setStorage(SGE::Utils::getELStorage());
 	el::Configurations conf("resources/logger.conf");
-	el::Loggers::reconfigureLogger("default", conf);
+	//el::Loggers::reconfigureLogger("default", conf);
 	el::Loggers::reconfigureAllLoggers(conf);
-
-	LOG(DEBUG) << "HERE";
 
 	for (int i = 1; i < argc; ++i)
 	{

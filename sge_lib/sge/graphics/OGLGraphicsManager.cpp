@@ -11,7 +11,7 @@ namespace SGE
 
 		int OGLGraphicsManager::init()
 		{
-			LOG(INFO) << "Initialising";
+			LOG(DEBUG) << "Initialising GL";
 			GLenum error = GL_NO_ERROR;
 
 			glMatrixMode( GL_PROJECTION );
@@ -43,8 +43,8 @@ namespace SGE
 				return 0;
 			}
 
-			LOG(INFO) << " GL Version:";
-			LOG(INFO) << " \t" << glGetString(GL_VERSION);
+			LOG(DEBUG) << " GL Version:";
+			LOG(DEBUG) << " \t" << glGetString(GL_VERSION);
 
 			error = glewInit();
 			if(error != GLEW_OK)
@@ -54,8 +54,8 @@ namespace SGE
 				return 0;
 			}
 
-			LOG(INFO) << " GLEW Version:";
-			LOG(INFO) << " \t" << glewGetString(GLEW_VERSION);
+			LOG(DEBUG) << " GLEW Version:";
+			LOG(DEBUG) << " \t" << glewGetString(GLEW_VERSION);
 
 			return 1;
 		}

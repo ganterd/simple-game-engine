@@ -42,13 +42,16 @@ namespace SGE
 		geomShaderFilePath.append(".geom");
 
 		s->loadFromFiles(vertShaderFilePath, geomShaderFilePath, fragShaderFilePath);
-		s->setTargetBufferDimensions(
-			ShaderManager::targetBufferWidth,
-			ShaderManager::targetBufferHeight
-		);
 
 		shaders[shader] = s;
 		return s;
+	}
+
+	void ShaderManager::addShader(std::string shaderName, IShader* shader)
+	{
+		if(hasShader(shaderName))
+			LOG(WARNING) << "Overwriting shader '" << shaderName << "'";
+		shaders[shaderName] = shader;
 	}
 
 	bool ShaderManager::hasShader(std::string shader)
@@ -96,11 +99,6 @@ namespace SGE
 	{
 		targetBufferWidth = w;
 		targetBufferHeight = h;
-
-		if(currentShader != NULL)
-		{
-			currentShader->setTargetBufferDimensions(targetBufferWidth, targetBufferHeight);
-		}
 	}
 
 	int ShaderManager::getTargetBufferWidth()

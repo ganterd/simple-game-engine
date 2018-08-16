@@ -1,4 +1,18 @@
 <scene name="Test Scene">
+	<shaders>
+		<shader name="deferredShadingGeometryPass">
+			<vert>resources/shaders/deferred_shading/geometry_pass.vert</vert>
+			<frag>resources/shaders/deferred_shading/geometry_pass.frag</frag>
+		</shader>
+		<shader name="deferredShadingDebugLightPass">
+			<vert>resources/shaders/deferred_shading/debug_light.vert</vert>
+			<frag>resources/shaders/deferred_shading/debug_light.frag</frag>
+		</shader>
+		<shader name="deferredShadingLightingPass">
+			<vert>resources/shaders/deferred_shading/lighting_pass.vert</vert>
+			<frag>resources/shaders/deferred_shading/lighting_pass.frag</frag>
+		</shader>
+	</shaders>
 	<entities>
 		<entity name="Cube">
 			<transform>
@@ -29,10 +43,10 @@
 		</entity>
 		<entity name="FillLight" x="5" y="0" z="3">
 			<transform>
-				<translation x="5" y="0" z="5"/>
+				<translation x="5" y="1" z="2"/>
 				<rotation x="0" y="0" z="0"/>
 			</transform>
-			<light r="0.7" g="0.7" b="1.0" power="7.0"/>
+			<light r="0.7" g="0.7" b="1.0" power="3.0"/>
 		</entity>
 	</entities>
 </scene>
