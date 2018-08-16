@@ -27,6 +27,8 @@ namespace SGE
 
 	Scene* SceneImporter::importSceneFromFile(std::string sceneFile)
 	{
+		Processors::listRegisteredProcessors();
+
 		/* Import the scene text data */
 		const char* text = this->_readFile(sceneFile.c_str());
 		if(text == NULL)
@@ -112,36 +114,36 @@ namespace SGE
 
 	Entity* SceneImporter::_getEntity(const tinyxml2::XMLElement* entityNode)
 	{
-		Entity* entity;
 		LOG(DEBUG) << "Parsing entity...";
 
-		const tinyxml2::XMLElement* modelNode = entityNode->FirstChildElement("model");
-		if(modelNode == NULL)
+		Entity* entity = new Entity();
+
+		const tinyxml2::XMLElement* childNode = entityNode->FirstChildElement();
+		if(childNode == NULL)
 		{
-			LOG(WARNING) << "An entity has no model!";
+			LOG(WARNING) << "An entity has no components!";
 			return NULL;
 		}
 
-		const tinyxml2::XMLElement* modelPathNode = modelNode->FirstChildElement("path");
-		if(modelPathNode == NULL)
+		for(; childNode; childNode = childNode->NextSiblingElement())
 		{
-			LOG(ERROR) << "An entity has a model with no path!";
-			return NULL;
+			std::string nodeType(childNode->Name());
+			if(nodeType == "entity")
+			{
+				Entity* childEntity = _getEntity(childNode);
+				childEntity->setParent(entity);
+				entity->addChild(childEntity);
+			}
+			else
+			{
+				Processors::process(childNode, entity);
+			}
 		}
-
-		std::string modelPath(modelPathNode->GetText());
-		LOG(DEBUG) << "Model: " << modelPath;
-
-		std::string scaleString = modelNode->Attribute("scale");
-		float scale = 1.0f;
-		if(scaleString.length() > 0)
-			scale = std::stof(scaleString);
-		LOG(DEBUG) << "Scale: " << scale;
-
-		entity = new Entity();
-		entity->loadFromFile(modelPath, scale, false);
 
 		LOG(DEBUG) << "Finished parsing entity";
+
 		return entity;
 	}
+
+	
 }

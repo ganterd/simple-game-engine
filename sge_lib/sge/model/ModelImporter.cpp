@@ -235,6 +235,7 @@ namespace SGE
 		}
 
 		/* Create a local mesh */
+		std::cout << "Mesh '" << mesh->mName.C_Str() << "' Material: " << mesh->mMaterialIndex << std::endl;
 		resultMesh->setMaterial(mMaterials[mesh->mMaterialIndex]);
 
 

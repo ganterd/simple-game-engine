@@ -8,6 +8,7 @@
 
 #include <sge/scene/scene.hpp>
 #include <sge/model/Entity.hpp>
+#include <sge/scene/importer/processors.hpp>
 
 namespace SGE
 {
@@ -18,7 +19,10 @@ namespace SGE
 		std::string _getSceneName(const tinyxml2::XMLElement* root);
 		std::vector<Entity*> _getSceneEntities(const tinyxml2::XMLElement* root);
 		Entity* _getEntity(const tinyxml2::XMLElement* entityNode);
-		
+
+		void _processModelComponent(const tinyxml2::XMLElement* modelNode, Entity* parentEntity);
+		void _processLightComponent(const tinyxml2::XMLElement* modelNode, Entity* parentEntity);
+
 	public:
 		Scene* importSceneFromFile(std::string sceneFile);
 	};

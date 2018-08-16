@@ -6,7 +6,7 @@ INITIALIZE_NULL_EASYLOGGINGPP
 #include <sge/configmanager/ConfigManager.hpp>
 #include <sge/display/DisplayManager.hpp>
 #include <sge/scene/scene.hpp>
-#include <sge/scene/sceneimporter.hpp>
+#include <sge/scene/importer/sceneimporter.hpp>
 #include <sge/graphics/ShaderManager.hpp>
 #include <sge/graphics/OGLGraphicsManager.hpp>
 
@@ -63,19 +63,6 @@ void init()
 
 	cameraControl = new CameraControl();
 	cameraControl->mCamera = scene->camera;
-
-	const int numLights = 100;
-	const float maxRadius = 6.0f;
-	for(int i = 0; i < numLights; ++i)
-	{
-		float offset = (float)(rand() % 1000) / 1.1233120f;
-		float radius = ((float)(rand() % 1000) / 1000.0f) * maxRadius;
-		Entity* light = new Entity();
-		//light->loadFromFile("resources/models/cube/cube.obj");
-		light->attachScript(new DemoLightsScript(radius, i % 2 == 0, offset));
-		light->addLight(new ILight());
-		scene->addEntity(light);
-	}
 
 	ShaderManager::loadShader("normals");
 	ShaderManager::loadShader("depth");

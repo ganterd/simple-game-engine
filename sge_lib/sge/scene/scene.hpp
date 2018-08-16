@@ -29,6 +29,7 @@ namespace SGE
 		OverlayQuad* overlayQuad;
 		GLSLRenderTarget* renderTarget;
 		Entity* lightDebugModel;
+		Entity* mRootEntity;
 
 		Scene();
 
@@ -36,6 +37,9 @@ namespace SGE
 		void update();
 		void draw();
 		void lightScene();
+
+		std::vector<SceneLight> extractLights();
+		void recursiveExtractLights(Entity* n, glm::mat4 mat, std::vector<SceneLight>& l);
 	};
 }
 

@@ -56,5 +56,5 @@ void main(){
     }
     outColour = vec4(finalColour, 1.0f);
     //finalColour = vec4(vec3(falloff), 1.0f);
-    //finalColour = vec4(vec3(position) * 0.5f, 1.0f);
+    //outColour = vec4(vec3(position) * 0.5f, 1.0f);
 }

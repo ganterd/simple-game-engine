@@ -1,14 +1,38 @@
 <scene name="Test Scene">
 	<entities>
-		<entity name="Sponza">
-			<model scale="0.01">
-				<path>resources/models/sponza/sponza.obj</path>
+		<entity name="Cube">
+			<transform>
+				<translation x="0" y="0" z="0"/>
+				<rotation x="0" y="45" z="0"/>
+			</transform>
+			<model>
+				<shadowCaster>true</shadowCaster>
+				<path>resources/models/testCube.obj</path>
 			</model>
-			<position>
-				<x>0</x>
-				<y>-1</y>
-				<z>0</z>
-			</position>
+		</entity>
+		<entity name="Walls">
+			<transform>
+				<translation x="0" y="0" z="0"/>
+				<rotation x="0" y="0" z="0"/>
+			</transform>
+			<model>
+				<shadowReceiver>true</shadowReceiver>
+				<path>resources/models/walls.obj</path>
+			</model>
+		</entity>
+		<entity name="KeyLight" x="0" y="5" z="5">
+			<transform>
+				<translation x="0" y="5" z="5"/>
+				<rotation x="0" y="0" z="0"/>
+			</transform>
+			<light r="1.0" g="1.0" b="1.0" power="7.0"/>
+		</entity>
+		<entity name="FillLight" x="5" y="0" z="3">
+			<transform>
+				<translation x="5" y="0" z="5"/>
+				<rotation x="0" y="0" z="0"/>
+			</transform>
+			<light r="0.7" g="0.7" b="1.0" power="7.0"/>
 		</entity>
 	</entities>
 </scene>
