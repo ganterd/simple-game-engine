@@ -39,7 +39,7 @@ namespace SGE
 
 		Export void update();
 		Export void draw();
-		Export void draw(IShader* shader, glm::mat4 parentMat = glm::mat4(1.0f));
+		Export void draw(SubShader* shader, glm::mat4 parentMat = glm::mat4(1.0f));
 
 		Export void setPositionX(float);
 		Export void setPositionY(float);

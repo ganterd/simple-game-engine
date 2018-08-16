@@ -2,6 +2,20 @@
 
 namespace SGE
 {
+	GLSLRenderTarget::GLSLRenderTarget()
+	{
+		int bufferWidth = DisplayManager::getDisplayInstance()->size().width;
+		int bufferHeight = DisplayManager::getDisplayInstance()->size().height;
+		fbo = 0;
+		mBufferWidth = bufferWidth;
+		mBufferHeight = bufferHeight;
+		gBuffers = NULL;
+		gBufferCount = 0;
+
+		initFBO();
+		unbind();
+	}
+
 	GLSLRenderTarget::GLSLRenderTarget(int width, int height)
 	{
 		fbo = 0;
@@ -78,6 +92,55 @@ namespace SGE
 			attachment
 		);
 		mRenderBuffers.push_back(buffer);
+
+		if(bufferType != IRenderBuffer::BufferType::Depth)
+		{
+			LOG(DEBUG) << "New colour attachment [" << attachment << "]";
+			mColourAttachments.push_back(buffer);
+			unsigned int* attachments = new unsigned int[mColourAttachments.size()];
+			for(int i = 0; i < mColourAttachments.size(); ++i)
+			{
+				attachments[i] = ((GLSLRenderBuffer*)mColourAttachments[i])->getGLColorAttachment();
+			}
+			glDrawBuffers((int)mColourAttachments.size(), attachments);
+			delete[] attachments;
+		}
+
+		GLSLRenderBuffer::checkFBOStatus();
+
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+		return (int)mRenderBuffers.size() - 1;
+	}
+
+	unsigned int GLSLRenderTarget::addRenderBuffer(
+			std::string bufferName,
+			IRenderBuffer::BufferType bufferType,
+			ITexture::DataType dataType
+	)
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+		GLuint attachment;
+		if(bufferType == IRenderBuffer::BufferType::Depth)
+		{
+			attachment = GL_DEPTH_ATTACHMENT;
+		}
+		else
+		{
+			attachment = GL_COLOR_ATTACHMENT0 + (GLuint)mColourAttachments.size();
+		}
+
+		GLSLRenderBuffer* buffer = new GLSLRenderBuffer(
+			mBufferWidth,
+			mBufferHeight,
+			fbo,
+			bufferType,
+			dataType,
+			attachment
+		);
+		mRenderBuffers.push_back(buffer);
+		mRenderBufferMap[bufferName] = buffer;
 
 		if(bufferType != IRenderBuffer::BufferType::Depth)
 		{

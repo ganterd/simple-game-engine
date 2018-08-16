@@ -1,18 +1,35 @@
 <scene name="Test Scene">
+	<!-- Shaders go here -->
 	<shaders>
-		<shader name="deferredShadingGeometryPass">
-			<vert>resources/shaders/deferred_shading/geometry_pass.vert</vert>
-			<frag>resources/shaders/deferred_shading/geometry_pass.frag</frag>
-		</shader>
-		<shader name="deferredShadingDebugLightPass">
-			<vert>resources/shaders/deferred_shading/debug_light.vert</vert>
-			<frag>resources/shaders/deferred_shading/debug_light.frag</frag>
-		</shader>
-		<shader name="deferredShadingLightingPass">
-			<vert>resources/shaders/deferred_shading/lighting_pass.vert</vert>
-			<frag>resources/shaders/deferred_shading/lighting_pass.frag</frag>
+		<shader name="deferredShading">
+			<subShader name="geometryPass">
+				<renderTarget>
+					<buffer name="diffuse" type="rgba32" />
+					<buffer name="specular" type="rgb32" />
+					<buffer name="normals" type="rgb32" />
+					<buffer name="emmisive" type="rgb32" />
+					<buffer name="positions" type="rgb32" />
+					<buffer name="depth" type="depth" />
+				</renderTarget>
+				<file type="vert">resources/shaders/deferred_shading/geometry_pass.vert</file>
+				<file type="frag">resources/shaders/deferred_shading/geometry_pass.frag</file>
+			</subShader>
+			<subShader name="lightingPass">
+				<screenSpace>true</screenSpace>
+				<inputBuffers>
+					<buffer fromShader="geometryPass" name="diffuse" sampler="diffuse"/>
+					<buffer fromShader="geometryPass" name="specular" sampler="specular"/>
+					<buffer fromShader="geometryPass" name="normals" sampler="normals"/>
+					<buffer fromShader="geometryPass" name="emmisive" sampler="emmisive"/>
+					<buffer fromShader="geometryPass" name="positions" sampler="positions"/>
+				</inputBuffers>
+				<file type="vert">resources/shaders/deferred_shading/lighting_pass.vert</file>
+				<file type="frag">resources/shaders/deferred_shading/lighting_pass.frag</file>
+			</subShader>
 		</shader>
 	</shaders>
+
+	<!-- Scene entities go here -->
 	<entities>
 		<entity name="Cube">
 			<transform>
@@ -24,6 +41,7 @@
 				<path>resources/models/testCube.obj</path>
 			</model>
 		</entity>
+
 		<entity name="Walls">
 			<transform>
 				<translation x="0" y="0" z="0"/>
@@ -34,6 +52,7 @@
 				<path>resources/models/walls.obj</path>
 			</model>
 		</entity>
+
 		<entity name="KeyLight" x="0" y="5" z="5">
 			<transform>
 				<translation x="0" y="5" z="5"/>
@@ -41,6 +60,7 @@
 			</transform>
 			<light r="1.0" g="1.0" b="1.0" power="7.0"/>
 		</entity>
+
 		<entity name="FillLight" x="5" y="0" z="3">
 			<transform>
 				<translation x="5" y="1" z="2"/>

@@ -1,8 +1,8 @@
-#include "IShader.hpp"
+#include <sge/graphics/shaders/SubShader.hpp>
 
 namespace SGE
 {
-	const char* IShader::readFile(const char* filePath)
+	const char* SubShader::readFile(const char* filePath)
 	{
 		char* text;
 

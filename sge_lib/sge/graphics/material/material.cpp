@@ -17,7 +17,7 @@ void SGE::Material::addTexture(ITexture* t)
 
 void SGE::Material::bindAllTextures()
 {
-    IShader* shader = ShaderManager::getCurrentShader();
+    SubShader* shader = ShaderManager::getCurrentSubShader();
     shader->setVariable("hasNormalMap", hasNormalMap);
     shader->setVariable("hasOpacityMap", hasOpacityMap);
     for(int i = 0; i < mTextures.size(); ++i)

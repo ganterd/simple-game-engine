@@ -40,7 +40,6 @@ void main_loop()
 
 	dm->setAsTarget();
 	gm->clearBuffer();
-	ShaderManager::useShader("depth");
 	scene->update();
 	cameraControl->update();
 
@@ -63,9 +62,6 @@ void init()
 
 	cameraControl = new CameraControl();
 	cameraControl->mCamera = scene->camera;
-
-	ShaderManager::loadShader("normals");
-	ShaderManager::loadShader("depth");
 }
 
 void exit()

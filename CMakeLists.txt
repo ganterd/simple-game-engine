@@ -19,7 +19,7 @@ find_package(Threads REQUIRED)
 if(WIN32)
 	add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 else()
-	add_definitions( -Wfatal-errors -std=c++11 )
+	add_definitions( -std=c++11 )
 endif()
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)

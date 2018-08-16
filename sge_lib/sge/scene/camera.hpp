@@ -5,7 +5,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <sge/utils/export.hpp>
-#include <sge/graphics/shaders/IShader.hpp>
 #include <sge/graphics/shaders/ShaderManager.hpp>
 
 namespace SGE

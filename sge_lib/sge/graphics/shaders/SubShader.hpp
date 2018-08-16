@@ -20,11 +20,14 @@
 
 namespace SGE
 {
-	class Export IShader
+	class Export SubShader
 	{
 	protected:
+		std::string mName;
+		bool mIsScreenSpaceShader;
+		bool mToRenderTarget;
+		IRenderTarget* mRenderTarget;
 
-		virtual void updateTargetBufferDimensions() = 0;
 
 	public:
 		enum ShaderType
@@ -33,6 +36,10 @@ namespace SGE
 			Geometry,
 			Fragment
 		};
+
+		void setName(std::string n){ mName = n; };
+		virtual void setToRenderTarget(bool b) = 0;
+		virtual void getRenderTargetBuffer(std::string bufferName) = 0;
 
 		virtual bool addShaderFile(std::string shaderFile, ShaderType shaderType) = 0;
 		virtual bool loadFromFiles(std::string vertFile, std::string fragFile) = 0;

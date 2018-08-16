@@ -6,10 +6,8 @@
 #include <sge/time/time.hpp>
 #include <sge/input/input.hpp>
 #include <sge/model/Entity.hpp>
-#include <sge/graphics/shaders/IShader.hpp>
 #include <sge/graphics/shaders/ShaderManager.hpp>
 #include <sge/scene/camera.hpp>
-#include <sge/scene/geometry/overlayquad.hpp>
 
 namespace SGE
 {

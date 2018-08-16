@@ -16,6 +16,7 @@ namespace SGE
 	class GLSLRenderTarget : public IRenderTarget
 	{
 	public:
+		Export GLSLRenderTarget();
 		Export GLSLRenderTarget(int width, int height);
 		Export ~GLSLRenderTarget();
 
@@ -25,6 +26,7 @@ namespace SGE
 		Export virtual void clear();
 
 		Export unsigned int addRenderBuffer(IRenderBuffer::BufferType bufferType, ITexture::DataType dataType);
+		Export unsigned int addRenderBuffer(std::string bufferName, IRenderBuffer::BufferType type, ITexture::DataType  dataType);
 
 	private:
 

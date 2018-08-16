@@ -6,6 +6,7 @@
 #include <easylogging++.h>
 #include <glm/glm.hpp>
 
+#include <sge/display/DisplayManager.hpp>
 #include <sge/graphics/IRenderBuffer.hpp>
 #include <sge/graphics/texture/ITexture.hpp>
 
@@ -26,6 +27,7 @@ namespace SGE
 		Export int getBufferHeight();
 
 		Export virtual unsigned int addRenderBuffer(IRenderBuffer::BufferType bufferType, ITexture::DataType dataType) = 0;
+		Export virtual unsigned int addRenderBuffer(std::string bufferName, IRenderBuffer::BufferType type, ITexture::DataType  dataType) = 0;
 		Export unsigned int addRenderBuffer(IRenderBuffer* buffer);
 		Export unsigned int addRenderBuffer(IRenderBuffer* buffer, unsigned int idx);
 		Export IRenderBuffer* getRenderBuffer(unsigned int bufferIndex);
@@ -38,6 +40,7 @@ namespace SGE
 		glm::vec4 mBufferClearColour;
 
 		std::vector<IRenderBuffer*> mRenderBuffers;
+		std::map<std::string, IRenderBuffer*> mRenderBufferMap;
 		std::vector<IRenderBuffer*> mColourAttachments;
 
 		/* Called after the dimensions are set. */

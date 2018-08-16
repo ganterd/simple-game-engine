@@ -46,7 +46,7 @@ namespace SGE
 		}
 	}
 
-	void Entity::draw(IShader* shader, glm::mat4 currentMat)
+	void Entity::draw(SubShader* shader, glm::mat4 currentMat)
 	{
 		currentMat *= modelMat;
 		shader->setVariable("modelMatrix", currentMat);

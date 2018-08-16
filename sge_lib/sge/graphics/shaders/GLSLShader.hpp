@@ -6,26 +6,19 @@
 
 #include <easylogging++.h>
 
-#include <sge/graphics/shaders/IShader.hpp>
+#include <sge/graphics/shaders/SubShader.hpp>
 #include <sge/graphics/GLSLRenderTarget.hpp>
 
 namespace SGE
 {
-	class Export GLSLShader : public IShader
+	class Export GLSLShader : public SubShader
 	{
-	protected:
-		void updateTargetBufferDimensions();
-
 	private:
 		GLuint vShaderID;
 		GLuint fShaderID;
 		GLuint gShaderID;
 
 		GLuint shaderID;
-
-		GLuint locMVP;
-		GLuint locBufferWidth;
-		GLuint locBufferHeight;
 
 		const char* readShaderCode(std::string file);
 		GLuint loadShader(const char* shaderCode, GLuint shaderType, GLuint targetProgram);
@@ -36,6 +29,9 @@ namespace SGE
 	public:
 		GLSLShader();
 		~GLSLShader();
+
+		void setToRenderTarget(bool b);
+		void getRenderTargetBuffer(std::string bufferName);
 
 		bool addShaderFile(std::string shaderFile, ShaderType shaderType);
 		bool loadFromFiles(std::string vFile, std::string fFile);

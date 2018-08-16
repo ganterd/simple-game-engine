@@ -39,7 +39,6 @@ if( MSVC )
   set(ASSIMP_LIBRARY "assimp-${MSVC_PREFIX}-mt" CACHE STRING "")
 else()
 	set(ASSIMP_LIBRARY "assimp" CACHE STRING "")
-	message("HERE")
 endif()
 
 

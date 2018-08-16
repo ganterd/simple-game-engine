@@ -80,7 +80,7 @@ namespace SGE
 			LOG(ERROR) << "Couldn't link shader: " << errorString << std::endl;
 
 			glDeleteShader(shaderID);
-			//delete[] errorString;
+			delete[] errorString;
 			return false;
 		}
 		return true;
@@ -99,9 +99,17 @@ namespace SGE
 			mUniformsMap[name] = loc;
 
 			if(loc == -1)
-				LOG(WARNING) << "Shader has no uniform \"" << name << "\"";
+				LOG(WARNING) << "Shader '" << mName << "'[" << shaderID << "] has no uniform \"" << name << "\"";
 		}
 	}
+
+	void GLSLShader::setToRenderTarget(bool b)
+	{
+	};
+
+	void GLSLShader::getRenderTargetBuffer(std::string bufferName)
+	{
+	};
 
 	void GLSLShader::setVariable(std::string name, bool value)
 	{
@@ -184,7 +192,7 @@ namespace SGE
 
 	void GLSLShader::enable()
 	{
-		glUseProgram(this->shaderID);
+		glUseProgram(shaderID);
 		//glUniform1f(this->locBufferWidth, (float)targetBufferWidth);
 		//glUniform1f(this->locBufferHeight, (float)targetBufferHeight);
 
@@ -197,14 +205,5 @@ namespace SGE
 	{
 		//this->renderTarget->unbind();
 		glUseProgram(0);
-	}
-
-	void GLSLShader::setMVP(glm::mat4 mvpMat)
-	{
-		glUniformMatrix4fv(this->locMVP, 1, GL_FALSE, &mvpMat[0][0]);
-	}
-
-	void GLSLShader::updateTargetBufferDimensions()
-	{
 	}
 }

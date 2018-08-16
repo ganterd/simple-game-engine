@@ -7,7 +7,7 @@ namespace SGE
 		camera = new Camera();
 		mRootEntity = new Entity();
 		ShaderManager::init();
-		
+
 		Time::init();
 		overlayQuad = new OverlayQuad();
 
@@ -58,8 +58,7 @@ namespace SGE
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		ShaderManager::useShader("deferredShadingGeometryPass");
-		IShader* shader = ShaderManager::getCurrentShader();
+		SubShader* shader = ShaderManager::useShader("deferredShading", "geometryPass");
 
 		/* Draw the meshes */
 		// TODO: Use acceleration structure
@@ -72,26 +71,26 @@ namespace SGE
 
 
 		/* Gather lights. */
-		ShaderManager::useShader("deferredShadingDebugLightPass");
-		shader = ShaderManager::getCurrentShader();
-		renderTarget->bind();
-		shader->setVariable("viewProjectionMatrix", camera->getVPMat());
-
+		// ShaderManager::useShader("deferredShading", "lightingPass");
+		// shader = ShaderManager::getCurrentSubShader();
+		// renderTarget->bind();
+		// shader->setVariable("viewProjectionMatrix", camera->getVPMat());
+		//
 		std::vector<SceneLight> sceneLights = extractLights();
-		for(SceneLight l : sceneLights)
-		{
-			shader->setVariable("lightColour", glm::vec3(l.colour.r, l.colour.y, l.colour.z));
-			lightDebugModel->setPosition(l.position);
-			lightDebugModel->draw(shader);
-		}
+		// for(SceneLight l : sceneLights)
+		// {
+		// 	shader->setVariable("lightColour", glm::vec3(l.colour.r, l.colour.y, l.colour.z));
+		// 	lightDebugModel->setPosition(l.position);
+		// 	lightDebugModel->draw(shader);
+		// }
 
 		renderTarget->unbind();
 
 		glDisable(GL_CULL_FACE);
 		glDisable(GL_DEPTH_TEST);
 
-		ShaderManager::useShader("deferredShadingLightingPass");
-		shader = ShaderManager::getCurrentShader();
+		ShaderManager::useShader("deferredShading", "lightingPass");
+		shader = ShaderManager::getCurrentSubShader();
 
 		int numLights = sceneLights.size();
 		shader->setVariable("numLights", numLights);

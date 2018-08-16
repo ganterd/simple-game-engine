@@ -57,13 +57,15 @@ namespace SGE
 		if(sceneName != "")
 			LOG(DEBUG) << "Scene name is '" << sceneName << "'";
 
+		processShaders(root);
+
 		std::vector<Entity*> entities = _getSceneEntities(root);
 		for(int i = 0; i < entities.size(); ++i)
 		{
 			scene->addEntity(entities[i]);
 		}
 
-		processShaders(root);
+
 
 		LOG(DEBUG) << "Finished parsing scene";
 		return scene;
@@ -103,28 +105,39 @@ namespace SGE
 
 		for(; shaderNode; shaderNode = shaderNode->NextSiblingElement("shader"))
 		{
-			IShader* shader = new GLSLShader();
+			Shader* shader = new Shader();
 
 			const char* shaderName = shaderNode->Attribute("name");
+			shader->setName(shaderName);
 
-			for(
-				const tinyxml2::XMLElement* shaderFileNode = shaderNode->FirstChildElement();
-				shaderFileNode;
-				shaderFileNode = shaderFileNode->NextSiblingElement()
-			)
+			const tinyxml2::XMLElement* subShaderNode = shaderNode->FirstChildElement("subShader");
+			while(subShaderNode)
 			{
-				std::string shaderFileType = shaderFileNode->Name();
-				std::string shaderFilePath = shaderFileNode->GetText();
+				const char* subShaderName = subShaderNode->Attribute("name");
+				SubShader* subShader = new GLSLShader();
+				subShader->setName(subShaderName);
 
-				IShader::ShaderType shaderType;
-				if(shaderFileType == "vert")
-					shaderType = IShader::Vertex;
-				if(shaderFileType == "geom")
-					shaderType = IShader::Geometry;
-				if(shaderFileType == "frag")
-					shaderType = IShader::Fragment;
+				const tinyxml2::XMLElement* shaderFileNode = subShaderNode->FirstChildElement("file");
+				while(shaderFileNode)
+				{
+					std::string shaderFileType = shaderFileNode->Attribute("type");
+					std::string shaderFilePath = shaderFileNode->GetText();
 
-				shader->addShaderFile(shaderFilePath, shaderType);
+					SubShader::ShaderType shaderType;
+					if(shaderFileType == "vert")
+						shaderType = SubShader::Vertex;
+					if(shaderFileType == "geom")
+						shaderType = SubShader::Geometry;
+					if(shaderFileType == "frag")
+						shaderType = SubShader::Fragment;
+
+
+					subShader->addShaderFile(shaderFilePath, shaderType);
+					shaderFileNode = shaderFileNode->NextSiblingElement();
+				}
+
+				shader->addSubShader(subShaderName, subShader);
+				subShaderNode = subShaderNode->NextSiblingElement();
 			}
 
 			ShaderManager::addShader(shaderName, shader);

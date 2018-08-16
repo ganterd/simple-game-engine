@@ -1,7 +1,10 @@
 #ifndef SGE_GEOMETRY_OVERLAY_QUAD
 #define SGE_GEOMETRY_OVERLAY_QUAD
 
-#include <sge/model/Mesh.hpp>
+
+#include <GL/glew.h>
+#include <GL/glu.h>
+#include <GL/gl.h>
 
 namespace SGE
 {

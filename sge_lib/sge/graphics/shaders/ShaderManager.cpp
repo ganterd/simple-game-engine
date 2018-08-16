@@ -2,52 +2,18 @@
 
 namespace SGE
 {
-	IShader* ShaderManager::currentShader = NULL;
-	std::string ShaderManager::shaderFolder = "resources/shaders/";
-	std::map<std::string, IShader*> ShaderManager::shaders;
+	Shader* ShaderManager::currentShader = NULL;
+	std::map<std::string, Shader*> ShaderManager::shaders;
 
 	int ShaderManager::targetBufferWidth = 1;
 	int ShaderManager::targetBufferHeight = 1;
 
 	void ShaderManager::init()
 	{
-		setShaderFolder("resources/shaders/");
 		currentShader = NULL;
 	}
 
-	void ShaderManager::setShaderFolder(std::string folder)
-	{
-		shaderFolder = folder;
-	}
-
-	IShader* ShaderManager::loadShader(std::string shader)
-	{
-		if(hasShader(shader))
-			return getShader(shader);
-
-		IShader* s;
-
-		/* Should be some logic to determine if using GLSL or HLSL shaders */
-		s = new GLSLShader();
-		std::string vertShaderFilePath = shaderFolder;
-		vertShaderFilePath.append(shader);
-		vertShaderFilePath.append(".vert");
-
-		std::string fragShaderFilePath = shaderFolder;
-		fragShaderFilePath.append(shader);
-		fragShaderFilePath.append(".frag");
-
-		std::string geomShaderFilePath = shaderFolder;
-		geomShaderFilePath.append(shader);
-		geomShaderFilePath.append(".geom");
-
-		s->loadFromFiles(vertShaderFilePath, geomShaderFilePath, fragShaderFilePath);
-
-		shaders[shader] = s;
-		return s;
-	}
-
-	void ShaderManager::addShader(std::string shaderName, IShader* shader)
+	void ShaderManager::addShader(std::string shaderName, Shader* shader)
 	{
 		if(hasShader(shaderName))
 			LOG(WARNING) << "Overwriting shader '" << shaderName << "'";
@@ -61,9 +27,9 @@ namespace SGE
 		return false;
 	}
 
-	IShader* ShaderManager::getShader(std::string shader)
+	Shader* ShaderManager::getShader(std::string shader)
 	{
-		IShader* s = NULL;
+		Shader* s = NULL;
 		if(hasShader(shader))
 		{
 			s = shaders[shader];
@@ -72,27 +38,68 @@ namespace SGE
 		return s;
 	}
 
-	void ShaderManager::useShader(std::string shader)
+	Shader* ShaderManager::useShader(std::string shader)
 	{
-		if(currentShader != NULL)
-			currentShader->disable();
-
-		IShader* s = getShader(shader);
-		if(s != NULL)
+		if(currentShader != nullptr)
 		{
-			s->enable();
+			currentShader->disable();
+			currentShader = nullptr;
+		}
+
+		Shader* s = getShader(shader);
+		if(s != nullptr)
+		{
+			s->useSubShader(0);
 			//s->setTargetBufferDimensions(targetBufferWidth, targetBufferHeight);
 			currentShader = s;
+			return currentShader;
 		}
 		else
 		{
 			LOG(WARNING) << "No shader with name '" << shader << "'";
+			return nullptr;
 		}
 	}
 
-	IShader* ShaderManager::getCurrentShader()
+	SubShader* ShaderManager::useShader(std::string shaderName, std::string subShaderName)
+	{
+		if(currentShader != nullptr)
+			currentShader->disable();
+
+		Shader* s = getShader(shaderName);
+		if(s != nullptr)
+		{
+			SubShader* subShader = s->useSubShader(subShaderName);
+			//s->setTargetBufferDimensions(targetBufferWidth, targetBufferHeight);
+			if(subShader)
+			{
+				currentShader = s;
+				return subShader;
+			}
+			else
+			{
+				LOG(WARNING) << "Shader '" << shaderName << "' has no sub shader '" << subShader << "'";
+				currentShader->disable();
+				return nullptr;
+			}
+		}
+		else
+		{
+			LOG(WARNING) << "No shader with name '" << shaderName << "'";
+			return nullptr;
+		}
+	}
+
+	Shader* ShaderManager::getCurrentShader()
 	{
 		return currentShader;
+	}
+
+	SubShader* ShaderManager::getCurrentSubShader()
+	{
+		if(currentShader)
+			return currentShader->getCurrentSubShader();
+		return nullptr;
 	}
 
 	void ShaderManager::setTargetBufferDimensions(int w, int h)
