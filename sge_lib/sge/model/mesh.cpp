@@ -1,10 +1,15 @@
-#include "Mesh.hpp"
+#include "mesh.hpp"
 
 namespace SGE
 {
 	Mesh::Mesh()
 	{
 		glGenVertexArrays(1, &vao);
+	}
+
+	void Mesh::draw()
+	{
+		renderGL();
 	}
 
 	void Mesh::renderGL()

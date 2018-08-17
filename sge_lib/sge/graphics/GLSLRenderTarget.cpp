@@ -48,6 +48,7 @@ namespace SGE
 	void GLSLRenderTarget::bind()
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+		checkGLErrors();
 
 		if(mColourAttachments.size() == 0)
 		{
@@ -98,7 +99,7 @@ namespace SGE
 			LOG(DEBUG) << "New colour attachment [" << attachment << "]";
 			mColourAttachments.push_back(buffer);
 			unsigned int* attachments = new unsigned int[mColourAttachments.size()];
-			for(int i = 0; i < mColourAttachments.size(); ++i)
+			for(unsigned int i = 0; i < mColourAttachments.size(); ++i)
 			{
 				attachments[i] = ((GLSLRenderBuffer*)mColourAttachments[i])->getGLColorAttachment();
 			}
@@ -109,6 +110,7 @@ namespace SGE
 		GLSLRenderBuffer::checkFBOStatus();
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		checkGLErrors();
 
 		return (int)mRenderBuffers.size() - 1;
 	}
@@ -141,13 +143,14 @@ namespace SGE
 		);
 		mRenderBuffers.push_back(buffer);
 		mRenderBufferMap[bufferName] = buffer;
+		buffer->mName = bufferName;
 
 		if(bufferType != IRenderBuffer::BufferType::Depth)
 		{
 			LOG(DEBUG) << "New colour attachment [" << attachment << "]";
 			mColourAttachments.push_back(buffer);
 			unsigned int* attachments = new unsigned int[mColourAttachments.size()];
-			for(int i = 0; i < mColourAttachments.size(); ++i)
+			for(unsigned int i = 0; i < mColourAttachments.size(); ++i)
 			{
 				attachments[i] = ((GLSLRenderBuffer*)mColourAttachments[i])->getGLColorAttachment();
 			}

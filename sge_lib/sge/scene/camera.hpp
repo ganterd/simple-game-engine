@@ -4,17 +4,24 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/string_cast.hpp>
+
 #include <sge/utils/export.hpp>
 #include <sge/graphics/shaders/ShaderManager.hpp>
+#include <sge/scene/scenemanager.hpp>
+#include <sge/scene/entity/component.hpp>
 
 namespace SGE
 {
-	class Camera
+	class Camera : public EntityComponent
 	{
 	private:
 		glm::vec3 mPosition;
 		glm::vec3 mForwardVector;
 		glm::vec3 mUpVector;
+		glm::vec4 mBackgroundColour;
+		std::vector<Shader*> mShaders;
 
 		float fov;
 		float ratio;
@@ -36,13 +43,16 @@ namespace SGE
 		Export void setAspectRatio(float r);
 		Export void setNearPlaneDistance(float p);
 		Export void setFarPlaneDistance(float p);
+		Export void addShader(Shader* s);
+		Export void setAsMainCamera();
 
 		Export glm::vec3 getPosition();
 		Export glm::vec3 getForwardVector();
 		Export glm::vec3 getUpVector();
 		Export glm::mat4 getVPMat();
 
-		Export void update();
+		virtual void update();
+		Export void render();
 	};
 }
 

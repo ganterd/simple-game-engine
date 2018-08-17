@@ -31,6 +31,9 @@ namespace SGE
 		Export unsigned int addRenderBuffer(IRenderBuffer* buffer);
 		Export unsigned int addRenderBuffer(IRenderBuffer* buffer, unsigned int idx);
 		Export IRenderBuffer* getRenderBuffer(unsigned int bufferIndex);
+		Export IRenderBuffer* getRenderBuffer(std::string bufferName);
+		Export std::vector<IRenderBuffer*> getRenderBuffers(){ return mRenderBuffers; };
+		Export std::vector<IRenderBuffer*> getColourAttachmentBuffers(){ return mColourAttachments; };
 		Export void removeRenderBuffer(unsigned int bufferIndex);
 		Export void removeRenderBuffer(IRenderBuffer* buffer);
 

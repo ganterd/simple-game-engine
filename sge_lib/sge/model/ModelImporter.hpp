@@ -13,7 +13,7 @@
 #include <sge/utils/utils.hpp>
 #include <sge/model/ILight.hpp>
 #include <sge/model/PointLight.hpp>
-#include <sge/model/Mesh.hpp>
+#include <sge/model/mesh.hpp>
 
 #include <sge/graphics/texture/ITexture.hpp>
 #include <sge/graphics/texture/texturefactory.hpp>
@@ -50,6 +50,6 @@ namespace SGE
 		Export std::vector<ILight*> getLights();
 		Export std::vector<Material*> getMaterials(){ return mMaterials; };
 	};
-};
+}
 
 #endif

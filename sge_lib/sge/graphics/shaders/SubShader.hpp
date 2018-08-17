@@ -28,6 +28,14 @@ namespace SGE
 		bool mToRenderTarget;
 		IRenderTarget* mRenderTarget;
 
+		typedef struct _RenderBufferLinks
+		{
+			std::string sourceShader;
+			std::string sourceSubShader;
+			std::string sourceBuffer;
+			std::string targetSampler;
+		} RenderBufferLink;
+		std::vector<RenderBufferLink> mRenderBufferLinks;
 
 	public:
 		enum ShaderType
@@ -38,12 +46,15 @@ namespace SGE
 		};
 
 		void setName(std::string n){ mName = n; };
+		void setIsScreenSpaceShader(bool b){ mIsScreenSpaceShader = b; };
+		bool isScreenSpaceShader(){ return mIsScreenSpaceShader; };
 		virtual void setToRenderTarget(bool b) = 0;
+		IRenderTarget* getRenderTarget(){ return mRenderTarget; };
 		virtual void getRenderTargetBuffer(std::string bufferName) = 0;
-
 		virtual bool addShaderFile(std::string shaderFile, ShaderType shaderType) = 0;
 		virtual bool loadFromFiles(std::string vertFile, std::string fragFile) = 0;
 		virtual bool loadFromFiles(std::string vFile, std::string fFile, std::string gFile) = 0;
+		void addRenderBufferLink(std::string sourceShader, std::string sourceSubShader, std::string sourceBuffer, std::string targetSampler);
 
 		virtual void enable() = 0;
 		virtual void disable() = 0;

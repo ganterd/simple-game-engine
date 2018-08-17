@@ -15,11 +15,11 @@ uniform bool hasNormalMap;
 uniform bool hasOpacityMap;
 uniform bool hasEmmisiveTexture;
 
-layout (location = 0) out vec4 albedoGBuffer;
-layout (location = 1) out vec4 specularGBuffer;
-layout (location = 2) out vec4 normalGBuffer;
-layout (location = 3) out vec4 positionGBuffer;
-layout (location = 4) out vec4 emmisiveGBuffer;
+layout(location = 0) out vec4 diffuse;
+layout(location = 1) out vec4 specular;
+layout(location = 3) out vec4 normals;
+layout(location = 4) out vec4 positions;
+layout(location = 2) out vec4 emissive;
 
 void main(){
     vec3 normal = fragNormal;
@@ -38,8 +38,8 @@ void main(){
             discard;
     }
 
-    positionGBuffer = vec4(fragPosition, opacity);
-    normalGBuffer = vec4(normal, opacity);
-    albedoGBuffer = vec4(vec3(texture(albedoTexture, fragTexCoord)), opacity);
-    specularGBuffer = vec4(vec3(texture(specularTexture, fragTexCoord)), opacity);
+    positions = vec4(fragPosition, opacity);
+    normals = vec4(normal, opacity);
+    diffuse = vec4(vec3(texture(albedoTexture, fragTexCoord)), opacity);
+    specular = vec4(vec3(texture(specularTexture, fragTexCoord)), opacity);
 }

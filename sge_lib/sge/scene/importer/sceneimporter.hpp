@@ -7,15 +7,15 @@
 #include <vector>
 
 #include <sge/scene/scene.hpp>
-#include <sge/model/Entity.hpp>
+#include <sge/scene/entity/entity.hpp>
 #include <sge/scene/importer/processors.hpp>
 
 namespace SGE
 {
+	class Scene;
 	class Export SceneImporter
 	{
 	private:
-		const char* _readFile(const char* filePath);
 		std::string _getSceneName(const tinyxml2::XMLElement* root);
 		std::vector<Entity*> _getSceneEntities(const tinyxml2::XMLElement* root);
 		Entity* _getEntity(const tinyxml2::XMLElement* entityNode);

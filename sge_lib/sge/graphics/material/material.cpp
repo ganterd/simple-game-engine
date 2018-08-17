@@ -13,14 +13,14 @@ void SGE::Material::addTexture(ITexture* t)
         hasNormalMap = true;
     if(t->type() == ITexture::Type::Opacity)
         hasOpacityMap = true;
-};
+}
 
 void SGE::Material::bindAllTextures()
 {
     SubShader* shader = ShaderManager::getCurrentSubShader();
     shader->setVariable("hasNormalMap", hasNormalMap);
     shader->setVariable("hasOpacityMap", hasOpacityMap);
-    for(int i = 0; i < mTextures.size(); ++i)
+    for(unsigned int i = 0; i < mTextures.size(); ++i)
     {
         switch(mTextures[i]->type())
         {
@@ -40,13 +40,15 @@ void SGE::Material::bindAllTextures()
             shader->setVariable("opacityTexture", 3);
             mTextures[i]->bindTexture(3);
             break;
+        default:
+            LOG_N_TIMES(1, WARNING) << "Tried to bind and unknown texture type";
         }
     }
 }
 
 void SGE::Material::unbindAllTextures()
 {
-    for(int i = 0; i < mTextures.size(); ++i)
+    for(unsigned int i = 0; i < mTextures.size(); ++i)
     {
         mTextures[i]->unbindTexture();
     }

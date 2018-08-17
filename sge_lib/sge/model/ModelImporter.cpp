@@ -74,7 +74,7 @@ namespace SGE
 				extractMaterialTextures(material, (aiTextureType)t, textures);
 			}
 
-			for(int t = 0; t < textures.size(); ++t)
+			for(unsigned int t = 0; t < textures.size(); ++t)
 			{
 				newMaterial->addTexture(textures[t]);
 			}
@@ -248,11 +248,10 @@ namespace SGE
 			aiLight* light = model->mLights[i];
 
 			LOG(DEBUG) << "     |-Type: ";
-			ILight* l;
+			ILight* l = new PointLight();
 			if(light->mType == aiLightSource_POINT)
 			{
 				LOG(DEBUG) << "Point" ;
-				l = new PointLight();
 			}
 
 			lights.push_back(l);

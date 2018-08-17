@@ -6,8 +6,8 @@ out vec4 outColour;
 layout (binding = 0) uniform sampler2D positionsTexture;
 layout (binding = 1) uniform sampler2D specularTexture;
 layout (binding = 2) uniform sampler2D normalsTexture;
-layout (binding = 3) uniform sampler2D albedoTexture;
-layout (binding = 4) uniform sampler2D emmisiveTexture;
+layout (binding = 3) uniform sampler2D diffuseTexture;
+layout (binding = 4) uniform sampler2D emissiveTexture;
 
 uniform vec3 cameraPosition;
 
@@ -25,10 +25,10 @@ void main(){
     vec3 position = vec3(texture(positionsTexture, p));
     vec3 normal = vec3(texture(normalsTexture, p));
     vec3 specular = vec3(texture(specularTexture, p));
-    vec3 diffuse = vec3(texture(albedoTexture, p));
+    vec3 diffuse = vec3(texture(diffuseTexture, p));
 
     //vec3 lightPosition = vec3(0.0f, 2.0f, 0.0f);
-    vec3 finalColour = vec3(texture(emmisiveTexture, p));
+    vec3 finalColour = vec3(texture(emissiveTexture, p)) + diffuse * 0.3f + vec3(0.5f, 0.0f, 0.0f);
     for(int i = 0; i < numLights; ++i)
     {
         PointLight light = pointLights[i];

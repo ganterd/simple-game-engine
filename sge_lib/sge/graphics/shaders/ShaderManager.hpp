@@ -23,8 +23,11 @@ namespace SGE
 		Export static void addShader(std::string shaderName, Shader* shader);
 		Export static bool hasShader(std::string shader);
 		Export static Shader* getShader(std::string shader);
+		Export static void setCurrentShader(Shader* shader);
 		Export static Shader* getCurrentShader();
+		
 		Export static SubShader* getCurrentSubShader();
+
 		Export static Shader* useShader(std::string shader);
 		Export static SubShader* useShader(std::string shader, std::string subShader);
 

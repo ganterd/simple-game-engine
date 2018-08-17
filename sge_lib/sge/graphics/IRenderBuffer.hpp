@@ -16,6 +16,8 @@ namespace SGE
 			Depth
 		};
 
+		std::string mName;
+
 		virtual void bindBuffer() = 0;
 		virtual void unbindBuffer() = 0;
 		virtual void bindTexture(int textureUnit = 0);

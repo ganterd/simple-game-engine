@@ -33,6 +33,7 @@ namespace SGE
 	public:
 		Mesh();
 
+		void draw();
 		void renderGL();
 
 		void setMaterial(Material* m){ mMaterial = m; };

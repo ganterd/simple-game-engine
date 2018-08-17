@@ -42,6 +42,11 @@ namespace SGE
 		return mColourAttachments[idx];
 	}
 
+	IRenderBuffer* IRenderTarget::getRenderBuffer(std::string bufferName)
+	{
+		return mRenderBufferMap[bufferName];
+	}
+
 	void IRenderTarget::updateBufferDimensions()
 	{
 	}

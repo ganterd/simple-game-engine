@@ -8,6 +8,7 @@
 
 #include <sge/graphics/shaders/SubShader.hpp>
 #include <sge/graphics/GLSLRenderTarget.hpp>
+#include <sge/graphics/OGLGraphicsManager.hpp>
 
 namespace SGE
 {
@@ -17,6 +18,8 @@ namespace SGE
 		GLuint vShaderID;
 		GLuint fShaderID;
 		GLuint gShaderID;
+		unsigned int mFragmentShaderCount;
+		bool mBoundFragLocations;
 
 		GLuint shaderID;
 

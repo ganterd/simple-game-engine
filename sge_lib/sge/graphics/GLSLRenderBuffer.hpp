@@ -8,6 +8,7 @@
 
 #include <sge/graphics/IRenderBuffer.hpp>
 #include <sge/graphics/texture/GLSLTexture.hpp>
+#include <sge/graphics/OGLGraphicsManager.hpp>
 
 namespace SGE
 {

@@ -4,10 +4,10 @@
 		<shader name="deferredShading">
 			<subShader name="geometryPass">
 				<renderTarget>
-					<buffer name="diffuse" type="rgba32" />
-					<buffer name="specular" type="rgb32" />
+					<buffer name="diffuse" type="rgb" />
+					<buffer name="specular" type="rgb" />
+					<buffer name="emissive" type="rgb" />
 					<buffer name="normals" type="rgb32" />
-					<buffer name="emmisive" type="rgb32" />
 					<buffer name="positions" type="rgb32" />
 					<buffer name="depth" type="depth" />
 				</renderTarget>
@@ -17,11 +17,11 @@
 			<subShader name="lightingPass">
 				<screenSpace>true</screenSpace>
 				<inputBuffers>
-					<buffer fromShader="geometryPass" name="diffuse" sampler="diffuse"/>
-					<buffer fromShader="geometryPass" name="specular" sampler="specular"/>
-					<buffer fromShader="geometryPass" name="normals" sampler="normals"/>
-					<buffer fromShader="geometryPass" name="emmisive" sampler="emmisive"/>
-					<buffer fromShader="geometryPass" name="positions" sampler="positions"/>
+					<buffer source="geometryPass" name="diffuse" sampler="diffuseTexture"/>
+					<buffer source="geometryPass" name="specular" sampler="specularTexture"/>
+					<buffer source="geometryPass" name="normals" sampler="normalsTexture"/>
+					<buffer source="geometryPass" name="emissive" sampler="emissiveTexture"/>
+					<buffer source="geometryPass" name="positions" sampler="positionsTexture"/>
 				</inputBuffers>
 				<file type="vert">resources/shaders/deferred_shading/lighting_pass.vert</file>
 				<file type="frag">resources/shaders/deferred_shading/lighting_pass.frag</file>
@@ -67,6 +67,17 @@
 				<rotation x="0" y="0" z="0"/>
 			</transform>
 			<light r="0.7" g="0.7" b="1.0" power="3.0"/>
+		</entity>
+
+		<entity name="MainCamera">
+			<transform>
+				<translation x="5" y="3" z="5"/>
+				<rotation x="0" y="-135" z="0"/>
+			</transform>
+			<camera main="true">
+				<!-- This defines the order of which shaders run -->
+				<shader shader="deferredShading" />
+			</camera>
 		</entity>
 	</entities>
 </scene>

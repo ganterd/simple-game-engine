@@ -28,7 +28,7 @@ namespace SGE
         return mCurrentSubShader;
     }
 
-    SubShader* Shader::useSubShader(int subShaderIndex)
+    SubShader* Shader::useSubShader(unsigned int subShaderIndex)
     {
         if(mCurrentSubShader)
         {
@@ -45,6 +45,11 @@ namespace SGE
         mCurrentSubShader = mSubShaders[subShaderIndex];
         mCurrentSubShader->enable();
         return mCurrentSubShader;
+    }
+
+    SubShader* Shader::getSubShader(std::string subShaderName)
+    {
+        return mSubShaderMap[subShaderName];
     }
 
     void Shader::disable()

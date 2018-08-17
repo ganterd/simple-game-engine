@@ -26,25 +26,20 @@ GraphicsManager::IGraphicsManager* gm;
 Scene* scene;
 CameraControl* cameraControl;
 
-bool quit = false;
-
-void main_loop()
+bool main_loop()
 {
 	dm->handleEvents();
-	quit = dm->wasQuitRequested();
-	if(quit)
+	if(dm->wasQuitRequested())
 	{
 		LOG(INFO) << "Quit requested";
-		return;
+		return false;
 	}
 
-	dm->setAsTarget();
-	gm->clearBuffer();
 	scene->update();
-	cameraControl->update();
+	// cameraControl->update();
+	scene->getMainCamera()->render();
 
-	scene->draw();
-	dm->swapBuffers();
+	return true;
 }
 
 void init()
@@ -52,16 +47,21 @@ void init()
 	/* Initialise the display manager */
 	dm = SGE::DisplayManager::getDisplayInstance();
 
+
 	/* Initialise the graphics manager */
 	gm = new GraphicsManager::OGLGraphicsManager(dm);
 
+	dm->setAsTarget();
+
 	/* Instantiate the scene object */
-	SceneImporter sceneImporter;
-	scene = sceneImporter.importSceneFromFile("resources/scenes/test_scene.xml");
-	scene->camera->setAspectRatio((float)dm->size().width / (float)dm->size().height);
+	scene = SceneManager::loadScene("resources/scenes/test_scene.xml");
+	// SceneImporter sceneImporter;
+	// scene = sceneImporter.importSceneFromFile("resources/scenes/test_scene.xml");
+	// scene->camera->setAspectRatio((float)dm->size().width / (float)dm->size().height);
 
 	cameraControl = new CameraControl();
-	cameraControl->mCamera = scene->camera;
+	scene->getMainCamera()->getEntity()->addComponent(cameraControl);
+	// cameraControl->mCamera = scene->getMainCamera();
 }
 
 void exit()
@@ -89,8 +89,7 @@ int main( int argc, char* args[] )
 
 
 	init();
-	while(!quit)
-		main_loop();
+	while(main_loop());
 
 	exit();
 

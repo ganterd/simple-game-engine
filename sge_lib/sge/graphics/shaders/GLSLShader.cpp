@@ -1,12 +1,14 @@
-#include "GLSLShader.hpp"
+#include <sge/graphics/shaders/GLSLShader.hpp>
+#include <sge/graphics/shaders/ShaderManager.hpp>
 
 namespace SGE
 {
 	GLSLShader::GLSLShader()
 	{
-		//this->renderTarget = new GLSLRenderTarget();
-		//LOG(DEBUG) << "Created render target [" << this->renderTarget << "]";
-
+		mRenderTarget = nullptr;
+		mToRenderTarget = false;
+		mFragmentShaderCount = 0;
+		mBoundFragLocations = false;
 		shaderID = glCreateProgram();
 	}
 
@@ -22,7 +24,7 @@ namespace SGE
 
 	bool GLSLShader::addShaderFile(std::string shaderFile, ShaderType shaderType)
 	{
-		GLuint glShaderType;
+		GLuint glShaderType = GL_VERTEX_SHADER;
 		const char* sType = "unknown";
 		switch(shaderType)
 		{
@@ -48,6 +50,11 @@ namespace SGE
 
 		loadShader(shaderCode, glShaderType, shaderID);
 
+		if(shaderType == Fragment)
+		{
+			mFragmentShaderCount++;
+		}
+
 		delete[] shaderCode;
 
 		return link();
@@ -66,7 +73,37 @@ namespace SGE
 
 	bool GLSLShader::link()
 	{
+		// Prior to linking, render buffers must be assigned
+		if(mToRenderTarget && mRenderTarget && !mBoundFragLocations)
+		{
+			mRenderTarget->bind();
+			std::vector<IRenderBuffer*> renderBuffers = mRenderTarget->getColourAttachmentBuffers();
+			for(IRenderBuffer* renderBuffer : renderBuffers)
+			{
+				flushGLErrors();
+				GLSLRenderBuffer* buffer = (GLSLRenderBuffer*)renderBuffer;
+				buffer->bindBuffer();
+				glBindFragDataLocation(shaderID, buffer->getGLColorAttachment() - GL_COLOR_ATTACHMENT0, buffer->mName.c_str());
+				LOG(DEBUG) << "Binding attachment " << buffer->getGLColorAttachment() - GL_COLOR_ATTACHMENT0 << " variable " << buffer->mName;
+
+				checkGLErrors();
+			}
+			mBoundFragLocations = true;
+		}
+
+
 		glLinkProgram(shaderID);
+
+		if(mRenderTarget && mFragmentShaderCount)
+		{
+			for(IRenderBuffer* renderBuffer : mRenderTarget->getColourAttachmentBuffers())
+			{
+				GLSLRenderBuffer* buffer = (GLSLRenderBuffer*)renderBuffer;
+				GLuint want = glGetFragDataLocation(shaderID, buffer->mName.c_str());
+				LOG(DEBUG) << "Bound '" << buffer->mName << "' to attachment " << want;
+				checkGLErrors();
+			}
+		}
 
 		GLint linked = 0;
 		glGetProgramiv(shaderID, GL_LINK_STATUS, &linked);
@@ -98,18 +135,25 @@ namespace SGE
 			GLuint loc = glGetUniformLocation(shaderID, name.c_str());
 			mUniformsMap[name] = loc;
 
-			if(loc == -1)
+			if(loc == (GLuint)-1)
 				LOG(WARNING) << "Shader '" << mName << "'[" << shaderID << "] has no uniform \"" << name << "\"";
+			return loc;
 		}
 	}
 
 	void GLSLShader::setToRenderTarget(bool b)
 	{
-	};
+		mToRenderTarget = b;
+		if(mToRenderTarget)
+		{
+			mRenderTarget = new GLSLRenderTarget();
+		}
+	}
 
 	void GLSLShader::getRenderTargetBuffer(std::string bufferName)
 	{
-	};
+
+	}
 
 	void GLSLShader::setVariable(std::string name, bool value)
 	{
@@ -193,17 +237,39 @@ namespace SGE
 	void GLSLShader::enable()
 	{
 		glUseProgram(shaderID);
-		//glUniform1f(this->locBufferWidth, (float)targetBufferWidth);
-		//glUniform1f(this->locBufferHeight, (float)targetBufferHeight);
 
-		//if(this->renderTarget == NULL)
-		//	LOG(ERROR) << "Shader has no render target!";
-		//this->renderTarget->bind();
+		if(mToRenderTarget && mRenderTarget)
+		{
+			mRenderTarget->bind();
+			mRenderTarget->clear();
+		}
+
+		for(RenderBufferLink l : mRenderBufferLinks)
+		{
+			Shader* linkedShader = ShaderManager::getShader(l.sourceShader);
+			SubShader* linkedSubShader = linkedShader->getSubShader(l.sourceSubShader);
+			IRenderTarget* linkedRenderTarget = linkedSubShader->getRenderTarget();
+
+			if(!linkedRenderTarget)
+			{
+				LOG(WARNING) << "Linked render buffer '" << l.sourceShader << "." << l.sourceSubShader << "' is not a render target";
+				continue;
+			}
+
+			GLSLRenderBuffer* linkedBuffer = (GLSLRenderBuffer*)linkedRenderTarget->getRenderBuffer(l.sourceBuffer);
+			GLuint textureUnit = linkedBuffer->getGLColorAttachment() - GL_COLOR_ATTACHMENT0;
+
+			setVariable(l.targetSampler, (int)textureUnit);
+			linkedBuffer->bindTexture(textureUnit);
+		}
 	}
 
 	void GLSLShader::disable()
 	{
-		//this->renderTarget->unbind();
+		if(mToRenderTarget && mRenderTarget)
+		{
+			mRenderTarget->unbind();
+		}
 		glUseProgram(0);
 	}
 }

@@ -4,25 +4,11 @@ namespace SGE
 {
 	Scene::Scene()
 	{
-		camera = new Camera();
+		mMainCamera = nullptr;
 		mRootEntity = new Entity();
 		ShaderManager::init();
 
 		Time::init();
-		overlayQuad = new OverlayQuad();
-
-		int bufferWidth = DisplayManager::getDisplayInstance()->size().width;
-		int bufferHeight = DisplayManager::getDisplayInstance()->size().height;
-		renderTarget = new GLSLRenderTarget(bufferWidth, bufferHeight);
-		renderTarget->addRenderBuffer(IRenderBuffer::BufferType::Color, ITexture::DataType::Float); // Albedo g-buffer
-		renderTarget->addRenderBuffer(IRenderBuffer::BufferType::Color, ITexture::DataType::Float); // Specular g-buffer
-		renderTarget->addRenderBuffer(IRenderBuffer::BufferType::Position, ITexture::DataType::Float); // Normals g-buffer
-		renderTarget->addRenderBuffer(IRenderBuffer::BufferType::Position, ITexture::DataType::Float); // Position g-buffer
-		renderTarget->addRenderBuffer(IRenderBuffer::BufferType::Depth, ITexture::DataType::Float);
-		renderTarget->addRenderBuffer(IRenderBuffer::BufferType::Color, ITexture::DataType::Float); // emmisiveGBuffer g-buffer
-
-		lightDebugModel = new Entity();
-		lightDebugModel->loadFromFile("resources/models/cube/cube.obj");
 	}
 
 	void Scene::addEntity(Entity* entity)
@@ -34,93 +20,41 @@ namespace SGE
 	{
 		Time::tick();
 		Input::update();
-		camera->update();
+		//camera->update();
 
-		int entities_count = (int)entities.size();
-		for(int i = 0; i < entities_count; ++i)
-		{
-			entities[i]->update();
-		}
+		mRootEntity->update();
 	}
 
-	void Scene::draw()
+	// 	/* Gather lights. */
+	// 	// ShaderManager::useShader("deferredShading", "lightingPass");
+	// 	// shader = ShaderManager::getCurrentSubShader();
+	// 	// renderTarget->bind();
+	// 	// shader->setVariable("viewProjectionMatrix", camera->getVPMat());
+	// 	//
+	// 	std::vector<SceneLight> sceneLights = extractLights();
+	// 	// for(SceneLight l : sceneLights)
+	// 	// {
+	// 	// 	shader->setVariable("lightColour", glm::vec3(l.colour.r, l.colour.y, l.colour.z));
+	// 	// 	lightDebugModel->setPosition(l.position);
+	// 	// 	lightDebugModel->draw(shader);
+	// 	// }
+	//
+	// 	int numLights = sceneLights.size();
+	// 	shader->setVariable("numLights", numLights);
+	//
+	// 	GLuint sceneLightsSSBO;
+	// 	glGenBuffers(1, &sceneLightsSSBO);
+	// 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, sceneLightsSSBO);
+	// 	glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(SceneLight) * numLights, &sceneLights[0], GL_DYNAMIC_COPY);
+	// 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 9, sceneLightsSSBO);
+	// 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+	//
+	// 	glDeleteBuffers(1, &sceneLightsSSBO);
+	// }
+
+	void Scene::draw(SubShader* targetShader)
 	{
-		glEnable(GL_CULL_FACE);
-		glCullFace(GL_BACK);
-
-		glDepthMask(GL_TRUE);
-		glEnable(GL_DEPTH_TEST);
-		glDepthFunc(GL_LESS);
-
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		SubShader* shader = ShaderManager::useShader("deferredShading", "geometryPass");
-
-		/* Draw the meshes */
-		// TODO: Use acceleration structure
-		int entities_count = (int)entities.size();
-		renderTarget->bind();
-		renderTarget->clear();
-
-		shader->setVariable("viewProjectionMatrix", camera->getVPMat());
-		mRootEntity->draw(shader);
-
-
-		/* Gather lights. */
-		// ShaderManager::useShader("deferredShading", "lightingPass");
-		// shader = ShaderManager::getCurrentSubShader();
-		// renderTarget->bind();
-		// shader->setVariable("viewProjectionMatrix", camera->getVPMat());
-		//
-		std::vector<SceneLight> sceneLights = extractLights();
-		// for(SceneLight l : sceneLights)
-		// {
-		// 	shader->setVariable("lightColour", glm::vec3(l.colour.r, l.colour.y, l.colour.z));
-		// 	lightDebugModel->setPosition(l.position);
-		// 	lightDebugModel->draw(shader);
-		// }
-
-		renderTarget->unbind();
-
-		glDisable(GL_CULL_FACE);
-		glDisable(GL_DEPTH_TEST);
-
-		ShaderManager::useShader("deferredShading", "lightingPass");
-		shader = ShaderManager::getCurrentSubShader();
-
-		int numLights = sceneLights.size();
-		shader->setVariable("numLights", numLights);
-
-		GLuint sceneLightsSSBO;
-		glGenBuffers(1, &sceneLightsSSBO);
-		glBindBuffer(GL_SHADER_STORAGE_BUFFER, sceneLightsSSBO);
-		glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(SceneLight) * numLights, &sceneLights[0], GL_DYNAMIC_COPY);
-		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 9, sceneLightsSSBO);
-		glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
-
-
-		shader->setVariable("albedoTexture", 0);
-		shader->setVariable("specularTexture", 1);
-		shader->setVariable("normalsTexture", 2);
-		shader->setVariable("positionsTexture", 3);
-		shader->setVariable("cameraPosition", camera->getPosition());
-		renderTarget->getRenderBuffer(0)->bindTexture(0); // Albedo g-buffer
-		renderTarget->getRenderBuffer(1)->bindTexture(1); // Specular g-buffer
-		renderTarget->getRenderBuffer(2)->bindTexture(2); // Normals g-buffer
-		renderTarget->getRenderBuffer(3)->bindTexture(3); // Position g-buffer
-		renderTarget->getRenderBuffer(4)->bindTexture(4); // Position g-buffer
-		overlayQuad->draw();
-		renderTarget->getRenderBuffer(0)->unbindTexture();
-		renderTarget->getRenderBuffer(1)->unbindTexture();
-		renderTarget->getRenderBuffer(2)->unbindTexture();
-		renderTarget->getRenderBuffer(3)->unbindTexture();
-		renderTarget->getRenderBuffer(4)->unbindTexture();
-
-		glDeleteBuffers(1, &sceneLightsSSBO);
+		mRootEntity->draw(targetShader);
 	}
 
 	std::vector<Scene::SceneLight> Scene::extractLights()
@@ -134,7 +68,7 @@ namespace SGE
 	{
 		mat *= n->getModelMat();
 		std::vector<ILight*> entityLights = n->getLights();
-		for(int j = 0; j < entityLights.size(); ++j)
+		for(unsigned int j = 0; j < entityLights.size(); ++j)
 		{
 			ILight* l = entityLights[j];
 			glm::vec3 lightPosition = l->getPosition();
@@ -153,7 +87,7 @@ namespace SGE
 		}
 
 		std::vector<Entity*> nChildren = n->getChildren();
-		for(int i = 0; i < nChildren.size(); ++i)
+		for(unsigned int i = 0; i < nChildren.size(); ++i)
 		{
 			recursiveExtractLights(nChildren[i], mat, sceneLights);
 		}

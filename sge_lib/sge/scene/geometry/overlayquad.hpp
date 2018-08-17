@@ -13,7 +13,13 @@ namespace SGE
     private:
         GLuint vao;
         GLuint vbo;
-
+        static OverlayQuad* mInstance;
+        static OverlayQuad* getInstance()
+        {
+            if(mInstance == nullptr)
+                mInstance = new OverlayQuad();
+            return mInstance;
+        }
     public:
         OverlayQuad()
         {
@@ -37,9 +43,9 @@ namespace SGE
     		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
         }
 
-        void draw()
+        static void draw()
         {
-            glBindVertexArray(vao);
+            glBindVertexArray(getInstance()->vao);
             glDrawArrays(GL_TRIANGLES, 0, 6);
             glBindVertexArray(0);
         }

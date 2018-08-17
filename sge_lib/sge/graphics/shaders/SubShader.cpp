@@ -4,7 +4,7 @@ namespace SGE
 {
 	const char* SubShader::readFile(const char* filePath)
 	{
-		char* text;
+		char* text = nullptr;
 
 		FILE *file = fopen(filePath, "r");
 
@@ -24,5 +24,19 @@ namespace SGE
 		fclose(file);
 
 		return text;
+	}
+
+	void SubShader::addRenderBufferLink(
+		std::string sourceShader,
+		std::string sourceSubShader,
+		std::string sourceBuffer,
+		std::string targetSampler
+	){
+		RenderBufferLink link;
+		link.sourceShader = sourceShader;
+		link.sourceSubShader = sourceSubShader;
+		link.sourceBuffer = sourceBuffer;
+		link.targetSampler = targetSampler;
+		mRenderBufferLinks.push_back(link);
 	}
 }

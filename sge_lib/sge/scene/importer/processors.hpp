@@ -3,7 +3,7 @@
 #include <easylogging++.h>
 #include <tinyxml2.h>
 
-#include <sge/model/Entity.hpp>
+#include <sge/scene/entity/entity.hpp>
 
 namespace SGE
 {

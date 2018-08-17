@@ -1,36 +1,14 @@
-#include "sceneimporter.hpp"
+#include <sge/scene/importer/sceneimporter.hpp>
+#include <sge/scene/scenemanager.hpp>
 
 namespace SGE
 {
-	const char* SceneImporter::_readFile(const char* filePath){
-		char* text;
-
-		FILE *file = fopen(filePath, "r");
-
-		if (file == NULL)
-			return NULL;
-
-		fseek(file, 0, SEEK_END);
-		size_t count = ftell(file);
-		rewind(file);
-
-
-		if (count > 0) {
-			text = (char*)malloc(sizeof(char) * (count + 1));
-			count = fread(text, sizeof(char), count, file);
-			text[count] = '\0';
-		}
-		fclose(file);
-
-		return text;
-	}
-
 	Scene* SceneImporter::importSceneFromFile(std::string sceneFile)
 	{
 		Processors::listRegisteredProcessors();
 
 		/* Import the scene text data */
-		const char* text = this->_readFile(sceneFile.c_str());
+		const char* text = Utils::readFile(sceneFile.c_str());
 		if(text == NULL)
 		{
 			LOG(WARNING) << "Couldn't read scene file: " << sceneFile;
@@ -51,6 +29,7 @@ namespace SGE
 		}
 		LOG(DEBUG) << "Scene has root node...";
 		Scene* scene = new Scene();
+		SceneManager::setActiveScene(scene);
 
 		/* Get the scene name, if any */
 		std::string sceneName = _getSceneName(root);
@@ -60,7 +39,7 @@ namespace SGE
 		processShaders(root);
 
 		std::vector<Entity*> entities = _getSceneEntities(root);
-		for(int i = 0; i < entities.size(); ++i)
+		for(unsigned int i = 0; i < entities.size(); ++i)
 		{
 			scene->addEntity(entities[i]);
 		}
@@ -117,23 +96,90 @@ namespace SGE
 				SubShader* subShader = new GLSLShader();
 				subShader->setName(subShaderName);
 
+				/* Create render targets if any */
+				XMLElement* renderTargetNode = subShaderNode->FirstChildElement("renderTarget");
+				if(renderTargetNode)
+				{
+					subShader->setToRenderTarget(true);
+
+					XMLElement* renderBufferNode = renderTargetNode->FirstChildElement("buffer");
+					while(renderBufferNode)
+					{
+						std::string bufferName = renderBufferNode->Attribute("name");
+						std::string bufferTypeString = renderBufferNode->Attribute("type");
+
+						IRenderBuffer::BufferType bufferType;
+						if(bufferTypeString == "rgb")
+							bufferType = IRenderBuffer::BufferType::Color;
+						else if(bufferTypeString == "rgb32")
+							bufferType = IRenderBuffer::BufferType::Position;
+						else if(bufferTypeString == "depth")
+							bufferType = IRenderBuffer::BufferType::Depth;
+						else
+						{
+							LOG(ERROR) << "Unkown render buffer type '" << bufferTypeString << "'";
+							continue;
+						}
+
+						subShader->getRenderTarget()->addRenderBuffer(bufferName, bufferType, ITexture::DataType::Float);
+
+						renderBufferNode = renderBufferNode->NextSiblingElement();
+					}
+				}
+
+				/* Import GLSL shader files */
 				const tinyxml2::XMLElement* shaderFileNode = subShaderNode->FirstChildElement("file");
 				while(shaderFileNode)
 				{
 					std::string shaderFileType = shaderFileNode->Attribute("type");
 					std::string shaderFilePath = shaderFileNode->GetText();
 
-					SubShader::ShaderType shaderType;
+					SubShader::ShaderType shaderType = SubShader::Vertex;
 					if(shaderFileType == "vert")
 						shaderType = SubShader::Vertex;
-					if(shaderFileType == "geom")
+					else if(shaderFileType == "geom")
 						shaderType = SubShader::Geometry;
-					if(shaderFileType == "frag")
+					else if(shaderFileType == "frag")
 						shaderType = SubShader::Fragment;
+					else
+					{
+						LOG(WARNING) << "Unknown shader type '" << shaderFileType << "'";
+						continue;
+					}
 
 
 					subShader->addShaderFile(shaderFilePath, shaderType);
 					shaderFileNode = shaderFileNode->NextSiblingElement();
+				}
+
+				/* Create render targets if any */
+				XMLElement* inputBuffers = subShaderNode->FirstChildElement("inputBuffers");
+				if(inputBuffers)
+				{
+					XMLElement* bufferNode = inputBuffers->FirstChildElement("buffer");
+					while(bufferNode)
+					{
+						std::string bufferSource = bufferNode->Attribute("source");
+						std::string bufferName = bufferNode->Attribute("name");
+						std::string bufferSampler = bufferNode->Attribute("sampler");
+
+						subShader->addRenderBufferLink(
+							shaderName,
+							bufferSource,
+							bufferName,
+							bufferSampler
+						);
+
+						bufferNode = bufferNode->NextSiblingElement();
+					}
+				}
+
+				XMLElement* screenSpaceShaderNode = subShaderNode->FirstChildElement("screenSpace");
+				if(screenSpaceShaderNode)
+				{
+					std::string screenSpaceString = screenSpaceShaderNode->GetText();
+					if(screenSpaceString == "true")
+						subShader->setIsScreenSpaceShader(true);
 				}
 
 				shader->addSubShader(subShaderName, subShader);
@@ -194,7 +240,6 @@ namespace SGE
 			if(nodeType == "entity")
 			{
 				Entity* childEntity = _getEntity(childNode);
-				childEntity->setParent(entity);
 				entity->addChild(childEntity);
 			}
 			else

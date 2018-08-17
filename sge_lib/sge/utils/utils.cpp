@@ -7,7 +7,7 @@ INITIALIZE_EASYLOGGINGPP
 namespace SGE
 {
 	const char* Utils::readFile(const char* filePath){
-		char* text;
+		char* text = nullptr;
 
 		FILE *file = fopen(filePath, "r");
 

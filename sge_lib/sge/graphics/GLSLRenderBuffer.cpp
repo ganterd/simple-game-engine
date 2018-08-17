@@ -111,11 +111,13 @@ namespace SGE
 	void GLSLRenderBuffer::bindBuffer()
 	{
 		glBindRenderbuffer(GL_RENDERBUFFER, this->m_glRenderBufferID);
+		checkGLErrors();
 	}
 
 	void GLSLRenderBuffer::unbindBuffer()
 	{
 		glBindRenderbuffer(GL_RENDERBUFFER, 0);
+		checkGLErrors();
 	}
 
 	void GLSLRenderBuffer::clear()

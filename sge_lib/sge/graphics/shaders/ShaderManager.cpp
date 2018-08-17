@@ -38,20 +38,20 @@ namespace SGE
 		return s;
 	}
 
-	Shader* ShaderManager::useShader(std::string shader)
+	void ShaderManager::setCurrentShader(Shader* s)
 	{
 		if(currentShader != nullptr)
-		{
 			currentShader->disable();
-			currentShader = nullptr;
-		}
+		currentShader = s;
+	}
 
+	Shader* ShaderManager::useShader(std::string shader)
+	{
 		Shader* s = getShader(shader);
 		if(s != nullptr)
 		{
+			setCurrentShader(s);
 			s->useSubShader(0);
-			//s->setTargetBufferDimensions(targetBufferWidth, targetBufferHeight);
-			currentShader = s;
 			return currentShader;
 		}
 		else
@@ -63,9 +63,6 @@ namespace SGE
 
 	SubShader* ShaderManager::useShader(std::string shaderName, std::string subShaderName)
 	{
-		if(currentShader != nullptr)
-			currentShader->disable();
-
 		Shader* s = getShader(shaderName);
 		if(s != nullptr)
 		{
@@ -73,13 +70,12 @@ namespace SGE
 			//s->setTargetBufferDimensions(targetBufferWidth, targetBufferHeight);
 			if(subShader)
 			{
-				currentShader = s;
+				setCurrentShader(s);
 				return subShader;
 			}
 			else
 			{
 				LOG(WARNING) << "Shader '" << shaderName << "' has no sub shader '" << subShader << "'";
-				currentShader->disable();
 				return nullptr;
 			}
 		}
