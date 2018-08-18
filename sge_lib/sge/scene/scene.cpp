@@ -54,7 +54,7 @@ namespace SGE
 
 	void Scene::draw(SubShader* targetShader)
 	{
-		std::cout << "Drawing scene" << std::endl;
+		// std::cout << "Drawing scene" << std::endl;
 		mRootEntity->draw(targetShader);
 	}
 

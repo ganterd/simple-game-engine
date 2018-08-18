@@ -36,7 +36,7 @@ namespace SGE
 		{
 			SGE::GraphicsManager::OGLGraphicsManager::clearBuffer(mBackgroundColour);
 		}
-		std::cout << "-----------" << std::endl;
+		// std::cout << "-----------" << std::endl;
 
 		for(Shader* shader : mShaders)
 		{
@@ -45,7 +45,7 @@ namespace SGE
 			std::vector<SubShader*> subShaders = shader->getSubShaders();
 			for(SubShader* subShader : subShaders)
 			{
-				std::cout << "Shader" << std::endl;
+				// std::cout << "Shader" << std::endl;
 				shader->setCurrentSubShader(subShader);
 				subShader->enable();
 				subShader->setVariable("viewProjectionMatrix", getVPMat());
@@ -69,7 +69,7 @@ namespace SGE
 					glCullFace(GL_BACK);
 
 					Scene* scene = SceneManager::getActiveScene();
-					std::cout << "Drawing scene " << scene << std::endl;
+					// std::cout << "Drawing scene " << scene << std::endl;
 					scene->draw(subShader);
 				}
 

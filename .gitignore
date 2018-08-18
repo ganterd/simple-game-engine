@@ -6,6 +6,7 @@ build/
 external/
 
 # Visual Studios Build Bits
+.vs/
 *.sdf
 *.opensdf
 *.tlog

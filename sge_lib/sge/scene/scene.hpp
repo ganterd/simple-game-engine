@@ -12,7 +12,7 @@
 namespace SGE
 {
 	class Camera;
-	class Export Scene
+	class Scene
 	{
 	private:
 		std::vector<Entity*> entities;

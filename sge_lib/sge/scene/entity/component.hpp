@@ -2,6 +2,8 @@
 
 #include <string>
 
+#include <sge/utils/export.hpp>
+
 namespace SGE
 {
     class Entity;
@@ -14,10 +16,10 @@ namespace SGE
         bool mIsDrawable = false;
 
     public:
-        virtual bool isDrawable(){ return mIsDrawable; };
-        virtual void isDrawable(bool b){ mIsDrawable = b; };
-        virtual void update();
-        virtual void draw();
+        Export virtual bool isDrawable(){ return mIsDrawable; };
+        Export virtual void isDrawable(bool b){ mIsDrawable = b; };
+        Export virtual void update();
+        Export virtual void draw();
         Entity* getEntity(){ return mEntity; };
     };
 }

@@ -122,7 +122,7 @@ ExternalProject_Add(
 ExternalProject_Add(
 	external_glew
 	PREFIX ${PROJECT_SOURCE_DIR}/external/glew/
-	URL https://sourceforge.net/projects/glew/files/glew/2.1.0/glew-2.1.0.zip
+	URL "https://sourceforge.net/projects/glew/files/glew/2.1.0/glew-2.1.0.zip"
 	SOURCE_SUBDIR build/cmake/
 	#CONFIGURE_COMMAND ${CMAKE_COMMAND}
 	#	-DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
