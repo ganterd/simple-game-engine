@@ -24,6 +24,8 @@ namespace SGE
 			dir = str.substr(0, found);
 			file = str.substr(found + 1);
 		}
+
+		static void printSceneStructure();
 	};
 }
 

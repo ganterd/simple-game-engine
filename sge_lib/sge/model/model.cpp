@@ -23,6 +23,7 @@ namespace SGE
 
     void Model::draw()
     {
+        LOG_N_TIMES(1, ERROR) << "Meshes :" << mMeshes.size();
         for(unsigned int i = 0; i < mMeshes.size(); ++i)
 			mMeshes[i]->draw();
     }

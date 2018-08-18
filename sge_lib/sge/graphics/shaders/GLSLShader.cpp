@@ -9,6 +9,7 @@ namespace SGE
 		mToRenderTarget = false;
 		mFragmentShaderCount = 0;
 		mBoundFragLocations = false;
+		mIsScreenSpaceShader = false;
 		shaderID = glCreateProgram();
 	}
 

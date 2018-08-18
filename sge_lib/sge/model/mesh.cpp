@@ -18,6 +18,7 @@ namespace SGE
 			mMaterial->bindAllTextures();
 		glBindVertexArray(vao);
 		glDrawElements(GL_TRIANGLES, numTris * 3, GL_UNSIGNED_INT, (void*)0);
+		LOG_N_TIMES(1, ERROR) << "Rendering mesh" << std::endl;
 		if(mMaterial)
 			mMaterial->unbindAllTextures();
 	}

@@ -33,6 +33,7 @@ namespace SGE
 
 		Scene();
 
+		Export Entity* getRoot(){ return mRootEntity; };
 		Export void addEntity(Entity* entity);
 		Export void update();
 		//Export void draw();

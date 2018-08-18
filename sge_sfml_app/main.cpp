@@ -62,6 +62,8 @@ void init()
 	cameraControl = new CameraControl();
 	scene->getMainCamera()->getEntity()->addComponent(cameraControl);
 	// cameraControl->mCamera = scene->getMainCamera();
+
+	Utils::printSceneStructure();
 }
 
 void exit()

@@ -59,6 +59,7 @@ namespace SGE
 
 		Export void attachScript(ObjectScript* script);
 		Export void addComponent(EntityComponent* component);
+		Export std::vector<EntityComponent*> getComponents(){ return mComponents; };
 	};
 }
 

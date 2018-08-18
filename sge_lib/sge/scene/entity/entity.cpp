@@ -49,11 +49,15 @@ namespace SGE
 
 	void Entity::draw(SubShader* shader)
 	{
+		std::cout << "Drawing entity" << std::endl;
 		shader->setVariable("modelMatrix", mWorldModelMat);
 		for(EntityComponent* component : mComponents)
 		{
+			std::cout << "Component " << component << " is " << component->isDrawable() << " drawable" << std::endl;
 			if(component->isDrawable())
+			{
 				component->draw();
+			}
 		}
 
 		for(unsigned int i = 0; i < mChildren.size(); ++i)
