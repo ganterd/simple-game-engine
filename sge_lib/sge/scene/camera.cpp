@@ -30,13 +30,10 @@ namespace SGE
 			return;
 		}
 
-		LOG_N_TIMES(1, ERROR) << glm::to_string(getVPMat()) << std::endl << std::endl;
-
 		if(SceneManager::getActiveScene()->getMainCamera() == this)
 		{
 			SGE::GraphicsManager::OGLGraphicsManager::clearBuffer(mBackgroundColour);
 		}
-		// std::cout << "-----------" << std::endl;
 
 		for(Shader* shader : mShaders)
 		{
@@ -45,7 +42,6 @@ namespace SGE
 			std::vector<SubShader*> subShaders = shader->getSubShaders();
 			for(SubShader* subShader : subShaders)
 			{
-				// std::cout << "Shader" << std::endl;
 				shader->setCurrentSubShader(subShader);
 				subShader->enable();
 				subShader->setVariable("viewProjectionMatrix", getVPMat());
@@ -69,7 +65,6 @@ namespace SGE
 					glCullFace(GL_BACK);
 
 					Scene* scene = SceneManager::getActiveScene();
-					// std::cout << "Drawing scene " << scene << std::endl;
 					scene->draw(subShader);
 				}
 
@@ -98,12 +93,7 @@ namespace SGE
 	void Camera::update()
 	{
 		updateProjectionMat();
-		glm::vec3 p = glm::vec3(mEntity->getWorldModelMat() * glm::vec4(mPosition.x, mPosition.y, mPosition.z, 1.0f));
-		glm::vec3 f = glm::vec3(mEntity->getWorldModelMat() * glm::vec4(0.0f, 0.0f, 1.0f, 0.0f)) + p;
-		glm::vec3 u = glm::vec3(mEntity->getWorldModelMat() * glm::vec4(0.0f, 1.0f, 0.0f, 0.0f));
-		viewMat = glm::lookAt(p, f, u);
 		vpMat = projectionMat *  glm::inverse(mEntity->getWorldModelMat());
-		//vpMat = projectionMat * viewMat;
 	}
 
 	void Camera::updateProjectionMat()
