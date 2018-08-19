@@ -50,7 +50,29 @@ namespace SGE
 				{
 					glDisable(GL_CULL_FACE);
 					glDisable(GL_DEPTH_TEST);
+
+					/* TMP */
+					std::vector<Scene::SceneLight> sceneLights = SceneManager::getActiveScene()->extractLights();
+					
+					int numLights = sceneLights.size();
+					subShader->setVariable("numLights", numLights);
+
+					GLuint ssboBinding = ((GLSLShader*)subShader)->getSSBOBinding("PointLightsBuffer");
+					LOG_N_TIMES(1, ERROR) << "PointLightsBuffer bounds at '" << ssboBinding << "'";
+					LOG_N_TIMES(1, ERROR) << "Sending " << numLights << " to shader...";
+					
+					GLuint sceneLightsSSBO;
+					glGenBuffers(1, &sceneLightsSSBO);
+					glBindBuffer(GL_SHADER_STORAGE_BUFFER, sceneLightsSSBO);
+					glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(Scene::SceneLight) * numLights, &sceneLights[0], GL_DYNAMIC_COPY);
+					glBindBufferBase(GL_SHADER_STORAGE_BUFFER, ssboBinding, sceneLightsSSBO);
+					glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+					
+					
+					/* END TMP */
+
 					OverlayQuad::draw();
+					glDeleteBuffers(1, &sceneLightsSSBO);
 				}
 				else
 				{

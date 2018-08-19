@@ -187,6 +187,21 @@ namespace SGE
 		glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, &value[0][0]);
 	}
 
+	GLuint GLSLShader::getSSBOBinding(const std::string& bufferName)
+	{
+		GLuint bufferResourceIndex = glGetProgramResourceIndex(shaderID, GL_SHADER_STORAGE_BLOCK, bufferName.c_str());
+		if (bufferResourceIndex == (GLuint)-1)
+		{
+			LOG_N_TIMES(1, WARNING) << "No SSBO named '" << bufferName << "' in shader...";
+			return (GLuint)-1;
+		}
+
+		GLenum props[1] = { GL_BUFFER_BINDING };
+		GLint returnedBinding[1];
+		glGetProgramResourceiv(shaderID, GL_SHADER_STORAGE_BLOCK, bufferResourceIndex, 1, props, 1, NULL, returnedBinding);
+		return (GLuint)returnedBinding[0];
+	}
+
 	const char* GLSLShader::readShaderCode(std::string file)
 	{
 		if(file.empty())
@@ -244,7 +259,7 @@ namespace SGE
 			mRenderTarget->bind();
 			mRenderTarget->clear();
 		}
-
+		
 		for(RenderBufferLink l : mRenderBufferLinks)
 		{
 			Shader* linkedShader = ShaderManager::getShader(l.sourceShader);

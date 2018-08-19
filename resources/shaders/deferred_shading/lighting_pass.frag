@@ -15,7 +15,7 @@ struct PointLight {
   vec4 position;
   vec4 colour;
 };
-layout(std430, binding = 9) buffer PointLightsBuffer{ PointLight pointLights[]; };
+/*layout(std430, binding = 9) */buffer PointLightsBuffer{ PointLight pointLights[]; };
 uniform int numLights;
 
 
@@ -28,7 +28,7 @@ void main(){
     vec3 diffuse = vec3(texture(diffuseTexture, p));
 
     //vec3 lightPosition = vec3(0.0f, 2.0f, 0.0f);
-    vec3 finalColour = vec3(texture(emissiveTexture, p)) + diffuse * 0.3f;
+    vec3 finalColour = vec3(texture(emissiveTexture, p)) + diffuse * 0.1f;
     for(int i = 0; i < numLights; ++i)
     {
         PointLight light = pointLights[i];

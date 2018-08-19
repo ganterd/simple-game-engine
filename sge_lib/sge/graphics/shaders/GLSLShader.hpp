@@ -46,6 +46,8 @@ namespace SGE
 
 		void setMVP(glm::mat4 mvpMat);
 
+		GLuint getSSBOBinding(const std::string& bufferName);
+
 		virtual void setVariable(std::string name, bool value);
 		virtual void setVariable(std::string name, int value);
 		virtual void setVariable(std::string name, float value);

@@ -53,20 +53,20 @@
 			</model>
 		</entity>
 
-		<entity name="KeyLight" x="0" y="5" z="5">
+		<entity name="KeyLight">
 			<transform>
 				<translation x="0" y="5" z="5"/>
 				<rotation x="0" y="0" z="0"/>
 			</transform>
-			<light r="1.0" g="1.0" b="1.0" power="7.0"/>
+			<light r="1.0" g="1.0" b="1.0" power="2.0"/>
 		</entity>
 
-		<entity name="FillLight" x="5" y="0" z="3">
+		<entity name="FillLight">
 			<transform>
-				<translation x="5" y="1" z="2"/>
+				<translation x="5" y="4" z="2"/>
 				<rotation x="0" y="0" z="0"/>
 			</transform>
-			<light r="0.7" g="0.7" b="1.0" power="3.0"/>
+			<light r="0.7" g="0.7" b="1.0" power="10.0"/>
 		</entity>
 
 		<entity name="MainCamera">

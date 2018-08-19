@@ -14,10 +14,7 @@ namespace SGE
 	class Camera;
 	class Scene
 	{
-	private:
-		std::vector<Entity*> entities;
-		ShaderManager* shaderManager;
-
+	public:
 		struct SceneLight
 		{
 			glm::vec4 position; // Note: Keep as vec4, because OpenGL will align the buffer to vec4
@@ -25,9 +22,16 @@ namespace SGE
 			glm::vec4 ambient;
 		};
 
+	private:
+		std::vector<Entity*> entities;
+		ShaderManager* shaderManager;
+
+		
+
 		void recursiveExtractLights(Entity* n, glm::mat4 mat, std::vector<SceneLight>& l);
 
 	public:
+		
 		Camera* mMainCamera;
 		Entity* mRootEntity;
 
