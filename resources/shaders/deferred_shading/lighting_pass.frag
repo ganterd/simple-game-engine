@@ -3,21 +3,23 @@
 in vec2 fragPosition;
 out vec4 outColour;
 
-layout (binding = 0) uniform sampler2D positionsTexture;
-layout (binding = 1) uniform sampler2D specularTexture;
-layout (binding = 2) uniform sampler2D normalsTexture;
-layout (binding = 3) uniform sampler2D diffuseTexture;
-layout (binding = 4) uniform sampler2D emissiveTexture;
+uniform sampler2D positionsTexture;
+uniform sampler2D specularTexture;
+uniform sampler2D normalsTexture;
+uniform sampler2D diffuseTexture;
+uniform sampler2D emissiveTexture;
 
 uniform vec3 cameraPosition;
 
 struct PointLight {
   vec4 position;
   vec4 colour;
+  vec4 ambient;
 };
-/*layout(std430, binding = 9) */buffer PointLightsBuffer{ PointLight pointLights[]; };
+buffer PointLightsBuffer{
+    PointLight pointLights[];
+};
 uniform int numLights;
-
 
 
 void main(){
@@ -27,13 +29,13 @@ void main(){
     vec3 specular = vec3(texture(specularTexture, p));
     vec3 diffuse = vec3(texture(diffuseTexture, p));
 
-    //vec3 lightPosition = vec3(0.0f, 2.0f, 0.0f);
-    vec3 finalColour = vec3(texture(emissiveTexture, p)) + diffuse * 0.1f;
+    vec3 finalColour = vec3(texture(emissiveTexture, p));
     for(int i = 0; i < numLights; ++i)
     {
         PointLight light = pointLights[i];
         vec3 lightPosition = vec3(light.position);
         vec3 lightColour = vec3(light.colour);
+        vec3 lightAmbient = vec3(light.ambient);
         float lightPower = light.colour.w;
 
         vec3 viewDirection = normalize(cameraPosition - position);
@@ -52,9 +54,10 @@ void main(){
         float specularIntensity = pow(specularLambertian, 16.0f);
         vec3 specularTerm = specular * lightColour * specularIntensity * falloff;
 
-        finalColour += diffuseTerm + specularTerm;
+        /* Ambient term */
+        vec3 ambientTerm = diffuse * lightAmbient;
+
+        finalColour += diffuseTerm + specularTerm + ambientTerm;
     }
     outColour = vec4(finalColour, 1.0f);
-    //finalColour = vec4(vec3(falloff), 1.0f);
-    //outColour = vec4(vec3(position) * 0.5f, 1.0f);
 }

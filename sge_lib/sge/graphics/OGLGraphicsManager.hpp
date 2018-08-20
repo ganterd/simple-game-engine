@@ -23,27 +23,10 @@ namespace SGE
 
 			void clearBuffer();
 			static void clearBuffer(const glm::vec4& c);
-			// static void checkErrors(){
-			// 	GLenum err = glGetError();
-			// 	const GLubyte* errString;
-			// 	while(err != GL_NO_ERROR)
-			// 	{
-			// 		errString = gluErrorString(err);
-			// 		LOG(ERROR) << "GL Error: " << errString;
-			// 		err = glGetError();
-			// 	}
-			// }
 		};
 
 		#define flushGLErrors() {\
-			GLenum err = glGetError();\
-			const GLubyte* errString;\
-			while(err != GL_NO_ERROR)\
-			{\
-				errString = gluErrorString(err);\
-				LOG(WARNING) << "Flushed previous GL Error: " << errString;\
-				err = glGetError();\
-			}\
+			while(glGetError() != GL_NO_ERROR);\
 		}
 
 		#define checkGLErrors() {\

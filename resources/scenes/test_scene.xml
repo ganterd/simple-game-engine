@@ -58,7 +58,9 @@
 				<translation x="0" y="5" z="5"/>
 				<rotation x="0" y="0" z="0"/>
 			</transform>
-			<light r="1.0" g="1.0" b="1.0" power="2.0"/>
+			<light>
+				<diffuse r="1.0" g="0.3" b="0.3" power="7.0"/>
+			</light>
 		</entity>
 
 		<entity name="FillLight">
@@ -66,12 +68,14 @@
 				<translation x="5" y="4" z="2"/>
 				<rotation x="0" y="0" z="0"/>
 			</transform>
-			<light r="0.7" g="0.7" b="1.0" power="10.0"/>
+			<light>
+				<diffuse r="0.3" g="0.3" b="1.0" power="10.0" />
+			</light>
 		</entity>
 
 		<entity name="MainCamera">
 			<transform>
-				<translation x="5" y="3" z="5"/>
+				<translation x="5" y="0" z="5"/>
 				<rotation x="0" y="-135" z="0"/>
 			</transform>
 			<camera main="true">

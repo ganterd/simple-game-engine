@@ -77,6 +77,7 @@ namespace SGE
 			p = mat * p;
 
 			glm::vec3 c = l->getColor();
+			glm::vec3 a = l->getAmbient();
 
 			SceneLight sceneLight;
 			sceneLight.position = p;
@@ -84,6 +85,10 @@ namespace SGE
 			sceneLight.colour.g = c.g;
 			sceneLight.colour.b = c.b;
 			sceneLight.colour.a = l->getIntensity();
+			sceneLight.ambient.r = a.r;
+			sceneLight.ambient.g = a.g;
+			sceneLight.ambient.b = a.b;
+
 			sceneLights.push_back(sceneLight);
 		}
 

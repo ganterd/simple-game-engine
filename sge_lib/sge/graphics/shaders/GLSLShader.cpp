@@ -81,13 +81,10 @@ namespace SGE
 			std::vector<IRenderBuffer*> renderBuffers = mRenderTarget->getColourAttachmentBuffers();
 			for(IRenderBuffer* renderBuffer : renderBuffers)
 			{
-				flushGLErrors();
 				GLSLRenderBuffer* buffer = (GLSLRenderBuffer*)renderBuffer;
-				buffer->bindBuffer();
+				//buffer->bindBuffer();
 				glBindFragDataLocation(shaderID, buffer->getGLColorAttachment() - GL_COLOR_ATTACHMENT0, buffer->mName.c_str());
 				LOG(DEBUG) << "Binding attachment " << buffer->getGLColorAttachment() - GL_COLOR_ATTACHMENT0 << " variable " << buffer->mName;
-
-				checkGLErrors();
 			}
 			mBoundFragLocations = true;
 		}
@@ -95,7 +92,7 @@ namespace SGE
 
 		glLinkProgram(shaderID);
 
-		if(mRenderTarget && mFragmentShaderCount)
+		if(mRenderTarget && mFragmentShaderCount && mBoundFragLocations)
 		{
 			for(IRenderBuffer* renderBuffer : mRenderTarget->getColourAttachmentBuffers())
 			{
@@ -259,7 +256,7 @@ namespace SGE
 			mRenderTarget->bind();
 			mRenderTarget->clear();
 		}
-		
+
 		for(RenderBufferLink l : mRenderBufferLinks)
 		{
 			Shader* linkedShader = ShaderManager::getShader(l.sourceShader);

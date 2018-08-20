@@ -7,27 +7,27 @@ namespace SGE
     class PrintSceneStructure
     {
     public:
-        static void indent(int spaces)
+        static std::string indent(int spaces)
         {
+            std::string spacesString = "";
             for(int i = 0; i < spaces; ++i)
-                std::cout << " ";
+                spacesString.append(" ");
+            return spacesString;
         }
         static void print(EntityComponent* c, int level)
         {
-            indent(level + 1);
-            std::cout << "|- Component" << std::endl;
+            LOG(INFO) << indent(level + 1) << "|- Component";
 
-            indent(level + 2);
-            std::cout << "|- Drawable: " << c->isDrawable() << std::endl;
+            LOG(INFO) << indent(level + 2) << "|- Drawable: " << c->isDrawable();
         }
 
         static void print(Entity* e, int level = 0)
         {
-            for(int i = 0; i < level; ++i)
-                std::cout << " ";
+
             if(level)
-                std::cout << "|-";
-            std::cout << "Entity: " << std::endl;
+                LOG(INFO) << indent(level) << "|- Entity";
+            else
+                LOG(INFO) << "Scene Root Node";
 
             std::vector<EntityComponent*> components = e->getComponents();
             for(EntityComponent* c : components)

@@ -7,40 +7,46 @@ namespace SGE
     public:
         LightProcessor() : ImportProcessor("light") {};
 
+        glm::vec3 GetColourFromAttributes(XMLElement* node)
+        {
+            const char* rCString = node->Attribute("r");
+            const char* gCString = node->Attribute("g");
+            const char* bCString = node->Attribute("b");
+
+            glm::vec3 c = glm::vec3(0.0f);
+            if(rCString)
+                c.r = std::stof(rCString);
+            if(gCString)
+                c.g = std::stof(gCString);
+            if(bCString)
+                c.b = std::stof(bCString);
+            return c;
+        }
+
         virtual void process(XMLElement* node, Entity* entity)
     	{
     		PointLight* p = new PointLight();
 
     		/* Extract the diffuse light colour */
-    		float r, g, b, power;
-    		std::string rString = node->Attribute("r");
-    		std::string gString = node->Attribute("g");
-    		std::string bString = node->Attribute("b");
-    		std::string pString = node->Attribute("power");
+            XMLElement* diffuseNode = node->FirstChildElement("diffuse");
+            if(diffuseNode)
+            {
+                glm::vec3 lightColour = GetColourFromAttributes(diffuseNode);
+                p->setColor(lightColour);
 
-    		if(!rString.length() || !gString.length() || !bString.length())
-    		{
-    			LOG(ERROR) << "Missing channel value in diffuse colour";
-    		}
-    		else
-    		{
-    			r = std::stof(rString);
-    			g = std::stof(gString);
-    			b = std::stof(bString);
+                const char* powerAttribute = diffuseNode->Attribute("power");
+                if(powerAttribute)
+                {
+                    p->setIntensity(std::stof(powerAttribute));
+                }
+            }
 
-    			p->setColor(glm::vec3(r, g, b));
-    		}
-
-    		/* Extract the light power */
-    		if(!pString.length())
-    		{
-    			LOG(ERROR) << "Light power node has no content!";
-    		}
-    		else
-    		{
-    			float power = std::stof(pString);
-    			p->setIntensity(power);
-    		}
+            XMLElement* ambientNode = node->FirstChildElement("ambient");
+            if(ambientNode)
+            {
+                glm::vec3 ambientColour = GetColourFromAttributes(ambientNode);
+                p->setAmbient(ambientColour);
+            }
 
     		entity->addLight(p);
     	}
