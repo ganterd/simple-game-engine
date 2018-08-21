@@ -30,7 +30,7 @@
 				<file type="frag">resources/shaders/deferred_shading/lighting_pass.frag</file>
 			</subShader>
 		</shader> -->
-		<shader name="blitAndGamma">
+		<!-- <shader name="blitAndGamma">
 			<subShader name="blitAndGammaShader">
 				<screenSpace>true</screenSpace>
 				<inputBuffers>
@@ -39,7 +39,7 @@
 				<file type="vert">resources/shaders/deferred_shading/blitAndGamma.vert</file>
 				<file type="frag">resources/shaders/deferred_shading/blitAndGamma.frag</file>
 			</subShader>
-		</shader>
+		</shader> -->
 	</shaders>
 
 	<!-- Scene entities go here -->
@@ -83,6 +83,7 @@
 			</transform>
 			<light>
 				<diffuse r="0.3" g="0.3" b="1.0" power="10.0" />
+				<ambient r="0.1" g="0.1" b="0.1" />
 			</light>
 		</entity>
 

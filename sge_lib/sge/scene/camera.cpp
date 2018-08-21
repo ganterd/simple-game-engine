@@ -5,7 +5,7 @@ namespace SGE
 	Camera::Camera() : EntityComponent()
 	{
 		mComponentTypeString = "camera";
-		
+
 		this->fov = 45.0f;
 		this->ratio = 4.0f/3.0f;
 		this->nearPlane = 0.01f;
@@ -94,6 +94,7 @@ namespace SGE
 			Scene::SceneLight light = sceneLights[i];
 			lightingPass->setVariable("inLightColour", glm::vec3(light.colour));
 			lightingPass->setVariable("inLightPosition", glm::vec3(light.position));
+			lightingPass->setVariable("inLightAmbient", glm::vec3(light.ambient));
 			lightingPass->setVariable("inLightPower", light.colour.w);
 
 			/* Do a whole screen-space render pass */
