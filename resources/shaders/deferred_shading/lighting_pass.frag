@@ -1,13 +1,14 @@
 #version 430 core
 
 in vec2 fragPosition;
-out vec4 outColour;
+out vec4 lightAccumulation;
 
 uniform sampler2D positionsTexture;
 uniform sampler2D specularTexture;
 uniform sampler2D normalsTexture;
 uniform sampler2D diffuseTexture;
 uniform sampler2D emissiveTexture;
+uniform sampler2D incomingLightAccumulation;
 
 uniform vec3 cameraPosition;
 
@@ -59,5 +60,6 @@ void main(){
 
         finalColour += diffuseTerm + specularTerm + ambientTerm;
     }
-    outColour = vec4(finalColour, 1.0f);
+    finalColour += vec3(texture(incomingLightAccumulation, p));
+    lightAccumulation = vec4(finalColour, 1.0f);
 }

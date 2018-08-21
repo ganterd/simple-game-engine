@@ -16,15 +16,28 @@
 			</subShader>
 			<subShader name="lightingPass">
 				<screenSpace>true</screenSpace>
+				<renderTarget>
+					<buffer name="lightAccumulation" type="rgb" />
+				</renderTarget>
 				<inputBuffers>
-					<buffer source="geometryPass" name="diffuse" sampler="diffuseTexture"/>
-					<buffer source="geometryPass" name="specular" sampler="specularTexture"/>
-					<buffer source="geometryPass" name="normals" sampler="normalsTexture"/>
-					<buffer source="geometryPass" name="emissive" sampler="emissiveTexture"/>
-					<buffer source="geometryPass" name="positions" sampler="positionsTexture"/>
+					<buffer sourceSubShader="geometryPass" name="diffuse" sampler="diffuseTexture"/>
+					<buffer sourceSubShader="geometryPass" name="specular" sampler="specularTexture"/>
+					<buffer sourceSubShader="geometryPass" name="normals" sampler="normalsTexture"/>
+					<buffer sourceSubShader="geometryPass" name="emissive" sampler="emissiveTexture"/>
+					<buffer sourceSubShader="geometryPass" name="positions" sampler="positionsTexture"/>
 				</inputBuffers>
 				<file type="vert">resources/shaders/deferred_shading/lighting_pass.vert</file>
 				<file type="frag">resources/shaders/deferred_shading/lighting_pass.frag</file>
+			</subShader>
+		</shader>
+		<shader name="blitAndGamma">
+			<subShader name="blitAndGammaShader">
+				<screenSpace>true</screenSpace>
+				<inputBuffers>
+					<buffer sourceShader="deferredShading" sourceSubShader="lightingPass" name="lightAccumulation" sampler="lightingPassTexture" />
+				</inputBuffers>
+				<file type="vert">resources/shaders/deferred_shading/blitAndGamma.vert</file>
+				<file type="frag">resources/shaders/deferred_shading/blitAndGamma.frag</file>
 			</subShader>
 		</shader>
 	</shaders>
@@ -75,12 +88,13 @@
 
 		<entity name="MainCamera">
 			<transform>
-				<translation x="5" y="0" z="5"/>
+				<translation x="5" y="2" z="5"/>
 				<rotation x="0" y="-135" z="0"/>
 			</transform>
 			<camera main="true">
 				<!-- This defines the order of which shaders run -->
 				<shader shader="deferredShading" />
+				<shader shader="blitAndGamma" />
 			</camera>
 		</entity>
 	</entities>

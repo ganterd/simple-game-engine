@@ -159,13 +159,16 @@ namespace SGE
 					XMLElement* bufferNode = inputBuffers->FirstChildElement("buffer");
 					while(bufferNode)
 					{
-						std::string bufferSource = bufferNode->Attribute("source");
+						std::string bufferSourceShader = shaderName;
+						if(bufferNode->Attribute("sourceShader"))
+							bufferSourceShader = bufferNode->Attribute("sourceShader");
+						std::string bufferSourceSubShader = bufferNode->Attribute("sourceSubShader");
 						std::string bufferName = bufferNode->Attribute("name");
 						std::string bufferSampler = bufferNode->Attribute("sampler");
 
 						subShader->addRenderBufferLink(
-							shaderName,
-							bufferSource,
+							bufferSourceShader,
+							bufferSourceSubShader,
 							bufferName,
 							bufferSampler
 						);

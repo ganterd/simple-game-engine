@@ -58,25 +58,20 @@ namespace SGE
 					subShader->setVariable("numLights", numLights);
 
 					GLuint ssboBinding = ((GLSLShader*)subShader)->getSSBOBinding("PointLightsBuffer");
-					LOG_N_TIMES(1, ERROR) << "PointLightsBuffer bounds at '" << ssboBinding << "'";
-					LOG_N_TIMES(1, ERROR) << "Sending " << numLights << " to shader...";
-					for(int i = 0; i < numLights; ++i)
+					GLuint sceneLightsSSBO;
+					if(ssboBinding != (GLuint)-1)
 					{
-						LOG_N_TIMES(2, ERROR) << "P[" << i << "]" << glm::to_string(sceneLights[i].position);
+						glGenBuffers(1, &sceneLightsSSBO);
+						glBindBuffer(GL_SHADER_STORAGE_BUFFER, sceneLightsSSBO);
+						glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(Scene::SceneLight) * numLights, &sceneLights[0], GL_DYNAMIC_COPY);
+						glBindBufferBase(GL_SHADER_STORAGE_BUFFER, ssboBinding, sceneLightsSSBO);
+						glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 					}
 
-					GLuint sceneLightsSSBO;
-					glGenBuffers(1, &sceneLightsSSBO);
-					glBindBuffer(GL_SHADER_STORAGE_BUFFER, sceneLightsSSBO);
-					glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(Scene::SceneLight) * numLights, &sceneLights[0], GL_DYNAMIC_COPY);
-					glBindBufferBase(GL_SHADER_STORAGE_BUFFER, ssboBinding, sceneLightsSSBO);
-					glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
-
-
 					/* END TMP */
-
 					OverlayQuad::draw();
-					glDeleteBuffers(1, &sceneLightsSSBO);
+					if(ssboBinding != (GLuint)-1)
+						glDeleteBuffers(1, &sceneLightsSSBO);
 				}
 				else
 				{
