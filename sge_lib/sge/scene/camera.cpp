@@ -9,9 +9,6 @@ namespace SGE
 		this->nearPlane = 0.01f;
 		this->farPlane = 1000.0f;
 
-		mPosition = glm::vec3(0.0f,0.0f,0.0f);
-		mForwardVector = glm::vec3(1, 0, 0);
-		mUpVector = glm::vec3(0,1,0);
 		mBackgroundColour = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
 
 		deferredShadingShader = new Shader();
@@ -57,9 +54,6 @@ namespace SGE
 
 	void Camera::render()
 	{
-		setPosition(glm::vec3(5.0f, 2.0f, 5.0f));
-		lookAt(glm::vec3(1.0f, 1.0f, 1.0f));
-
 		if(SceneManager::getActiveScene()->getMainCamera() == this)
 		{
 			SGE::GraphicsManager::OGLGraphicsManager::clearBuffer(mBackgroundColour);
@@ -131,11 +125,6 @@ namespace SGE
 		SceneManager::getActiveScene()->setMainCamera(this);
 	}
 
-	void Camera::lookAt(const glm::vec3& p)
-	{
-		mForwardVector = glm::normalize(p - mPosition);
-	}
-
 	void Camera::update()
 	{
 		updateProjectionMat();
@@ -145,18 +134,6 @@ namespace SGE
 	void Camera::updateProjectionMat()
 	{
 		projectionMat = glm::perspective(fov, ratio, nearPlane, farPlane);
-	}
-
-	void Camera::setLookVector(const glm::vec3& l)
-	{
-		mForwardVector = glm::normalize(l);
-		update();
-	}
-
-	void Camera::setPosition(const glm::vec3& p )
-	{
-		mPosition = p;
-		update();
 	}
 
 	void Camera::setFoV(float fov)
@@ -181,21 +158,6 @@ namespace SGE
 	{
 		this->farPlane = p;
 		this->updateProjectionMat();
-	}
-
-	glm::vec3 Camera::getPosition()
-	{
-		return mPosition;
-	}
-
-	glm::vec3 Camera::getForwardVector()
-	{
-		return mForwardVector;
-	}
-
-	glm::vec3 Camera::getUpVector()
-	{
-		return mUpVector;
 	}
 
 	glm::mat4 Camera::getVPMat()

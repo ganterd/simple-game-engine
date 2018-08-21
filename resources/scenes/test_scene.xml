@@ -88,8 +88,8 @@
 
 		<entity name="MainCamera">
 			<transform>
-				<translation x="5" y="2" z="5"/>
-				<rotation x="0" y="-135" z="0"/>
+				<translation x="5" y="7" z="11"/>
+				<rotation x="-25" y="20" z="0"/>
 			</transform>
 			<camera main="true">
 				<!-- This defines the order of which shaders run -->

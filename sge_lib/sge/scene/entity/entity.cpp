@@ -99,9 +99,9 @@ namespace SGE
 	void Entity::updateTranslationMatrix()
 	{
 		glm::mat4 mat(1.0f);
-		mat = glm::rotate(mat, mLocalRotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
-		mat = glm::rotate(mat, mLocalRotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
-		mat = glm::rotate(mat, mLocalRotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
+		mat = glm::rotate(mat, glm::radians(mLocalRotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+		mat = glm::rotate(mat, glm::radians(mLocalRotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+		mat = glm::rotate(mat, glm::radians(mLocalRotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
 		mat[3].x = position.x;
 		mat[3].y = position.y;
 		mat[3].z = position.z;

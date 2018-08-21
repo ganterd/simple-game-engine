@@ -17,9 +17,6 @@ namespace SGE
 	class Camera : public EntityComponent
 	{
 	private:
-		glm::vec3 mPosition;
-		glm::vec3 mForwardVector;
-		glm::vec3 mUpVector;
 		glm::vec4 mBackgroundColour;
 
 		Shader* deferredShadingShader;
@@ -40,18 +37,12 @@ namespace SGE
 	public:
 		Export Camera();
 
-		Export void lookAt(const glm::vec3& p);
-		Export void setLookVector(const glm::vec3& l);
-		Export void setPosition(const glm::vec3& p);
 		Export void setFoV(float fov);
 		Export void setAspectRatio(float r);
 		Export void setNearPlaneDistance(float p);
 		Export void setFarPlaneDistance(float p);
 		Export void setAsMainCamera();
 
-		Export glm::vec3 getPosition();
-		Export glm::vec3 getForwardVector();
-		Export glm::vec3 getUpVector();
 		Export glm::mat4 getVPMat();
 
 		virtual void update();

@@ -53,6 +53,10 @@ SGE::SFMLInputHandler::SFMLInputHandler()
 	SFMLKeyMapping[Input::Key::Down] = sf::Keyboard::Down;
     SFMLKeyMapping[Input::Key::LeftControl] = sf::Keyboard::LControl;
 
+    /* Put the mouse at the centre of the screen on startup */
+    SFMLDisplay* d = dynamic_cast<SFMLDisplay*>(DisplayManager::getDisplayInstance());
+    glm::vec2 center(d->mWindowSize.width / 2, d->mWindowSize.height / 2);
+    sf::Mouse::setPosition(sf::Vector2i((int)center.x, (int)center.y), *d->window);
     sf::Vector2i p = sf::Mouse::getPosition();
     mMousePosition = glm::vec2((float)p.x, (float)p.y);
     mMouseDelta = glm::vec2(0.0f);
