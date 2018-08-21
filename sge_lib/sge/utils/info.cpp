@@ -16,7 +16,11 @@ namespace SGE
         }
         static void print(EntityComponent* c, int level)
         {
-            LOG(INFO) << indent(level + 1) << "|- Component";
+            std::string cType = c->componentTypeString();
+            std::string cName = c->componentName();
+            LOG(INFO) << indent(level + 1)
+                << "|- Component '" << cName << "'"
+                << "[" << cType << "]";
 
             LOG(INFO) << indent(level + 2) << "|- Drawable: " << c->isDrawable();
         }
@@ -25,7 +29,7 @@ namespace SGE
         {
 
             if(level)
-                LOG(INFO) << indent(level) << "|- Entity";
+                LOG(INFO) << indent(level) << "|- Entity '" << e->name() << "'";
             else
                 LOG(INFO) << "Scene Root Node";
 

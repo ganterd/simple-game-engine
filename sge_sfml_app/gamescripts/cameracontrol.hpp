@@ -6,9 +6,9 @@
 #include <sge/input/input.hpp>
 #include <sge/time/time.hpp>
 #include <sge/scene/camera.hpp>
-#include <sge/scene/entity/component.hpp>
+#include <sge/scripting/objectscript.hpp>
 
-class CameraControl : public SGE::EntityComponent
+class CameraControl : public SGE::ObjectScript
 {
 public:
     const float accelerationPerSecond = 4.0f;

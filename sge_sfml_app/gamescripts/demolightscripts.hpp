@@ -28,7 +28,8 @@ public:
             cos(SGE::Time::gameTime() + mOffset) * mRadius
         );
 
-        SGE::ILight* light = mEntity->getLight(0);
+        std::vector<SGE::ILight*> lights = mEntity->getComponentsOfType<SGE::ILight>();
+        SGE::ILight* light = lights[0];
         light->setColor(glm::vec3(
             (sin((SGE::Time::gameTime() + mOffset) * 0.1f) + 1.0f) * 0.5f,
             (sin((SGE::Time::gameTime() + mOffset * 2) * 0.1f) + 1.0f) * 0.5f,

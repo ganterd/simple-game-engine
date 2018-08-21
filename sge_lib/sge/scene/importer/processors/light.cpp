@@ -48,7 +48,7 @@ namespace SGE
                 p->setAmbient(ambientColour);
             }
 
-    		entity->addLight(p);
+    		entity->addComponent(p);
     	}
     };
 

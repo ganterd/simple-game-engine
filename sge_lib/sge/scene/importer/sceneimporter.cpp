@@ -230,6 +230,11 @@ namespace SGE
 
 		Entity* entity = new Entity();
 
+		if(const char* nameString = entityNode->Attribute("name"))
+		{
+			entity->name(nameString);
+		}
+
 		const tinyxml2::XMLElement* childNode = entityNode->FirstChildElement();
 		if(childNode == NULL)
 		{

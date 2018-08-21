@@ -5,6 +5,7 @@ namespace SGE
     Model::Model()
     {
         mIsDrawable = true;
+        mComponentTypeString = "model";
     }
 
 	bool Model::loadFromFile(std::string file)

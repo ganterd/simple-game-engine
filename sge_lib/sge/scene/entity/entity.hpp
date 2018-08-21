@@ -17,13 +17,12 @@ namespace SGE
 	{
 	friend class EntityComponent;
 	protected:
+		std::string mName;
 		std::vector<Entity*> mChildren;
 		Entity* mParent = nullptr;
-		std::vector<Mesh*> meshes;
-		std::vector<ILight*> lights;
-		std::vector<Material*> mMaterials;
-		std::vector<ObjectScript*> mAttachedScripts;
+
 		std::vector<EntityComponent*> mComponents;
+
 		glm::mat4 mLocalModelMat;
 		glm::mat4 mWorldModelMat;
 		glm::vec3 position;
@@ -33,6 +32,9 @@ namespace SGE
 
 	public:
 		Export Entity();
+
+		Export void name(const std::string& n){ mName = n; };
+		Export std::string name(){ return mName; };
 
 		Export void addChild(Entity* childEntity);
 		Export std::vector<Entity*> getChildren(){ return mChildren; };
@@ -53,13 +55,21 @@ namespace SGE
 		Export glm::mat4 getModelMat();
 		Export glm::mat4 getWorldModelMat(){ return mWorldModelMat; };
 
-		Export void addLight(ILight* l);
-		Export std::vector<ILight*> getLights();
-		Export ILight* getLight(int lightIndex);
-
-		Export void attachScript(ObjectScript* script);
 		Export void addComponent(EntityComponent* component);
 		Export std::vector<EntityComponent*> getComponents(){ return mComponents; };
+		template <typename ComponentType> Export std::vector<ComponentType*> getComponentsOfType()
+		{
+			std::vector<ComponentType*> compatibleComponents;
+			for(EntityComponent* c : mComponents)
+			{
+				if(ComponentType* p = dynamic_cast<ComponentType*>(c))
+				{
+					compatibleComponents.push_back(p);
+				}
+			}
+			return compatibleComponents;
+		}
+
 	};
 }
 

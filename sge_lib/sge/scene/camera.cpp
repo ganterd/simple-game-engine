@@ -2,8 +2,10 @@
 
 namespace SGE
 {
-	Camera::Camera()
+	Camera::Camera() : EntityComponent()
 	{
+		mComponentTypeString = "camera";
+		
 		this->fov = 45.0f;
 		this->ratio = 4.0f/3.0f;
 		this->nearPlane = 0.01f;

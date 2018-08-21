@@ -1,7 +1,8 @@
 #include "cameracontrol.hpp"
 
-CameraControl::CameraControl() : SGE::EntityComponent()
+CameraControl::CameraControl() : SGE::ObjectScript()
 {
+    mComponentName = "CameraControl";
     mCurrentVelocity = glm::vec3(0.0f);
 }
 

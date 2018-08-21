@@ -10,12 +10,6 @@ namespace SGE
 		mLocalRotation = glm::vec3(0.0f, 0.0f, 0.0f);
 	}
 
-	void Entity::attachScript(ObjectScript* script)
-	{
-		mAttachedScripts.push_back(script);
-		script->mEntity = this;
-	}
-
 	void Entity::addChild(Entity* childEntity)
 	{
 		mChildren.push_back(childEntity);
@@ -37,14 +31,6 @@ namespace SGE
 
 		for(Entity* entity : mChildren)
 			entity->update();
-	}
-
-	void Entity::draw()
-	{
-		for(unsigned int i = 0; i < this->meshes.size(); ++i)
-		{
-			this->meshes[i]->renderGL();
-		}
 	}
 
 	void Entity::draw(SubShader* shader)
@@ -111,21 +97,5 @@ namespace SGE
 	glm::mat4 Entity::getModelMat()
 	{
 		return mLocalModelMat;
-	}
-
-	void Entity::addLight(ILight* l)
-	{
-		l->mParent = this;
-		lights.push_back(l);
-	}
-
-	std::vector<ILight*> Entity::getLights()
-	{
-		return this->lights;
-	}
-
-	ILight* Entity::getLight(int lightIndex)
-	{
-		return lights[lightIndex];
 	}
 }

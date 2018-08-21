@@ -1,15 +1,14 @@
 #pragma once
 
+#include <sge/scene/entity/component.hpp>
+
 namespace SGE
 {
-    // Forward declaration of entity script
-    class Entity;
-
-    class ObjectScript
+    class ObjectScript : public EntityComponent
     {
     public:
-        Entity* mEntity;
-
+        ObjectScript();
+        
         virtual void update(){};
     };
 }
