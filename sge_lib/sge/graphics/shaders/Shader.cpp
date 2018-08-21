@@ -47,6 +47,14 @@ namespace SGE
         return mCurrentSubShader;
     }
 
+    void Shader::setCurrentSubShader(SubShader* s)
+    {
+        if(mCurrentSubShader)
+            mCurrentSubShader->disable();
+        mCurrentSubShader = s;
+        s->enable();
+    }
+
     SubShader* Shader::getSubShader(std::string subShaderName)
     {
         return mSubShaderMap[subShaderName];

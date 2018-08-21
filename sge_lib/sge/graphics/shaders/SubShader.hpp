@@ -24,18 +24,10 @@ namespace SGE
 	{
 	protected:
 		std::string mName;
-		bool mIsScreenSpaceShader;
-		bool mToRenderTarget;
 		IRenderTarget* mRenderTarget;
 
-		typedef struct _RenderBufferLinks
-		{
-			std::string sourceShader;
-			std::string sourceSubShader;
-			std::string sourceBuffer;
-			std::string targetSampler;
-		} RenderBufferLink;
-		std::vector<RenderBufferLink> mRenderBufferLinks;
+		std::map<std::string, IRenderBuffer*> mRenderBufferOutputLinks;
+		std::map<std::string, IRenderBuffer*> mRenderBufferInputLinks;
 
 	public:
 		enum ShaderType
@@ -46,21 +38,16 @@ namespace SGE
 		};
 
 		void setName(std::string n){ mName = n; };
-		void setIsScreenSpaceShader(bool b){ mIsScreenSpaceShader = b; };
-		bool isScreenSpaceShader(){ return mIsScreenSpaceShader; };
-		virtual void setToRenderTarget(bool b) = 0;
-		IRenderTarget* getRenderTarget(){ return mRenderTarget; };
-		virtual void getRenderTargetBuffer(std::string bufferName) = 0;
 		virtual bool addShaderFile(std::string shaderFile, ShaderType shaderType) = 0;
-		virtual bool loadFromFiles(std::string vertFile, std::string fragFile) = 0;
-		virtual bool loadFromFiles(std::string vFile, std::string fFile, std::string gFile) = 0;
-		void addRenderBufferLink(std::string sourceShader, std::string sourceSubShader, std::string sourceBuffer, std::string targetSampler);
+
+		virtual void renderTarget(IRenderTarget* t){ mRenderTarget = t; };
+		virtual IRenderTarget* renderTarget(){ return mRenderTarget; };
+
+		virtual void linkOutputToRenderBuffer(std::string shaderOutput, IRenderBuffer* buffer);
+		virtual void linkInputFromRenderBuffer(IRenderBuffer* buffer, std::string targetSampler);
 
 		virtual void enable() = 0;
 		virtual void disable() = 0;
-
-		const char* readFile(const char* filePath);
-
 		virtual void setVariable(std::string name, bool value) = 0;
 		virtual void setVariable(std::string name, int value) = 0;
 		virtual void setVariable(std::string name, float value) = 0;

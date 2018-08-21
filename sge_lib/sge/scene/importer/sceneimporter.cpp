@@ -66,131 +66,131 @@ namespace SGE
 
 	void SceneImporter::processShaders(const tinyxml2::XMLElement* root)
 	{
-		LOG(DEBUG) << "Getting shaders...";
-
-		const tinyxml2::XMLElement* shadersNode = root->FirstChildElement("shaders");
-		if(shadersNode == NULL)
-		{
-			LOG(WARNING) << "Scene has no shaders listed";
-			return;
-		}
-
-		const tinyxml2::XMLElement* shaderNode = shadersNode->FirstChildElement("shader");
-		if(shaderNode == NULL)
-		{
-			LOG(WARNING) << "Scene has no shaders listed!";
-			return;
-		}
-
-		for(; shaderNode; shaderNode = shaderNode->NextSiblingElement("shader"))
-		{
-			Shader* shader = new Shader();
-
-			const char* shaderName = shaderNode->Attribute("name");
-			shader->setName(shaderName);
-
-			const tinyxml2::XMLElement* subShaderNode = shaderNode->FirstChildElement("subShader");
-			while(subShaderNode)
-			{
-				const char* subShaderName = subShaderNode->Attribute("name");
-				SubShader* subShader = new GLSLShader();
-				subShader->setName(subShaderName);
-
-				/* Create render targets if any */
-				XMLElement* renderTargetNode = subShaderNode->FirstChildElement("renderTarget");
-				if(renderTargetNode)
-				{
-					subShader->setToRenderTarget(true);
-
-					XMLElement* renderBufferNode = renderTargetNode->FirstChildElement("buffer");
-					while(renderBufferNode)
-					{
-						std::string bufferName = renderBufferNode->Attribute("name");
-						std::string bufferTypeString = renderBufferNode->Attribute("type");
-
-						IRenderBuffer::BufferType bufferType;
-						if(bufferTypeString == "rgb")
-							bufferType = IRenderBuffer::BufferType::Color;
-						else if(bufferTypeString == "rgb32")
-							bufferType = IRenderBuffer::BufferType::Position;
-						else if(bufferTypeString == "depth")
-							bufferType = IRenderBuffer::BufferType::Depth;
-						else
-						{
-							LOG(ERROR) << "Unkown render buffer type '" << bufferTypeString << "'";
-							continue;
-						}
-
-						subShader->getRenderTarget()->addRenderBuffer(bufferName, bufferType, ITexture::DataType::Float);
-
-						renderBufferNode = renderBufferNode->NextSiblingElement();
-					}
-				}
-
-				/* Import GLSL shader files */
-				const tinyxml2::XMLElement* shaderFileNode = subShaderNode->FirstChildElement("file");
-				while(shaderFileNode)
-				{
-					std::string shaderFileType = shaderFileNode->Attribute("type");
-					std::string shaderFilePath = shaderFileNode->GetText();
-
-					SubShader::ShaderType shaderType = SubShader::Vertex;
-					if(shaderFileType == "vert")
-						shaderType = SubShader::Vertex;
-					else if(shaderFileType == "geom")
-						shaderType = SubShader::Geometry;
-					else if(shaderFileType == "frag")
-						shaderType = SubShader::Fragment;
-					else
-					{
-						LOG(WARNING) << "Unknown shader type '" << shaderFileType << "'";
-						continue;
-					}
-
-
-					subShader->addShaderFile(shaderFilePath, shaderType);
-					shaderFileNode = shaderFileNode->NextSiblingElement();
-				}
-
-				/* Create render targets if any */
-				XMLElement* inputBuffers = subShaderNode->FirstChildElement("inputBuffers");
-				if(inputBuffers)
-				{
-					XMLElement* bufferNode = inputBuffers->FirstChildElement("buffer");
-					while(bufferNode)
-					{
-						std::string bufferSourceShader = shaderName;
-						if(bufferNode->Attribute("sourceShader"))
-							bufferSourceShader = bufferNode->Attribute("sourceShader");
-						std::string bufferSourceSubShader = bufferNode->Attribute("sourceSubShader");
-						std::string bufferName = bufferNode->Attribute("name");
-						std::string bufferSampler = bufferNode->Attribute("sampler");
-
-						subShader->addRenderBufferLink(
-							bufferSourceShader,
-							bufferSourceSubShader,
-							bufferName,
-							bufferSampler
-						);
-
-						bufferNode = bufferNode->NextSiblingElement();
-					}
-				}
-
-				XMLElement* screenSpaceShaderNode = subShaderNode->FirstChildElement("screenSpace");
-				if(screenSpaceShaderNode)
-				{
-					std::string screenSpaceString = screenSpaceShaderNode->GetText();
-					if(screenSpaceString == "true")
-						subShader->setIsScreenSpaceShader(true);
-				}
-
-				shader->addSubShader(subShaderName, subShader);
-				subShaderNode = subShaderNode->NextSiblingElement();
-			}
-
-			ShaderManager::addShader(shaderName, shader);
-		}
+		// LOG(DEBUG) << "Getting shaders...";
+		//
+		// const tinyxml2::XMLElement* shadersNode = root->FirstChildElement("shaders");
+		// if(shadersNode == NULL)
+		// {
+		// 	LOG(WARNING) << "Scene has no shaders listed";
+		// 	return;
+		// }
+		//
+		// const tinyxml2::XMLElement* shaderNode = shadersNode->FirstChildElement("shader");
+		// if(shaderNode == NULL)
+		// {
+		// 	LOG(WARNING) << "Scene has no shaders listed!";
+		// 	return;
+		// }
+		//
+		// for(; shaderNode; shaderNode = shaderNode->NextSiblingElement("shader"))
+		// {
+		// 	Shader* shader = new Shader();
+		//
+		// 	const char* shaderName = shaderNode->Attribute("name");
+		// 	shader->setName(shaderName);
+		//
+		// 	const tinyxml2::XMLElement* subShaderNode = shaderNode->FirstChildElement("subShader");
+		// 	while(subShaderNode)
+		// 	{
+		// 		const char* subShaderName = subShaderNode->Attribute("name");
+		// 		SubShader* subShader = new GLSLShader();
+		// 		subShader->setName(subShaderName);
+		//
+		// 		/* Create render targets if any */
+		// 		XMLElement* renderTargetNode = subShaderNode->FirstChildElement("renderTarget");
+		// 		if(renderTargetNode)
+		// 		{
+		// 			subShader->setToRenderTarget(true);
+		//
+		// 			XMLElement* renderBufferNode = renderTargetNode->FirstChildElement("buffer");
+		// 			while(renderBufferNode)
+		// 			{
+		// 				std::string bufferName = renderBufferNode->Attribute("name");
+		// 				std::string bufferTypeString = renderBufferNode->Attribute("type");
+		//
+		// 				IRenderBuffer::BufferType bufferType;
+		// 				if(bufferTypeString == "rgb")
+		// 					bufferType = IRenderBuffer::BufferType::Color;
+		// 				else if(bufferTypeString == "rgb32")
+		// 					bufferType = IRenderBuffer::BufferType::Position;
+		// 				else if(bufferTypeString == "depth")
+		// 					bufferType = IRenderBuffer::BufferType::Depth;
+		// 				else
+		// 				{
+		// 					LOG(ERROR) << "Unkown render buffer type '" << bufferTypeString << "'";
+		// 					continue;
+		// 				}
+		//
+		// 				subShader->getRenderTarget()->addRenderBuffer(bufferName, bufferType, ITexture::DataType::Float);
+		//
+		// 				renderBufferNode = renderBufferNode->NextSiblingElement();
+		// 			}
+		// 		}
+		//
+		// 		/* Import GLSL shader files */
+		// 		const tinyxml2::XMLElement* shaderFileNode = subShaderNode->FirstChildElement("file");
+		// 		while(shaderFileNode)
+		// 		{
+		// 			std::string shaderFileType = shaderFileNode->Attribute("type");
+		// 			std::string shaderFilePath = shaderFileNode->GetText();
+		//
+		// 			SubShader::ShaderType shaderType = SubShader::Vertex;
+		// 			if(shaderFileType == "vert")
+		// 				shaderType = SubShader::Vertex;
+		// 			else if(shaderFileType == "geom")
+		// 				shaderType = SubShader::Geometry;
+		// 			else if(shaderFileType == "frag")
+		// 				shaderType = SubShader::Fragment;
+		// 			else
+		// 			{
+		// 				LOG(WARNING) << "Unknown shader type '" << shaderFileType << "'";
+		// 				continue;
+		// 			}
+		//
+		//
+		// 			subShader->addShaderFile(shaderFilePath, shaderType);
+		// 			shaderFileNode = shaderFileNode->NextSiblingElement();
+		// 		}
+		//
+		// 		/* Create render targets if any */
+		// 		XMLElement* inputBuffers = subShaderNode->FirstChildElement("inputBuffers");
+		// 		if(inputBuffers)
+		// 		{
+		// 			XMLElement* bufferNode = inputBuffers->FirstChildElement("buffer");
+		// 			while(bufferNode)
+		// 			{
+		// 				std::string bufferSourceShader = shaderName;
+		// 				if(bufferNode->Attribute("sourceShader"))
+		// 					bufferSourceShader = bufferNode->Attribute("sourceShader");
+		// 				std::string bufferSourceSubShader = bufferNode->Attribute("sourceSubShader");
+		// 				std::string bufferName = bufferNode->Attribute("name");
+		// 				std::string bufferSampler = bufferNode->Attribute("sampler");
+		//
+		// 				subShader->addRenderBufferLink(
+		// 					bufferSourceShader,
+		// 					bufferSourceSubShader,
+		// 					bufferName,
+		// 					bufferSampler
+		// 				);
+		//
+		// 				bufferNode = bufferNode->NextSiblingElement();
+		// 			}
+		// 		}
+		//
+		// 		XMLElement* screenSpaceShaderNode = subShaderNode->FirstChildElement("screenSpace");
+		// 		if(screenSpaceShaderNode)
+		// 		{
+		// 			std::string screenSpaceString = screenSpaceShaderNode->GetText();
+		// 			if(screenSpaceString == "true")
+		// 				subShader->setIsScreenSpaceShader(true);
+		// 		}
+		//
+		// 		shader->addSubShader(subShaderName, subShader);
+		// 		subShaderNode = subShaderNode->NextSiblingElement();
+		// 	}
+		//
+		// 	ShaderManager::addShader(shaderName, shader);
+		// }
 	}
 
 	std::vector<Entity*> SceneImporter::_getSceneEntities(const tinyxml2::XMLElement* root)

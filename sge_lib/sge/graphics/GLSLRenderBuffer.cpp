@@ -91,6 +91,8 @@ namespace SGE
 	void GLSLRenderBuffer::setGLColorAttachment(GLuint glColorAttachment)
 	{
 		this->m_glColorAttachment = glColorAttachment;
+		glBindTexture(GL_TEXTURE_2D, mTexture->mTextureID);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, m_glColorAttachment, GL_TEXTURE_2D, mTexture->mTextureID, 0);
 	}
 
 	GLuint GLSLRenderBuffer::getGLColorAttachment()

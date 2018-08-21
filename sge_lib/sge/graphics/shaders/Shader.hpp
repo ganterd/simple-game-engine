@@ -26,7 +26,7 @@ namespace SGE
         SubShader* useSubShader(unsigned int subShaderIndex);
         SubShader* getSubShader(std::string subShader);
         std::vector<SubShader*> getSubShaders(){ return mSubShaders; };
-        void setCurrentSubShader(SubShader* s){ mCurrentSubShader = s; };
+        void setCurrentSubShader(SubShader* s);
         SubShader* getCurrentSubShader() { return mCurrentSubShader; };
 
         void disable();

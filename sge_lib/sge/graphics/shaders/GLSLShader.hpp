@@ -15,16 +15,9 @@ namespace SGE
 	class Export GLSLShader : public SubShader
 	{
 	private:
-		GLuint vShaderID;
-		GLuint fShaderID;
-		GLuint gShaderID;
-		unsigned int mFragmentShaderCount;
-		bool mBoundFragLocations;
-
-		GLuint shaderID;
-
-		const char* readShaderCode(std::string file);
-		GLuint loadShader(const char* shaderCode, GLuint shaderType, GLuint targetProgram);
+		GLuint mShaderProgramID;
+		GLuint compileAndAttachShader(const char*, GLuint);
+		bool link();
 
 		std::map<std::string, GLuint> mUniformsMap;
 		GLuint getUniformLocation(std::string name);
@@ -33,27 +26,19 @@ namespace SGE
 		GLSLShader();
 		~GLSLShader();
 
-		void setToRenderTarget(bool b);
-		void getRenderTargetBuffer(std::string bufferName);
-
 		bool addShaderFile(std::string shaderFile, ShaderType shaderType);
-		bool loadFromFiles(std::string vFile, std::string fFile);
-		bool loadFromFiles(std::string vFile, std::string fFile, std::string gFile);
-		bool link();
 
-		void enable();
-		void disable();
-
-		void setMVP(glm::mat4 mvpMat);
 
 		GLuint getSSBOBinding(const std::string& bufferName);
 
-		virtual void setVariable(std::string name, bool value);
-		virtual void setVariable(std::string name, int value);
-		virtual void setVariable(std::string name, float value);
-		virtual void setVariable(std::string name, glm::vec2 value);
-		virtual void setVariable(std::string name, glm::vec3 value);
-		virtual void setVariable(std::string name, glm::mat4 value);
+		void enable();
+		void disable();
+		void setVariable(std::string name, bool value);
+		void setVariable(std::string name, int value);
+		void setVariable(std::string name, float value);
+		void setVariable(std::string name, glm::vec2 value);
+		void setVariable(std::string name, glm::vec3 value);
+		void setVariable(std::string name, glm::mat4 value);
 	};
 }
 

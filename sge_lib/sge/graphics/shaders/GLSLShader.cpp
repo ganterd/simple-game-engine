@@ -6,25 +6,16 @@ namespace SGE
 	GLSLShader::GLSLShader()
 	{
 		mRenderTarget = nullptr;
-		mToRenderTarget = false;
-		mFragmentShaderCount = 0;
-		mBoundFragLocations = false;
-		mIsScreenSpaceShader = false;
-		shaderID = glCreateProgram();
+		mShaderProgramID = glCreateProgram();
 	}
 
 	GLSLShader::~GLSLShader()
 	{
-		//delete this->renderTarget;
-	}
-
-	bool GLSLShader::loadFromFiles(std::string vFile, std::string fFile)
-	{
-		return this->loadFromFiles(vFile, "", fFile);
 	}
 
 	bool GLSLShader::addShaderFile(std::string shaderFile, ShaderType shaderType)
 	{
+		/* Convert internal shader type to GL enum */
 		GLuint glShaderType = GL_VERTEX_SHADER;
 		const char* sType = "unknown";
 		switch(shaderType)
@@ -44,81 +35,146 @@ namespace SGE
 		}
 		LOG(DEBUG) << "Loading " << sType << " shader [" << shaderFile << "]";
 
-		const char* shaderCode = readShaderCode(shaderFile);
-
+		/* Read shader code from file*/
+		const char* shaderCode = Utils::readFile(shaderFile);
 		if(shaderCode == NULL)
-			return false;
-
-		loadShader(shaderCode, glShaderType, shaderID);
-
-		if(shaderType == Fragment)
 		{
-			mFragmentShaderCount++;
+			LOG(ERROR) << "Could not read shader file '" << shaderFile << "'";
+			return false;
 		}
 
+		/* Compile the shader and attach it to the current program */
+		compileAndAttachShader(shaderCode, glShaderType);
+
+		/* Free the shader code memory */
 		delete[] shaderCode;
 
+		/* Attempt to link the shader */
 		return link();
-	}
-
-	bool GLSLShader::loadFromFiles(
-		std::string vertShaderFile,
-		std::string geomShaderFile,
-		std::string fragShaderFile
-	){
-		addShaderFile(vertShaderFile, ShaderType::Vertex);
-		addShaderFile(geomShaderFile, ShaderType::Geometry);
-		addShaderFile(fragShaderFile, ShaderType::Fragment);
-		return true;
 	}
 
 	bool GLSLShader::link()
 	{
-		// Prior to linking, render buffers must be assigned
-		if(mToRenderTarget && mRenderTarget && !mBoundFragLocations)
-		{
-			mRenderTarget->bind();
-			std::vector<IRenderBuffer*> renderBuffers = mRenderTarget->getColourAttachmentBuffers();
-			for(IRenderBuffer* renderBuffer : renderBuffers)
-			{
-				GLSLRenderBuffer* buffer = (GLSLRenderBuffer*)renderBuffer;
-				//buffer->bindBuffer();
-				glBindFragDataLocation(shaderID, buffer->getGLColorAttachment() - GL_COLOR_ATTACHMENT0, buffer->mName.c_str());
-				LOG(DEBUG) << "Binding attachment " << buffer->getGLColorAttachment() - GL_COLOR_ATTACHMENT0 << " variable " << buffer->mName;
-			}
-			mBoundFragLocations = true;
-		}
+		/* Link the glsl shader program */
+		glLinkProgram(mShaderProgramID);
 
-
-		glLinkProgram(shaderID);
-
-		if(mRenderTarget && mFragmentShaderCount && mBoundFragLocations)
-		{
-			for(IRenderBuffer* renderBuffer : mRenderTarget->getColourAttachmentBuffers())
-			{
-				GLSLRenderBuffer* buffer = (GLSLRenderBuffer*)renderBuffer;
-				GLuint want = glGetFragDataLocation(shaderID, buffer->mName.c_str());
-				LOG(DEBUG) << "Bound '" << buffer->mName << "' to attachment " << want;
-				checkGLErrors();
-			}
-		}
-
+		/* Check for errors */
 		GLint linked = 0;
-		glGetProgramiv(shaderID, GL_LINK_STATUS, &linked);
+		glGetProgramiv(mShaderProgramID, GL_LINK_STATUS, &linked);
 		if (linked == GL_FALSE)
 		{
 			GLint logLength = 0;
-			glGetProgramiv(shaderID, GL_INFO_LOG_LENGTH, &logLength);
+			glGetProgramiv(mShaderProgramID, GL_INFO_LOG_LENGTH, &logLength);
 			GLchar* errorString = new GLchar[logLength];
-			glGetProgramInfoLog(shaderID, logLength, &logLength, errorString);
+			glGetProgramInfoLog(mShaderProgramID, logLength, &logLength, errorString);
 
-			LOG(ERROR) << "Couldn't link shader: " << errorString << std::endl;
+			LOG(ERROR) << "Couldn't link shader: " << errorString;
 
+			glDeleteShader(mShaderProgramID);
+			delete[] errorString;
+			return false;
+		}
+		else
+		{
+			return true;
+		}
+	}
+
+	GLuint GLSLShader::compileAndAttachShader(
+		const char* shaderCode,
+		GLuint shaderType
+	){
+		if(shaderCode == NULL)
+			return 0;
+
+		/* Instantiate and compile new glsl shader */
+		GLuint shaderID = glCreateShader(shaderType);
+		glShaderSource(shaderID, 1, &shaderCode, 0);
+		glCompileShader(shaderID);
+
+		/* Make sure the shader compiled */
+		GLint compiled;
+		glGetShaderiv(shaderID, GL_COMPILE_STATUS, &compiled);
+		if (compiled == GL_FALSE)
+		{
+			GLint logLength = 0;
+			glGetShaderiv(shaderID, GL_INFO_LOG_LENGTH, &logLength);
+			GLchar* errorString = new GLchar[logLength];
+			glGetShaderInfoLog(shaderID, logLength, &logLength, errorString);
+
+			const char* sType = shaderType == GL_VERTEX_SHADER ? "vertex" : "fragment";
+			LOG(ERROR) << "Couldn't compile " << sType << " shader:" << std::endl << errorString << std::endl;
+
+			/* Delete the shader if it didn't */
 			glDeleteShader(shaderID);
 			delete[] errorString;
 			return false;
 		}
-		return true;
+		else
+		{
+			/* Attach the shader to the parent shader program */
+			glAttachShader(mShaderProgramID, shaderID);
+			return shaderID;
+		}
+	}
+
+	void GLSLShader::enable()
+	{
+		glUseProgram(mShaderProgramID);
+
+		/* Attach outputs to render target, if any */
+		if(mRenderTarget)
+		{
+			mRenderTarget->bind();
+			mRenderTarget->clear();
+
+			/* Attach outputs to frame buffers */
+			std::map<std::string, IRenderBuffer*>::iterator it;
+			it = mRenderBufferOutputLinks.begin();
+			while(it != mRenderBufferOutputLinks.end())
+			{
+				GLuint attachment = glGetFragDataLocation(
+					mShaderProgramID,
+					it->first.c_str()
+				);
+				if(attachment != (GLuint)-1)
+				{
+					GLSLRenderBuffer* buffer = (GLSLRenderBuffer*)it->second;
+					buffer->setGLColorAttachment(GL_COLOR_ATTACHMENT0 + attachment);
+				}
+				it++;
+			}
+		}
+
+		/* Attach incoming render buffers to shader samplers */
+		std::map<std::string, IRenderBuffer*>::iterator it;
+		it = mRenderBufferInputLinks.begin();
+		int textureUnit = 0;
+		for(; it != mRenderBufferInputLinks.end(); it++)
+		{
+			GLSLRenderBuffer* linkedBuffer = (GLSLRenderBuffer*)it->second;
+			setVariable(it->first, (int)textureUnit);
+			linkedBuffer->bindTexture(textureUnit);
+			textureUnit++;
+		}
+	}
+
+	void GLSLShader::disable()
+	{
+		/* Unbind the render target */
+		if(mRenderTarget)
+			mRenderTarget->unbind();
+
+		/* Unbind the textures */
+		std::map<std::string, IRenderBuffer*>::iterator it = mRenderBufferInputLinks.begin();
+		for(; it != mRenderBufferInputLinks.end(); it++)
+		{
+			IRenderBuffer* linkedBuffer = it->second;
+			linkedBuffer->bindTexture(0);
+		}
+
+		/* Unbind the shader program */
+		glUseProgram(0);
 	}
 
 	GLuint GLSLShader::getUniformLocation(std::string name)
@@ -130,27 +186,15 @@ namespace SGE
 		}
 		else
 		{
-			GLuint loc = glGetUniformLocation(shaderID, name.c_str());
+			GLuint loc = glGetUniformLocation(mShaderProgramID, name.c_str());
 			mUniformsMap[name] = loc;
 
 			if(loc == (GLuint)-1)
-				LOG(WARNING) << "Shader '" << mName << "'[" << shaderID << "] has no uniform \"" << name << "\"";
+				LOG(WARNING) << "Shader '" << mName
+					<< "'[" << mShaderProgramID << "]"
+					<< " has no uniform \"" << name << "\"";
 			return loc;
 		}
-	}
-
-	void GLSLShader::setToRenderTarget(bool b)
-	{
-		mToRenderTarget = b;
-		if(mToRenderTarget)
-		{
-			mRenderTarget = new GLSLRenderTarget();
-		}
-	}
-
-	void GLSLShader::getRenderTargetBuffer(std::string bufferName)
-	{
-
 	}
 
 	void GLSLShader::setVariable(std::string name, bool value)
@@ -186,103 +230,29 @@ namespace SGE
 
 	GLuint GLSLShader::getSSBOBinding(const std::string& bufferName)
 	{
-		GLuint bufferResourceIndex = glGetProgramResourceIndex(shaderID, GL_SHADER_STORAGE_BLOCK, bufferName.c_str());
+		GLuint bufferResourceIndex = glGetProgramResourceIndex(
+			mShaderProgramID,
+			GL_SHADER_STORAGE_BLOCK,
+			bufferName.c_str()
+		);
+
 		if (bufferResourceIndex == (GLuint)-1)
 		{
-			LOG_N_TIMES(1, WARNING) << "No SSBO named '" << bufferName << "' in shader...";
+			LOG_N_TIMES(1, WARNING) << "No SSBO '" << bufferName << "' in shader";
 			return (GLuint)-1;
 		}
 
 		GLenum props[1] = { GL_BUFFER_BINDING };
 		GLint returnedBinding[1];
-		glGetProgramResourceiv(shaderID, GL_SHADER_STORAGE_BLOCK, bufferResourceIndex, 1, props, 1, NULL, returnedBinding);
+		glGetProgramResourceiv(
+			mShaderProgramID,
+			GL_SHADER_STORAGE_BLOCK,
+			bufferResourceIndex, 1,
+			props, 1, NULL,
+			returnedBinding
+		);
 		return (GLuint)returnedBinding[0];
 	}
 
-	const char* GLSLShader::readShaderCode(std::string file)
-	{
-		if(file.empty())
-		{
-			return NULL;
-		}
 
-		const char* shaderCode = readFile(file.c_str());
-		if(!shaderCode){
-			LOG(WARNING) << "Could not read shader file: " << file;
-			return NULL;
-		}
-
-		return shaderCode;
-	}
-
-	GLuint GLSLShader::loadShader(const char* shaderCode, GLuint shaderType, GLuint targetProgram)
-	{
-		if(shaderCode == NULL)
-			return 0;
-
-		// TODO: Add some error sutff in here
-		GLuint shaderID = glCreateShader(shaderType);
-
-		glShaderSource(shaderID, 1, &shaderCode, 0);
-		glCompileShader(shaderID);
-
-		GLint compiled;
-		glGetShaderiv(shaderID, GL_COMPILE_STATUS, &compiled);
-		if (compiled == GL_FALSE)
-		{
-			GLint logLength = 0;
-			glGetShaderiv(shaderID, GL_INFO_LOG_LENGTH, &logLength);
-			GLchar* errorString = new GLchar[logLength];
-			glGetShaderInfoLog(shaderID, logLength, &logLength, errorString);
-
-			const char* sType = shaderType == GL_VERTEX_SHADER ? "vertex" : "fragment";
-			LOG(ERROR) << "Couldn't compile " << sType << " shader:" << std::endl << errorString << std::endl;
-			glDeleteShader(shaderID);
-			delete[] errorString;
-			return false;
-		}
-
-
-		glAttachShader(targetProgram, shaderID);
-		return shaderID;
-	}
-
-	void GLSLShader::enable()
-	{
-		glUseProgram(shaderID);
-
-		if(mToRenderTarget && mRenderTarget)
-		{
-			mRenderTarget->bind();
-			mRenderTarget->clear();
-		}
-
-		for(RenderBufferLink l : mRenderBufferLinks)
-		{
-			Shader* linkedShader = ShaderManager::getShader(l.sourceShader);
-			SubShader* linkedSubShader = linkedShader->getSubShader(l.sourceSubShader);
-			IRenderTarget* linkedRenderTarget = linkedSubShader->getRenderTarget();
-
-			if(!linkedRenderTarget)
-			{
-				LOG(WARNING) << "Linked render buffer '" << l.sourceShader << "." << l.sourceSubShader << "' is not a render target";
-				continue;
-			}
-
-			GLSLRenderBuffer* linkedBuffer = (GLSLRenderBuffer*)linkedRenderTarget->getRenderBuffer(l.sourceBuffer);
-			GLuint textureUnit = linkedBuffer->getGLColorAttachment() - GL_COLOR_ATTACHMENT0;
-
-			setVariable(l.targetSampler, (int)textureUnit);
-			linkedBuffer->bindTexture(textureUnit);
-		}
-	}
-
-	void GLSLShader::disable()
-	{
-		if(mToRenderTarget && mRenderTarget)
-		{
-			mRenderTarget->unbind();
-		}
-		glUseProgram(0);
-	}
 }

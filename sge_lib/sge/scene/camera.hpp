@@ -21,7 +21,11 @@ namespace SGE
 		glm::vec3 mForwardVector;
 		glm::vec3 mUpVector;
 		glm::vec4 mBackgroundColour;
-		std::vector<Shader*> mShaders;
+
+		Shader* deferredShadingShader;
+		SubShader* geometryPass;
+		SubShader* lightingPass;
+		SubShader* blitAndGammaPass;
 
 		float fov;
 		float ratio;
@@ -43,7 +47,6 @@ namespace SGE
 		Export void setAspectRatio(float r);
 		Export void setNearPlaneDistance(float p);
 		Export void setFarPlaneDistance(float p);
-		Export void addShader(Shader* s);
 		Export void setAsMainCamera();
 
 		Export glm::vec3 getPosition();

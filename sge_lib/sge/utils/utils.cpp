@@ -6,6 +6,10 @@ INITIALIZE_EASYLOGGINGPP
 
 namespace SGE
 {
+	const char* Utils::readFile(const std::string& filePath)
+	{
+		return readFile(filePath.c_str());
+	}
 	const char* Utils::readFile(const char* filePath){
 		char* text = nullptr;
 

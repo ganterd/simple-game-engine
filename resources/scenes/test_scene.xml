@@ -1,7 +1,7 @@
 <scene name="Test Scene">
 	<!-- Shaders go here -->
 	<shaders>
-		<shader name="deferredShading">
+		<!-- <shader name="deferredShading">
 			<subShader name="geometryPass">
 				<renderTarget>
 					<buffer name="diffuse" type="rgb" />
@@ -29,7 +29,7 @@
 				<file type="vert">resources/shaders/deferred_shading/lighting_pass.vert</file>
 				<file type="frag">resources/shaders/deferred_shading/lighting_pass.frag</file>
 			</subShader>
-		</shader>
+		</shader> -->
 		<shader name="blitAndGamma">
 			<subShader name="blitAndGammaShader">
 				<screenSpace>true</screenSpace>
@@ -93,8 +93,8 @@
 			</transform>
 			<camera main="true">
 				<!-- This defines the order of which shaders run -->
-				<shader shader="deferredShading" />
-				<shader shader="blitAndGamma" />
+				<!-- <shader shader="deferredShading" />
+				<shader shader="blitAndGamma" /> -->
 			</camera>
 		</entity>
 	</entities>

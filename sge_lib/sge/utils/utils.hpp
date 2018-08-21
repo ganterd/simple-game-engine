@@ -12,6 +12,7 @@ namespace SGE
 	class Export Utils
 	{
 	public:
+		static const char* readFile(const std::string& filePath);
 		static const char* readFile(const char* filePath);
 		static el::base::type::StoragePointer getELStorage();
 
