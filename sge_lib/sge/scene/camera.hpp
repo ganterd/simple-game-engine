@@ -21,6 +21,7 @@ namespace SGE
 
 		Shader* deferredShadingShader;
 		SubShader* geometryPass;
+		SubShader* debugGeometryPass;
 		SubShader* lightingPass;
 		SubShader* blitAndGammaPass;
 

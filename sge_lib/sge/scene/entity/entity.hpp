@@ -43,7 +43,7 @@ namespace SGE
 
 		Export void update();
 		Export void draw();
-		Export void draw(SubShader* shader);
+		Export void draw(SubShader* shader, bool debug = false);
 
 		Export void setPosition(float, float, float);
 		Export void setPosition(glm::vec3);

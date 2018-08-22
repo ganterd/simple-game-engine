@@ -9,17 +9,17 @@ uniform sampler2D albedoTexture;
 uniform sampler2D specularTexture;
 uniform sampler2D normalsTexture;
 uniform sampler2D opacityTexture;
-uniform sampler2D emmisiveTexture;
+uniform sampler2D emissiveTexture;
 
 uniform bool hasNormalMap;
 uniform bool hasOpacityMap;
 uniform bool hasEmmisiveTexture;
 
-layout(location = 0) out vec4 diffuse;
-layout(location = 1) out vec4 specular;
-layout(location = 3) out vec4 normals;
-layout(location = 4) out vec4 positions;
-layout(location = 2) out vec4 emissive;
+out vec4 outDiffuse;
+out vec4 outSpecular;
+out vec4 outNormals;
+out vec4 outPositions;
+out vec4 outEmissive;
 
 void main(){
     vec3 normal = fragNormal;
@@ -38,8 +38,13 @@ void main(){
             discard;
     }
 
-    positions = vec4(fragPosition, opacity);
-    normals = vec4(normal, opacity);
-    diffuse = vec4(vec3(texture(albedoTexture, fragTexCoord)), opacity);
-    specular = vec4(vec3(texture(specularTexture, fragTexCoord)), opacity);
+    outPositions = vec4(fragPosition, opacity);
+    outNormals = vec4(normal, opacity);
+    outDiffuse = vec4(vec3(texture(albedoTexture, fragTexCoord)), opacity);
+    outSpecular = vec4(vec3(texture(specularTexture, fragTexCoord)), opacity);
+
+    if(hasEmmisiveTexture)
+        outEmissive = vec4(vec3(texture(emissiveTexture, fragTexCoord)), opacity);
+    else
+        outEmissive = vec4(0.0f, 0.0f, 0.0f, 1.0f);
 }

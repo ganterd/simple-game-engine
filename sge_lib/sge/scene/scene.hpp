@@ -26,12 +26,12 @@ namespace SGE
 		std::vector<Entity*> entities;
 		ShaderManager* shaderManager;
 
-		
+
 
 		void recursiveExtractLights(Entity* n, glm::mat4 mat, std::vector<SceneLight>& l);
 
 	public:
-		
+
 		Camera* mMainCamera;
 		Entity* mRootEntity;
 
@@ -40,8 +40,7 @@ namespace SGE
 		Export Entity* getRoot(){ return mRootEntity; };
 		Export void addEntity(Entity* entity);
 		Export void update();
-		//Export void draw();
-		Export void draw(SubShader* targetShader);
+		Export void draw(SubShader* targetShader, bool debug = false);
 		Export void lightScene();
 
 		Export void setMainCamera(Camera* c){ mMainCamera = c; };

@@ -24,10 +24,10 @@ namespace SGE
             mMax = max;
         }
 
-        Export void min(const glm::vec3& min);
-        Export glm::vec3 min(){ return mMin; };
-        Export void max(const glm::vec3& max);
-        Export glm::vec3 max(){ return mMax; };
+        Export void min(const glm::vec3& min){ mMin = glm::min(min, mMin); };
+        Export glm::vec3 min() const { return mMin; };
+        Export void max(const glm::vec3& max){ mMax = glm::max(max, mMax); };
+        Export glm::vec3 max() const { return mMax; };
 
         Export void operator+=(const glm::vec3& p)
         {

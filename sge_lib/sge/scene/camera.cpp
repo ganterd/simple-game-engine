@@ -14,10 +14,8 @@ namespace SGE
 		mBackgroundColour = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
 
 		deferredShadingShader = new Shader();
-		geometryPass = new GLSLShader();
-		geometryPass->addShaderFile("resources/shaders/deferred_shading/geometry_pass.vert", SubShader::Vertex);
-		geometryPass->addShaderFile("resources/shaders/deferred_shading/geometry_pass.frag", SubShader::Fragment);
 
+		/* Create the render target for the geometry and debug geometry passes */
 		IRenderTarget* geometryPassRT = new GLSLRenderTarget();
 		geometryPassRT->addRenderBuffer("diffuse", IRenderBuffer::Color, ITexture::DataType::Float);
 		geometryPassRT->addRenderBuffer("specular", IRenderBuffer::Color, ITexture::DataType::Float);
@@ -25,6 +23,11 @@ namespace SGE
 		geometryPassRT->addRenderBuffer("normals", IRenderBuffer::Position, ITexture::DataType::Float);
 		geometryPassRT->addRenderBuffer("positions", IRenderBuffer::Position, ITexture::DataType::Float);
 		geometryPassRT->addRenderBuffer("depth", IRenderBuffer::Depth, ITexture::DataType::Float);
+
+		/* Create the geometry pass shader, and link to the render target */
+		geometryPass = new GLSLShader();
+		geometryPass->addShaderFile("resources/shaders/deferred_shading/geometry_pass.vert", SubShader::Vertex);
+		geometryPass->addShaderFile("resources/shaders/deferred_shading/geometry_pass.frag", SubShader::Fragment);
 		geometryPass->renderTarget(geometryPassRT);
 		geometryPass->linkOutputToRenderBuffer("outDiffuse", geometryPassRT->getRenderBuffer("diffuse"));
 		geometryPass->linkOutputToRenderBuffer("outSpecular", geometryPassRT->getRenderBuffer("specular"));
@@ -33,25 +36,43 @@ namespace SGE
 		geometryPass->linkOutputToRenderBuffer("outPositions", geometryPassRT->getRenderBuffer("positions"));
 		deferredShadingShader->addSubShader("geometryPass", geometryPass);
 
+		/* Create the debug geometry shader pass, and link to the render target */
+		IRenderTarget* debugGeometryPassRT = new GLSLRenderTarget();
+		debugGeometryPassRT->addRenderBuffer("emissive", IRenderBuffer::Color, ITexture::DataType::Float);
+		debugGeometryPassRT->addRenderBuffer("depth", IRenderBuffer::Depth, ITexture::DataType::Float);
+
+		debugGeometryPass = new GLSLShader();
+		debugGeometryPass->addShaderFile("resources/shaders/deferred_shading/debug_geometry_pass.vert", SubShader::Vertex);
+		debugGeometryPass->addShaderFile("resources/shaders/deferred_shading/debug_geometry_pass.frag", SubShader::Fragment);
+		debugGeometryPass->renderTarget(debugGeometryPassRT);
+		debugGeometryPass->linkOutputToRenderBuffer("outEmissive", debugGeometryPassRT->getRenderBuffer("emissive"));
+		deferredShadingShader->addSubShader("debugGeometryPass", debugGeometryPass);
+
+		/* Create the lighting pass shader, link the inputs ffrom the geometry pass */
 		lightingPass = new GLSLShader();
 		lightingPass->addShaderFile("resources/shaders/deferred_shading/lighting_pass.vert", SubShader::Vertex);
 		lightingPass->addShaderFile("resources/shaders/deferred_shading/lighting_pass.frag", SubShader::Fragment);
 		lightingPass->linkInputFromRenderBuffer(geometryPassRT->getRenderBuffer("diffuse"), "inDiffuse");
 		lightingPass->linkInputFromRenderBuffer(geometryPassRT->getRenderBuffer("specular"), "inSpecular");
-		lightingPass->linkInputFromRenderBuffer(geometryPassRT->getRenderBuffer("emissive"), "inEmissive");
 		lightingPass->linkInputFromRenderBuffer(geometryPassRT->getRenderBuffer("normals"), "inNormal");
 		lightingPass->linkInputFromRenderBuffer(geometryPassRT->getRenderBuffer("positions"), "inPosition");
+		deferredShadingShader->addSubShader("lightingPass", lightingPass);
+
+		/* Create the ping-pong render target for the per-light lighting pass */
 		IRenderTarget* lightingPassRT = new GLSLRenderTarget();
 		lightingPassRT->addRenderBuffer("pingPong0", IRenderBuffer::Color, ITexture::DataType::Float);
 		lightingPassRT->addRenderBuffer("pingPong1", IRenderBuffer::Color, ITexture::DataType::Float);
 		lightingPass->renderTarget(lightingPassRT);
-		deferredShadingShader->addSubShader("lightingPass", lightingPass);
 
+		/* Create the blit and gamma pass shader, and link the inputs from the */
+		/* geometry pass. The specific input from the lighting pass will be decided  */
+		/* during rendering, depending on how many lights are in the scene and which */
+		/* ping-pong texture was the most-recently used */
 		blitAndGammaPass = new GLSLShader();
 		blitAndGammaPass->addShaderFile("resources/shaders/deferred_shading/blitAndGamma.vert", SubShader::Vertex);
 		blitAndGammaPass->addShaderFile("resources/shaders/deferred_shading/blitAndGamma.frag", SubShader::Fragment);
+		blitAndGammaPass->linkInputFromRenderBuffer(debugGeometryPassRT->getRenderBuffer("emissive"), "inEmissive");
 		deferredShadingShader->addSubShader("blitAndGammaPass", blitAndGammaPass);
-
 	}
 
 	void Camera::render()
@@ -64,6 +85,7 @@ namespace SGE
 		/* Geometry Pass */
 		ShaderManager::setCurrentShader(deferredShadingShader);
 		deferredShadingShader->setCurrentSubShader(geometryPass);
+		geometryPass->renderTarget()->clear();
 		geometryPass->setVariable("viewProjectionMatrix", getVPMat());
 		glDepthMask(GL_TRUE);
 		glEnable(GL_DEPTH_TEST);
@@ -78,10 +100,21 @@ namespace SGE
 		Scene* scene = SceneManager::getActiveScene();
 		scene->draw(geometryPass);
 
+		bool debug = true;
+		if(debug)
+		{
+			deferredShadingShader->setCurrentSubShader(debugGeometryPass);
+			debugGeometryPass->renderTarget()->clear();
+			debugGeometryPass->setVariable("viewProjectionMatrix", getVPMat());
+			scene->draw(debugGeometryPass, true);
+		}
+
+
 		/* Lighting Passes */
 		glDisable(GL_CULL_FACE);
 		glDisable(GL_DEPTH_TEST);
 		deferredShadingShader->setCurrentSubShader(lightingPass);
+		lightingPass->renderTarget()->clear();
 		std::vector<Scene::SceneLight> sceneLights = SceneManager::getActiveScene()->extractLights();
 		IRenderBuffer* fromBuffer = lightingPass->renderTarget()->getRenderBuffer("pingPong0");
 		IRenderBuffer* toBuffer = lightingPass->renderTarget()->getRenderBuffer("pingPong1");
@@ -110,6 +143,7 @@ namespace SGE
 		/* Blit and gamma correction pass */
 		deferredShadingShader->setCurrentSubShader(blitAndGammaPass);
 		blitAndGammaPass->linkInputFromRenderBuffer(fromBuffer, "inColour");
+		//blitAndGammaPass->linkInputFromRenderBuffer(geometryPass->renderTarget()->getRenderBuffer("diffuse"), "inColour");
 		OverlayQuad::draw();
 
 		glEnable(GL_CULL_FACE);

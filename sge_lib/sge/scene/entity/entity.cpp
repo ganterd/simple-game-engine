@@ -37,16 +37,16 @@ namespace SGE
 			entity->update();
 	}
 
-	void Entity::draw(SubShader* shader)
+	void Entity::draw(SubShader* shader, bool debug)
 	{
 		shader->setVariable("modelMatrix", mWorldModelMat);
 		for(DrawableComponent* component : mDrawableComponents)
 		{
-			component->draw();
+			component->draw(debug);
 		}
 
 		for(unsigned int i = 0; i < mChildren.size(); ++i)
-			mChildren[i]->draw(shader);
+			mChildren[i]->draw(shader, debug);
 	}
 
 	void Entity::setPosition(float x, float y, float z)

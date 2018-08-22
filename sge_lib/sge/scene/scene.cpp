@@ -25,10 +25,10 @@ namespace SGE
 		mRootEntity->update();
 	}
 
-	void Scene::draw(SubShader* targetShader)
+	void Scene::draw(SubShader* targetShader, bool debug)
 	{
 		// std::cout << "Drawing scene" << std::endl;
-		mRootEntity->draw(targetShader);
+		mRootEntity->draw(targetShader, debug);
 	}
 
 	std::vector<Scene::SceneLight> Scene::extractLights()

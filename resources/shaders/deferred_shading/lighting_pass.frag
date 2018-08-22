@@ -5,7 +5,6 @@ out vec4 lightAccumulation;
 
 uniform sampler2D inDiffuse;
 uniform sampler2D inSpecular;
-uniform sampler2D inEmissive;
 uniform sampler2D inPosition;
 uniform sampler2D inNormal;
 uniform sampler2D inLightAccumulation;

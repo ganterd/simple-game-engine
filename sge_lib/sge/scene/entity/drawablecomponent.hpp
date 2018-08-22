@@ -7,6 +7,6 @@ namespace SGE
     class DrawableComponent : public EntityComponent
     {
     public:
-        virtual void draw() = 0;
+        virtual void draw(bool debug = false) = 0;
     };
 }

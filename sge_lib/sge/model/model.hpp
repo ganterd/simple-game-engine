@@ -19,7 +19,7 @@ namespace SGE
 
     public:
         Model();
-        void draw();
+        void draw(bool debug = false);
         Export bool loadFromFile(std::string file);
 		Export bool loadFromFile(std::string file, float scale, bool makeLeftHanded);
         Export AABB aabb(){ return mAABB; };

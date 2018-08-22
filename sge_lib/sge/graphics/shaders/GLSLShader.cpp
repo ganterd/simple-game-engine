@@ -126,7 +126,6 @@ namespace SGE
 		if(mRenderTarget)
 		{
 			mRenderTarget->bind();
-			mRenderTarget->clear();
 
 			/* Attach outputs to frame buffers */
 			std::map<std::string, IRenderBuffer*>::iterator it;

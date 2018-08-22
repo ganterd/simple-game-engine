@@ -1,4 +1,5 @@
 #include <sge/model/model.hpp>
+#include <sge/model/geometry/box.hpp>
 
 namespace SGE
 {
@@ -27,14 +28,21 @@ namespace SGE
         LOG(DEBUG) << "Model Loaded:";
         LOG(DEBUG) << "|- File [" << file << "]";
         LOG(DEBUG) << "|- AABB "
-            << " [" << mAABB.min().x << "," << mAABB.min().y << "," << mAABB.min().z << "]->"
-            << " [" << mAABB.max().x << "," << mAABB.max().y << "," << mAABB.max().z << "]";
+            << "[" << mAABB.min().x << "," << mAABB.min().y << "," << mAABB.min().z << "]->"
+            << "[" << mAABB.max().x << "," << mAABB.max().y << "," << mAABB.max().z << "]";
 		return true;
 	}
 
-    void Model::draw()
+    void Model::draw(bool debug)
     {
-        for(unsigned int i = 0; i < mMeshes.size(); ++i)
-			mMeshes[i]->draw();
+        if(debug)
+        {
+            Box(mAABB).drawLines();
+        }
+        else
+        {
+            for(unsigned int i = 0; i < mMeshes.size(); ++i)
+        		mMeshes[i]->draw();
+        }
     }
 }
