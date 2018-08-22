@@ -1,5 +1,6 @@
 #pragma once
 
+#include <sge/model/mesh.hpp>
 #include <sge/model/aabb.hpp>
 
 namespace SGE

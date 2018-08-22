@@ -47,6 +47,29 @@ namespace SGE
 		Export Camera* getMainCamera(){ return mMainCamera; };
 
 		Export std::vector<SceneLight> extractLights();
+
+		template <typename T> Export std::vector<T*> getComponentsOfType()
+		{
+			std::vector<Entity*> entityList;
+			entityList.push_back(mRootEntity);
+
+			std::vector<T*> matchingComponents;
+			while(entityList.size())
+			{
+				Entity* entity = entityList.back();
+				entityList.pop_back();
+
+				for(Entity* child : entity->getChildren())
+					entityList.push_back(child);
+
+				std::vector<T*> entityMatchingComponents = entity->getComponentsOfType<T>();
+				for(T* component : entityMatchingComponents)
+					matchingComponents.push_back(component);
+			}
+			return matchingComponents;
+		}
+
+
 	};
 }
 

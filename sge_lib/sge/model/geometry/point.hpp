@@ -1,5 +1,6 @@
 #pragma once
 
+#include <sge/model/mesh.hpp>
 #include <sge/model/aabb.hpp>
 #include <sge/graphics/shaders/Shader.hpp>
 #include <sge/graphics/shaders/ShaderManager.hpp>
@@ -16,7 +17,7 @@ namespace SGE
     public:
         Point(
             const glm::vec3& p,
-            const glm::vec4& colour = glm::vec4(1.0f, 1.0f, 1.0f, 0.8f), 
+            const glm::vec4& colour = glm::vec4(1.0f, 1.0f, 1.0f, 0.8f),
             float size = 10.0f
         ){
             mPointSize = size;
