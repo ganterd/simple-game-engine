@@ -8,10 +8,12 @@ namespace SGE
     {
     private:
         GLuint vao, vbo;
+        glm::vec4 mColour;
 
     public:
-        Box(const AABB& aabb)
+        Box(const AABB& aabb, const glm::vec4& colour = glm::vec4(0.8f, 1.0f, 0.8f, 0.8f))
         {
+            mColour = colour;
             glm::vec3 min = aabb.min();
             glm::vec3 max = aabb.max();
             float vertices[] = {
@@ -47,6 +49,9 @@ namespace SGE
 
         void drawLines()
         {
+            SubShader* shader = ShaderManager::getCurrentShader()->getCurrentSubShader();
+            shader->setVariable("pointSize", 1.0f);
+            shader->setVariable("debugColour", mColour);
             glBindVertexArray(vao);
             glEnable(GL_PROGRAM_POINT_SIZE);
             //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);

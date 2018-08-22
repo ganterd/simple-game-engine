@@ -4,11 +4,11 @@
 #include <glm/glm.hpp>
 
 #include <sge/utils/export.hpp>
-#include <sge/scene/entity/component.hpp>
+#include <sge/scene/entity/drawablecomponent.hpp>
 
 namespace SGE
 {
-	class ILight : public EntityComponent
+	class ILight : public DrawableComponent
 	{
 	private:
 		glm::vec3 mColor;
@@ -16,13 +16,15 @@ namespace SGE
 		float mIntensity;
 
 	public:
-		Export ILight() : EntityComponent()
+		Export ILight() : DrawableComponent()
 		{
 			mComponentTypeString = "light";
 			mColor = glm::vec3(1.0f, 1.0f, 1.0f);
 			mAmbient = glm::vec3(0.0f);
 			mIntensity = 0.1f;
 		};
+
+		virtual void draw(bool debug = false);
 
 		Export void setColor(glm::vec3 c){ mColor = c; };
 		Export void setAmbient(const glm::vec3& a){ mAmbient = a; };
