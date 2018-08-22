@@ -100,15 +100,14 @@ namespace SGE
 		Scene* scene = SceneManager::getActiveScene();
 		scene->draw(geometryPass);
 
-		bool debug = true;
-		if(debug)
+		debugGeometryPass->renderTarget()->bind();
+		debugGeometryPass->renderTarget()->clear();
+		if(mDrawDebug)
 		{
 			deferredShadingShader->setCurrentSubShader(debugGeometryPass);
-			debugGeometryPass->renderTarget()->clear();
 			debugGeometryPass->setVariable("viewProjectionMatrix", getVPMat());
 			scene->draw(debugGeometryPass, true);
 		}
-
 
 		/* Lighting Passes */
 		glDisable(GL_CULL_FACE);

@@ -18,6 +18,7 @@ namespace SGE
 	{
 	private:
 		glm::vec4 mBackgroundColour;
+		bool mDrawDebug = false;
 
 		Shader* deferredShadingShader;
 		SubShader* geometryPass;
@@ -43,6 +44,9 @@ namespace SGE
 		Export void setNearPlaneDistance(float p);
 		Export void setFarPlaneDistance(float p);
 		Export void setAsMainCamera();
+
+		Export bool drawDebug() const { return mDrawDebug; };
+		Export void drawDebug(bool b){ mDrawDebug = b; };
 
 		Export glm::mat4 getVPMat();
 

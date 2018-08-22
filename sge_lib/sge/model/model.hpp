@@ -15,13 +15,11 @@ namespace SGE
     private:
         std::vector<Mesh*> mMeshes;
         std::vector<Material*> mMaterials;
-        AABB mAABB;
 
     public:
         Model();
         void draw(bool debug = false);
         Export bool loadFromFile(std::string file);
 		Export bool loadFromFile(std::string file, float scale, bool makeLeftHanded);
-        Export AABB aabb(){ return mAABB; };
     };
 }

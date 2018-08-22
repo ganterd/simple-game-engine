@@ -33,6 +33,18 @@ namespace SGE
 
             Model* model = new Model();
             model->loadFromFile(modelPath, scale, false);
+
+            const XMLElement* shadowsNode = node->FirstChildElement("shadowCaster");
+            if(shadowsNode)
+            {
+                const char* text = shadowsNode->GetText();
+                if(text)
+                {
+                    if(std::string(text) == "true")
+                        model->castsShadows(true);
+                }
+            }
+
             entity->addComponent(model);
         }
     };
