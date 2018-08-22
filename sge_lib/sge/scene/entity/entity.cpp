@@ -1,5 +1,6 @@
 #include <sge/scene/entity/entity.hpp>
 #include <sge/scene/entity/component.hpp>
+#include <sge/scene/entity/drawablecomponent.hpp>
 
 namespace SGE
 {
@@ -20,6 +21,9 @@ namespace SGE
 	{
 		mComponents.push_back(component);
 		component->mEntity = this;
+
+		if(DrawableComponent* drawable = dynamic_cast<DrawableComponent*>(component))
+			mDrawableComponents.push_back(drawable);
 	}
 
 	void Entity::update()
@@ -36,12 +40,9 @@ namespace SGE
 	void Entity::draw(SubShader* shader)
 	{
 		shader->setVariable("modelMatrix", mWorldModelMat);
-		for(EntityComponent* component : mComponents)
+		for(DrawableComponent* component : mDrawableComponents)
 		{
-			if(component->isDrawable())
-			{
-				component->draw();
-			}
+			component->draw();
 		}
 
 		for(unsigned int i = 0; i < mChildren.size(); ++i)

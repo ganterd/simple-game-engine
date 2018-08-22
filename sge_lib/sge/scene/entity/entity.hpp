@@ -13,6 +13,7 @@
 namespace SGE
 {
 	class EntityComponent;
+	class DrawableComponent;
 	class Entity
 	{
 	friend class EntityComponent;
@@ -22,6 +23,7 @@ namespace SGE
 		Entity* mParent = nullptr;
 
 		std::vector<EntityComponent*> mComponents;
+		std::vector<DrawableComponent*> mDrawableComponents;
 
 		glm::mat4 mLocalModelMat;
 		glm::mat4 mWorldModelMat;

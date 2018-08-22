@@ -3,5 +3,4 @@
 namespace SGE
 {
     void EntityComponent::update(){ }
-    void EntityComponent::draw(){ }
 }

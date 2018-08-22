@@ -21,8 +21,6 @@ namespace SGE
             LOG(INFO) << indent(level + 1)
                 << "|- Component '" << cName << "'"
                 << "[" << cType << "]";
-
-            LOG(INFO) << indent(level + 2) << "|- Drawable: " << c->isDrawable();
         }
 
         static void print(Entity* e, int level = 0)

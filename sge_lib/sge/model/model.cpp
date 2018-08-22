@@ -4,7 +4,6 @@ namespace SGE
 {
     Model::Model()
     {
-        mIsDrawable = true;
         mComponentTypeString = "model";
     }
 

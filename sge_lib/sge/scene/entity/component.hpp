@@ -20,10 +20,7 @@ namespace SGE
         Export virtual std::string componentTypeString(){ return mComponentTypeString; };
         Export virtual void componentName(const std::string& n){ mComponentName = n; };
         Export virtual std::string componentName(){ return mComponentName; };
-        Export virtual bool isDrawable(){ return mIsDrawable; };
-        Export virtual void isDrawable(bool b){ mIsDrawable = b; };
         Export virtual void update();
-        Export virtual void draw();
         Entity* getEntity(){ return mEntity; };
     };
 }

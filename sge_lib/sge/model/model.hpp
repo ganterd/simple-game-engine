@@ -4,12 +4,12 @@
 
 #include <sge/utils/export.hpp>
 #include <sge/model/mesh.hpp>
-#include <sge/scene/entity/component.hpp>
+#include <sge/scene/entity/drawablecomponent.hpp>
 #include <sge/model/ModelImporter.hpp>
 
 namespace SGE
 {
-    class Model : public EntityComponent
+    class Model : public DrawableComponent
     {
     private:
         std::vector<Mesh*> mMeshes;
