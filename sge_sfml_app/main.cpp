@@ -12,7 +12,6 @@ INITIALIZE_NULL_EASYLOGGINGPP
 
 #include "gamescripts/cameracontrol.hpp"
 #include "gamescripts/demolightscripts.hpp"
-#include "shadowmap.hpp"
 
 // Function Prototypes
 //---------------------------------------------------
@@ -56,7 +55,6 @@ void init()
 	/* Initialise the display manager */
 	dm = SGE::DisplayManager::getDisplayInstance();
 
-
 	/* Initialise the graphics manager */
 	gm = new GraphicsManager::OGLGraphicsManager(dm);
 
@@ -67,9 +65,6 @@ void init()
 
 	cameraControl = new CameraControl();
 	scene->getMainCamera()->getEntity()->addComponent(cameraControl);
-	std::vector<ILight*> lights = scene->getComponentsOfType<ILight>();
-	for(ILight* l : lights)
-		new ShadowMap(l);
 
 	Utils::printSceneStructure();
 }

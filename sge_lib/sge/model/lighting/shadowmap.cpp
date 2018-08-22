@@ -1,8 +1,18 @@
 #include "shadowmap.hpp"
 
+namespace SGE{
 ShadowMap::ShadowMap(ILight* light) : DrawableComponent()
 {
+    mComponentTypeString = "shadowmap";
     light->getEntity()->addComponent(this);
+    mShader = new GLSLShader();
+    mShader->addShaderFile("resources/shaders/shadowmapping/test.vert", Shader::Vertex);
+    mShader->addShaderFile("resources/shaders/shadowmapping/test.frag", Shader::Fragment);
+
+    mRenderTarget = new GLSLRenderTarget();
+    mRenderTarget->addRenderBuffer("depth", IRenderBuffer::Position, ITexture::DataType::Float);
+    mRenderTarget->addRenderBuffer("", IRenderBuffer::Depth, ITexture::DataType::Float);
+    mShader->renderTarget(mRenderTarget);
 }
 
 void ShadowMap::update()
@@ -54,21 +64,39 @@ void ShadowMap::update()
 
     glm::vec3 positionWorld = glm::vec3(glm::vec4(mEntity->getPosition(), 1.0f) * mEntity->getWorldModelMat());
 
-    mLightViewMatrix = glm::perspective(glm::radians(45.0f), 1.0f, 1.0f, 10.0f)
+    mLightViewMatrix = glm::perspective(glm::radians(45.0f), 1.0f, 1.0f, (sinf(Time::gameTime()) + 2.0f) * 10.0f)
         * glm::lookAt(
-            glm::vec3(0.0f),
-            mShadowCastersCentroid - positionWorld,
+            positionWorld,
+            mShadowCastersCentroid,
             glm::vec3(0.0f, 1.0f, 0.0f)
         );
+}
+
+void ShadowMap::render()
+{
+    glEnable(GL_CULL_FACE);
+    glEnable(GL_DEPTH_TEST);
+    ShaderManager::setCurrentShader(mShader);
+    mRenderTarget->bind();
+    mRenderTarget->clear();
+    glm::vec3 positionWorld = glm::vec3(glm::vec4(mEntity->getPosition(), 1.0f) * mEntity->getWorldModelMat());
+    mShader->setVariable("inLightPosition", positionWorld);
+    mShader->setVariable("inLightNearPlane", 1.0f);
+    mShader->setVariable("inLightFarPlane", 20.0f);
+    mShader->setVariable("viewProjectionMatrix", mLightViewMatrix);
+    SceneManager::getActiveScene()->draw(mShader);
+    ShaderManager::setCurrentShader(nullptr);
+    mRenderTarget->unbind();
 }
 
 void ShadowMap::draw(bool debug)
 {
     if(debug)
     {
-        Frustum(mLightViewMatrix).draw();
         ShaderManager::getCurrentShader()->setVariable("modelMatrix", glm::mat4(1.0f));
+        Frustum(mLightViewMatrix).draw();
         Point(mShadowCastersCentroid, glm::vec4(1.0f, 0.3f, 0.3f, 0.9f), 10.0f).draw();
         Box(mShadowCastersAABB, glm::vec4(1.0f, 0.4f, 0.4f, 0.9f)).drawLines();
     }
+}
 }

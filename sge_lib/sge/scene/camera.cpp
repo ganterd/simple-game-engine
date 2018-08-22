@@ -1,5 +1,7 @@
 #include "camera.hpp"
 
+#include <sge/model/lighting/shadowmap.hpp>
+
 namespace SGE
 {
 	Camera::Camera() : EntityComponent()
@@ -102,6 +104,18 @@ namespace SGE
 			scene->draw(debugGeometryPass, true);
 		}
 
+		/* Shadow passes */
+		std::vector<ILight*> lights = scene->getComponentsOfType<ILight>();
+		for(ILight* light : lights)
+		{
+			std::vector<ShadowMap*> shaddowMappers = light->getEntity()->getComponentsOfType<ShadowMap>();
+			if(shaddowMappers.size())
+			{
+				ShadowMap* m = shaddowMappers[0];
+				//m->render();
+			}
+		}
+
 		/* Lighting Passes */
 		glDisable(GL_CULL_FACE);
 		glDisable(GL_DEPTH_TEST);
@@ -110,17 +124,30 @@ namespace SGE
 		std::vector<Scene::SceneLight> sceneLights = SceneManager::getActiveScene()->extractLights();
 		IRenderBuffer* fromBuffer = lightingPass->renderTarget()->getRenderBuffer("pingPong0");
 		IRenderBuffer* toBuffer = lightingPass->renderTarget()->getRenderBuffer("pingPong1");
-		for(unsigned int i = 0; i < sceneLights.size(); ++i)
+		for(ILight* light : lights)
 		{
 			lightingPass->linkInputFromRenderBuffer(fromBuffer,	"inLightAccumulation");
 			lightingPass->linkOutputToRenderBuffer("outLightAccumulation", toBuffer);
 
 			/* Set light information */
-			Scene::SceneLight light = sceneLights[i];
-			lightingPass->setVariable("inLightColour", glm::vec3(light.colour));
-			lightingPass->setVariable("inLightPosition", glm::vec3(light.position));
-			lightingPass->setVariable("inLightAmbient", glm::vec3(light.ambient));
-			lightingPass->setVariable("inLightPower", light.colour.w);
+			glm::vec3 lightPosition = glm::vec3(light->getEntity()->getWorldModelMat() * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+			lightingPass->setVariable("inLightColour", light->getColor());
+			lightingPass->setVariable("inLightPosition", lightPosition);
+			lightingPass->setVariable("inLightAmbient", light->getAmbient());
+			lightingPass->setVariable("inLightPower", light->getIntensity());
+
+			std::vector<ShadowMap*> shaddowMappers = light->getEntity()->getComponentsOfType<ShadowMap>();
+			if(shaddowMappers.size())
+			{
+				ShadowMap* m = shaddowMappers[0];
+				lightingPass->setVariable("inLightHasShadowMap", 1);
+				lightingPass->setVariable("inLightViewMatrix", m->lightViewMatrix());
+				lightingPass->linkInputFromRenderBuffer(m->renderBuffer(), "inLightShadowMap");
+			}
+			else
+			{
+				lightingPass->setVariable("inLightHasShadowMap", 0);
+			}
 
 			/* Do a whole screen-space render pass */
 			/* TODO: Change this to only the light-affected screen region */

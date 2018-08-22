@@ -12,18 +12,10 @@ uniform vec3 inLightPosition;
 uniform vec3 inLightColour;
 uniform vec3 inLightAmbient;
 uniform float inLightPower;
-
+uniform int inLightHasShadowMap;
+uniform mat4 inLightViewMatrix;
+uniform sampler2D inLightShadowMap;
 uniform vec3 cameraPosition;
-
-struct PointLight {
-  vec4 position;
-  vec4 colour;
-  vec4 ambient;
-};
-buffer PointLightsBuffer{
-    PointLight pointLights[];
-};
-uniform int numLights;
 
 
 void main(){
@@ -38,6 +30,18 @@ void main(){
     vec3 lightDirection = inLightPosition - position;
     float lightDistance = length(lightDirection);
     lightDirection = normalize(lightDirection);
+
+    if(inLightHasShadowMap == 1)
+    {
+        vec4 p = inLightViewMatrix * vec4(position, 1.0f);
+        if(p.x > -1.0f && p.x < 1.0f && p.y > -1.0f && p.y < 1.0f && p.z > -1.0f)
+        {
+        }
+        else
+        {
+            discard;
+        }
+    }
 
     /* Diffuse term */
     float lambertian = clamp(dot(normal, lightDirection), 0.0f, 1.0f);

@@ -1,4 +1,5 @@
 #include <sge/scene/importer/processors.hpp>
+#include <sge/model/lighting/shadowmap.hpp>
 
 namespace SGE
 {
@@ -49,6 +50,17 @@ namespace SGE
             }
 
     		entity->addComponent(p);
+
+            const XMLElement* shadowsNode = node->FirstChildElement("shadows");
+            if(shadowsNode)
+            {
+                const char* text = shadowsNode->GetText();
+                if(text)
+                {
+                    if(std::string(text) == "true")
+                        new ShadowMap(p);
+                }
+            }
     	}
     };
 

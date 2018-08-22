@@ -22,10 +22,10 @@ namespace SGE
             glm::vec4 _near1 = invFrustumMat * glm::vec4(+1.0f, -1.0f, -1.0f, 1.0f);
             glm::vec4 _near2 = invFrustumMat * glm::vec4(-1.0f, +1.0f, -1.0f, 1.0f);
             glm::vec4 _near3 = invFrustumMat * glm::vec4(+1.0f, +1.0f, -1.0f, 1.0f);
-            glm::vec4 _far0 = invFrustumMat * glm::vec4(-1.0f, -1.0f, +1.0f, 1.0f);
-            glm::vec4 _far1 = invFrustumMat * glm::vec4(+1.0f, -1.0f, +1.0f, 1.0f);
-            glm::vec4 _far2 = invFrustumMat * glm::vec4(-1.0f, +1.0f, +1.0f, 1.0f);
-            glm::vec4 _far3 = invFrustumMat * glm::vec4(+1.0f, +1.0f, +1.0f, 1.0f);
+            glm::vec4 _far0 =  invFrustumMat * glm::vec4(-1.0f, -1.0f, +1.0f, 1.0f);
+            glm::vec4 _far1 =  invFrustumMat * glm::vec4(+1.0f, -1.0f, +1.0f, 1.0f);
+            glm::vec4 _far2 =  invFrustumMat * glm::vec4(-1.0f, +1.0f, +1.0f, 1.0f);
+            glm::vec4 _far3 =  invFrustumMat * glm::vec4(+1.0f, +1.0f, +1.0f, 1.0f);
 
             glm::vec3 near0 = glm::vec3(_near0) / _near0.w;
             glm::vec3 near1 = glm::vec3(_near1) / _near1.w;
