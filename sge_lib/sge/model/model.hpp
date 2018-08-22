@@ -3,6 +3,7 @@
 #include <vector>
 
 #include <sge/utils/export.hpp>
+#include <sge/model/aabb.hpp>
 #include <sge/model/mesh.hpp>
 #include <sge/scene/entity/drawablecomponent.hpp>
 #include <sge/model/ModelImporter.hpp>
@@ -14,11 +15,13 @@ namespace SGE
     private:
         std::vector<Mesh*> mMeshes;
         std::vector<Material*> mMaterials;
+        AABB mAABB;
 
     public:
         Model();
         void draw();
         Export bool loadFromFile(std::string file);
 		Export bool loadFromFile(std::string file, float scale, bool makeLeftHanded);
+        Export AABB aabb(){ return mAABB; };
     };
 }

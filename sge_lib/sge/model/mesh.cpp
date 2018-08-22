@@ -49,6 +49,17 @@ namespace SGE
 		this->numVerts = numVerts;
 		glBindVertexArray(0);
 		glDeleteBuffers(1, &bufferIndex);
+
+		/* Generate the AABB for this mesh */
+		for(int i = 0; i < numVerts; ++i)
+		{
+			glm::vec3 p(
+				vboData[i * 3 + 0],
+				vboData[i * 3 + 1],
+				vboData[i * 3 + 2]
+			);
+			mAABB += p;
+		}
 	}
 
 	void Mesh::setNBOData(GLfloat* nboData, int numVerts)

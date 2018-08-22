@@ -17,7 +17,18 @@ namespace SGE
 		ModelImporter* importer = new ModelImporter();
 		importer->importModel(file, scale, makeLeftHanded);
 		mMeshes = importer->getMeshes();
+        for(Mesh* m : mMeshes)
+        {
+            mAABB += m->aabb();
+        }
+
 		mMaterials = importer->getMaterials();
+
+        LOG(DEBUG) << "Model Loaded:";
+        LOG(DEBUG) << "|- File [" << file << "]";
+        LOG(DEBUG) << "|- AABB "
+            << " [" << mAABB.min().x << "," << mAABB.min().y << "," << mAABB.min().z << "]->"
+            << " [" << mAABB.max().x << "," << mAABB.max().y << "," << mAABB.max().z << "]";
 		return true;
 	}
 

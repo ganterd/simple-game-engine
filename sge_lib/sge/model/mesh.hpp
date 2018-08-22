@@ -9,7 +9,7 @@
 #include <vector>
 
 #include <sge/utils/export.hpp>
-
+#include <sge/model/aabb.hpp>
 #include <sge/graphics/material/material.hpp>
 
 namespace SGE
@@ -27,6 +27,7 @@ namespace SGE
 		GLfloat* tangentsData;
 		GLfloat* uvData;
 		unsigned int* iboData;
+		AABB mAABB;
 
 		Material* mMaterial;
 
@@ -35,6 +36,7 @@ namespace SGE
 
 		void draw();
 		void renderGL();
+		AABB aabb(){ return mAABB; };
 
 		void setMaterial(Material* m){ mMaterial = m; };
 		void setVBOData(GLfloat* vboData, int numVerts);
