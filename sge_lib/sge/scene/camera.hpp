@@ -11,6 +11,7 @@
 #include <sge/graphics/shaders/ShaderManager.hpp>
 #include <sge/scene/scenemanager.hpp>
 #include <sge/scene/entity/component.hpp>
+#include <sge/model/geometry/overlayquad.hpp>
 
 namespace SGE
 {
@@ -20,11 +21,10 @@ namespace SGE
 		glm::vec4 mBackgroundColour;
 		bool mDrawDebug = false;
 
-		Shader* deferredShadingShader;
-		SubShader* geometryPass;
-		SubShader* debugGeometryPass;
-		SubShader* lightingPass;
-		SubShader* blitAndGammaPass;
+		Shader* geometryPass;
+		Shader* debugGeometryPass;
+		Shader* lightingPass;
+		Shader* blitAndGammaPass;
 
 		float fov;
 		float ratio;

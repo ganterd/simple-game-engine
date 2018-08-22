@@ -25,7 +25,7 @@ namespace SGE
 		mRootEntity->update();
 	}
 
-	void Scene::draw(SubShader* targetShader, bool debug)
+	void Scene::draw(Shader* targetShader, bool debug)
 	{
 		// std::cout << "Drawing scene" << std::endl;
 		mRootEntity->draw(targetShader, debug);

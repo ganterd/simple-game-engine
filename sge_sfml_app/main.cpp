@@ -12,6 +12,7 @@ INITIALIZE_NULL_EASYLOGGINGPP
 
 #include "gamescripts/cameracontrol.hpp"
 #include "gamescripts/demolightscripts.hpp"
+#include "shadowmap.hpp"
 
 // Function Prototypes
 //---------------------------------------------------
@@ -35,8 +36,16 @@ bool main_loop()
 		return false;
 	}
 
+	if (SGE::Input::isKeyPressed(SGE::Input::Key::N0))
+	{
+		SGE::DisplayManager::getDisplayInstance()->toggleGrabCursor();
+	}
+
+	if (SGE::Input::isKeyPressed(SGE::Input::Key::N1))
+		scene->getMainCamera()->drawDebug(!scene->getMainCamera()->drawDebug());
+
+
 	scene->update();
-	// cameraControl->update();
 	scene->getMainCamera()->render();
 
 	return true;
@@ -55,13 +64,12 @@ void init()
 
 	/* Instantiate the scene object */
 	scene = SceneManager::loadScene("resources/scenes/test_scene.xml");
-	// SceneImporter sceneImporter;
-	// scene = sceneImporter.importSceneFromFile("resources/scenes/test_scene.xml");
-	// scene->camera->setAspectRatio((float)dm->size().width / (float)dm->size().height);
 
 	cameraControl = new CameraControl();
 	scene->getMainCamera()->getEntity()->addComponent(cameraControl);
-	// cameraControl->mCamera = scene->getMainCamera();
+	std::vector<ILight*> lights = scene->getComponentsOfType<ILight>();
+	for(ILight* l : lights)
+		new ShadowMap(l);
 
 	Utils::printSceneStructure();
 }
@@ -75,7 +83,6 @@ int main( int argc, char* args[] )
 {
 	el::Helpers::setStorage(SGE::Utils::getELStorage());
 	el::Configurations conf("resources/logger.conf");
-	//el::Loggers::reconfigureLogger("default", conf);
 	el::Loggers::reconfigureAllLoggers(conf);
 
 	for (int i = 1; i < argc; ++i)

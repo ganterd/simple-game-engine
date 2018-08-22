@@ -1,34 +1,61 @@
-#pragma once
+#ifndef SGE_ISHADER_HPP
+#define SGE_ISHADER_HPP
 
-#include <sge/graphics/shaders/SubShader.hpp>
-#include <sge/scene/geometry/overlayquad.hpp>
+#ifndef SGE_MVP_SHADER_MAT
+#define SGE_MVP_SHADER_MAT "modelViewProjection"
+#endif
+
+#define SGE_SHADER_BUFFER_WIDTH "bufferWidth"
+#define SGE_SHADER_BUFFER_HEIGHT "bufferHeight"
+
+#include <iostream>
+#include <fstream>
+#include <ostream>
+#include <sstream>
+#include <string>
+#include <stdlib.h>
+#include <glm/glm.hpp>
+
+#include <sge/graphics/IRenderTarget.hpp>
 
 namespace SGE
 {
-    /* Represents a group of shader passes */
-    class Shader
-    {
-    private:
-        std::string mName;
-        std::vector<SubShader*> mSubShaders; // Sub shaders in order
-        std::map<std::string, SubShader*> mSubShaderMap;
-        SubShader* mCurrentSubShader;
+	class Export Shader
+	{
+	protected:
+		std::string mName;
+		IRenderTarget* mRenderTarget;
 
-    public:
-        void setName(std::string n){ mName = n; };
+		std::map<std::string, IRenderBuffer*> mRenderBufferOutputLinks;
+		std::map<std::string, IRenderBuffer*> mRenderBufferInputLinks;
 
-        void addSubShader(std::string subShaderName, SubShader* subShader);
-        void listSubShaders();
+	public:
+		enum ShaderType
+		{
+			Vertex,
+			Geometry,
+			Fragment
+		};
 
-        void draw();
+		void setName(std::string n){ mName = n; };
+		virtual bool addShaderFile(std::string shaderFile, ShaderType shaderType) = 0;
 
-        SubShader* useSubShader(std::string subShader);
-        SubShader* useSubShader(unsigned int subShaderIndex);
-        SubShader* getSubShader(std::string subShader);
-        std::vector<SubShader*> getSubShaders(){ return mSubShaders; };
-        void setCurrentSubShader(SubShader* s);
-        SubShader* getCurrentSubShader() { return mCurrentSubShader; };
+		virtual void renderTarget(IRenderTarget* t){ mRenderTarget = t; };
+		virtual IRenderTarget* renderTarget(){ return mRenderTarget; };
 
-        void disable();
-    };
+		virtual void linkOutputToRenderBuffer(std::string shaderOutput, IRenderBuffer* buffer);
+		virtual void linkInputFromRenderBuffer(IRenderBuffer* buffer, std::string targetSampler);
+
+		virtual void enable() = 0;
+		virtual void disable() = 0;
+		virtual void setVariable(std::string name, bool value) = 0;
+		virtual void setVariable(std::string name, int value) = 0;
+		virtual void setVariable(std::string name, float value) = 0;
+		virtual void setVariable(std::string name, glm::vec2 value) = 0;
+		virtual void setVariable(std::string name, glm::vec3 value) = 0;
+		virtual void setVariable(std::string name, glm::vec4 value) = 0;
+		virtual void setVariable(std::string name, glm::mat4 value) = 0;
+	};
 }
+
+#endif

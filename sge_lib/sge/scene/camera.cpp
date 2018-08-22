@@ -13,8 +13,6 @@ namespace SGE
 
 		mBackgroundColour = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
 
-		deferredShadingShader = new Shader();
-
 		/* Create the render target for the geometry and debug geometry passes */
 		IRenderTarget* geometryPassRT = new GLSLRenderTarget();
 		geometryPassRT->addRenderBuffer("diffuse", IRenderBuffer::Color, ITexture::DataType::Float);
@@ -26,15 +24,14 @@ namespace SGE
 
 		/* Create the geometry pass shader, and link to the render target */
 		geometryPass = new GLSLShader();
-		geometryPass->addShaderFile("resources/shaders/deferred_shading/geometry_pass.vert", SubShader::Vertex);
-		geometryPass->addShaderFile("resources/shaders/deferred_shading/geometry_pass.frag", SubShader::Fragment);
+		geometryPass->addShaderFile("resources/shaders/deferred_shading/geometry_pass.vert", Shader::Vertex);
+		geometryPass->addShaderFile("resources/shaders/deferred_shading/geometry_pass.frag", Shader::Fragment);
 		geometryPass->renderTarget(geometryPassRT);
 		geometryPass->linkOutputToRenderBuffer("outDiffuse", geometryPassRT->getRenderBuffer("diffuse"));
 		geometryPass->linkOutputToRenderBuffer("outSpecular", geometryPassRT->getRenderBuffer("specular"));
 		geometryPass->linkOutputToRenderBuffer("outEmissive", geometryPassRT->getRenderBuffer("emissive"));
 		geometryPass->linkOutputToRenderBuffer("outNormals", geometryPassRT->getRenderBuffer("normals"));
 		geometryPass->linkOutputToRenderBuffer("outPositions", geometryPassRT->getRenderBuffer("positions"));
-		deferredShadingShader->addSubShader("geometryPass", geometryPass);
 
 		/* Create the debug geometry shader pass, and link to the render target */
 		IRenderTarget* debugGeometryPassRT = new GLSLRenderTarget();
@@ -42,21 +39,19 @@ namespace SGE
 		debugGeometryPassRT->addRenderBuffer("depth", IRenderBuffer::Depth, ITexture::DataType::Float);
 
 		debugGeometryPass = new GLSLShader();
-		debugGeometryPass->addShaderFile("resources/shaders/deferred_shading/debug_geometry_pass.vert", SubShader::Vertex);
-		debugGeometryPass->addShaderFile("resources/shaders/deferred_shading/debug_geometry_pass.frag", SubShader::Fragment);
+		debugGeometryPass->addShaderFile("resources/shaders/deferred_shading/debug_geometry_pass.vert", Shader::Vertex);
+		debugGeometryPass->addShaderFile("resources/shaders/deferred_shading/debug_geometry_pass.frag", Shader::Fragment);
 		debugGeometryPass->renderTarget(debugGeometryPassRT);
 		debugGeometryPass->linkOutputToRenderBuffer("outEmissive", debugGeometryPassRT->getRenderBuffer("emissive"));
-		deferredShadingShader->addSubShader("debugGeometryPass", debugGeometryPass);
 
 		/* Create the lighting pass shader, link the inputs ffrom the geometry pass */
 		lightingPass = new GLSLShader();
-		lightingPass->addShaderFile("resources/shaders/deferred_shading/lighting_pass.vert", SubShader::Vertex);
-		lightingPass->addShaderFile("resources/shaders/deferred_shading/lighting_pass.frag", SubShader::Fragment);
+		lightingPass->addShaderFile("resources/shaders/deferred_shading/lighting_pass.vert", Shader::Vertex);
+		lightingPass->addShaderFile("resources/shaders/deferred_shading/lighting_pass.frag", Shader::Fragment);
 		lightingPass->linkInputFromRenderBuffer(geometryPassRT->getRenderBuffer("diffuse"), "inDiffuse");
 		lightingPass->linkInputFromRenderBuffer(geometryPassRT->getRenderBuffer("specular"), "inSpecular");
 		lightingPass->linkInputFromRenderBuffer(geometryPassRT->getRenderBuffer("normals"), "inNormal");
 		lightingPass->linkInputFromRenderBuffer(geometryPassRT->getRenderBuffer("positions"), "inPosition");
-		deferredShadingShader->addSubShader("lightingPass", lightingPass);
 
 		/* Create the ping-pong render target for the per-light lighting pass */
 		IRenderTarget* lightingPassRT = new GLSLRenderTarget();
@@ -69,10 +64,9 @@ namespace SGE
 		/* during rendering, depending on how many lights are in the scene and which */
 		/* ping-pong texture was the most-recently used */
 		blitAndGammaPass = new GLSLShader();
-		blitAndGammaPass->addShaderFile("resources/shaders/deferred_shading/blitAndGamma.vert", SubShader::Vertex);
-		blitAndGammaPass->addShaderFile("resources/shaders/deferred_shading/blitAndGamma.frag", SubShader::Fragment);
+		blitAndGammaPass->addShaderFile("resources/shaders/deferred_shading/blitAndGamma.vert", Shader::Vertex);
+		blitAndGammaPass->addShaderFile("resources/shaders/deferred_shading/blitAndGamma.frag", Shader::Fragment);
 		blitAndGammaPass->linkInputFromRenderBuffer(debugGeometryPassRT->getRenderBuffer("emissive"), "inEmissive");
-		deferredShadingShader->addSubShader("blitAndGammaPass", blitAndGammaPass);
 	}
 
 	void Camera::render()
@@ -83,8 +77,7 @@ namespace SGE
 		}
 
 		/* Geometry Pass */
-		ShaderManager::setCurrentShader(deferredShadingShader);
-		deferredShadingShader->setCurrentSubShader(geometryPass);
+		ShaderManager::setCurrentShader(geometryPass);
 		geometryPass->renderTarget()->clear();
 		geometryPass->setVariable("viewProjectionMatrix", getVPMat());
 		glDepthMask(GL_TRUE);
@@ -104,7 +97,7 @@ namespace SGE
 		debugGeometryPass->renderTarget()->clear();
 		if(mDrawDebug)
 		{
-			deferredShadingShader->setCurrentSubShader(debugGeometryPass);
+			ShaderManager::setCurrentShader(debugGeometryPass);
 			debugGeometryPass->setVariable("viewProjectionMatrix", getVPMat());
 			scene->draw(debugGeometryPass, true);
 		}
@@ -112,7 +105,7 @@ namespace SGE
 		/* Lighting Passes */
 		glDisable(GL_CULL_FACE);
 		glDisable(GL_DEPTH_TEST);
-		deferredShadingShader->setCurrentSubShader(lightingPass);
+		ShaderManager::setCurrentShader(lightingPass);
 		lightingPass->renderTarget()->clear();
 		std::vector<Scene::SceneLight> sceneLights = SceneManager::getActiveScene()->extractLights();
 		IRenderBuffer* fromBuffer = lightingPass->renderTarget()->getRenderBuffer("pingPong0");
@@ -140,7 +133,7 @@ namespace SGE
 		}
 
 		/* Blit and gamma correction pass */
-		deferredShadingShader->setCurrentSubShader(blitAndGammaPass);
+		ShaderManager::setCurrentShader(blitAndGammaPass);
 		blitAndGammaPass->linkInputFromRenderBuffer(fromBuffer, "inColour");
 		//blitAndGammaPass->linkInputFromRenderBuffer(geometryPass->renderTarget()->getRenderBuffer("diffuse"), "inColour");
 		OverlayQuad::draw();

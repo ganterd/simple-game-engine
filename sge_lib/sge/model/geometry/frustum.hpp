@@ -71,7 +71,7 @@ namespace SGE
 
         void draw()
         {
-            SubShader* shader = ShaderManager::getCurrentShader()->getCurrentSubShader();
+            Shader* shader = ShaderManager::getCurrentShader();
             shader->setVariable("pointSize", 2.0f);
             shader->setVariable("debugColour", mColour);
             glBindVertexArray(vao);

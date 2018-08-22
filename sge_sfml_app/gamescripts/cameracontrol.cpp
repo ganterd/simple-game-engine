@@ -8,10 +8,6 @@ CameraControl::CameraControl() : SGE::ObjectScript()
 
 void CameraControl::update()
 {
-	if (SGE::Input::isKeyPressed(SGE::Input::Key::N0))
-	{
-		SGE::DisplayManager::getDisplayInstance()->toggleGrabCursor();
-	}
 
     glm::vec2 m = SGE::Input::mouseDelta() * mouseScale;
     glm::vec3 rot = mEntity->getLocalRotation();

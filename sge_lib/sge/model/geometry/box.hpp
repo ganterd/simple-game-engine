@@ -50,7 +50,7 @@ namespace SGE
 
         void drawLines()
         {
-            SubShader* shader = ShaderManager::getCurrentShader()->getCurrentSubShader();
+            Shader* shader = ShaderManager::getCurrentShader();
             shader->setVariable("pointSize", 1.0f);
             shader->setVariable("debugColour", mColour);
             glBindVertexArray(vao);

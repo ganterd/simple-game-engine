@@ -40,7 +40,7 @@ namespace SGE
 		Export Entity* getRoot(){ return mRootEntity; };
 		Export void addEntity(Entity* entity);
 		Export void update();
-		Export void draw(SubShader* targetShader, bool debug = false);
+		Export void draw(Shader* targetShader, bool debug = false);
 		Export void lightScene();
 
 		Export void setMainCamera(Camera* c){ mMainCamera = c; };

@@ -13,8 +13,6 @@ namespace SGE
 	{
 	private:
 		static std::map<std::string, Shader*> shaders;
-		static int targetBufferWidth;
-		static int targetBufferHeight;
 
 	public:
 		Export static Shader* currentShader;
@@ -25,15 +23,8 @@ namespace SGE
 		Export static Shader* getShader(std::string shader);
 		Export static void setCurrentShader(Shader* shader);
 		Export static Shader* getCurrentShader();
-		
-		Export static SubShader* getCurrentSubShader();
 
 		Export static Shader* useShader(std::string shader);
-		Export static SubShader* useShader(std::string shader, std::string subShader);
-
-		Export static void setTargetBufferDimensions(int w, int h);
-		Export static int getTargetBufferWidth();
-		Export static int getTargetBufferHeight();
 	};
 }
 

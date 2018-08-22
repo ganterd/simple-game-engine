@@ -37,7 +37,7 @@ namespace SGE
 			entity->update();
 	}
 
-	void Entity::draw(SubShader* shader, bool debug)
+	void Entity::draw(Shader* shader, bool debug)
 	{
 		shader->setVariable("modelMatrix", mWorldModelMat);
 		for(DrawableComponent* component : mDrawableComponents)

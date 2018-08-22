@@ -1,3 +1,3 @@
-#include <sge/scene/geometry/overlayquad.hpp>
+#include <sge/model/geometry/overlayquad.hpp>
 
 SGE::OverlayQuad* SGE::OverlayQuad::mInstance = nullptr;

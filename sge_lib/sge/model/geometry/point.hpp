@@ -44,7 +44,7 @@ namespace SGE
 
         void draw()
         {
-            SubShader* shader = ShaderManager::getCurrentShader()->getCurrentSubShader();
+            Shader* shader = ShaderManager::getCurrentShader();
             shader->setVariable("debugColour", mColour);
             shader->setVariable("pointSize", mPointSize);
 

@@ -6,13 +6,13 @@
 
 #include <easylogging++.h>
 
-#include <sge/graphics/shaders/SubShader.hpp>
+#include <sge/graphics/shaders/Shader.hpp>
 #include <sge/graphics/GLSLRenderTarget.hpp>
 #include <sge/graphics/OGLGraphicsManager.hpp>
 
 namespace SGE
 {
-	class Export GLSLShader : public SubShader
+	class Export GLSLShader : public Shader
 	{
 	private:
 		GLuint mShaderProgramID;
