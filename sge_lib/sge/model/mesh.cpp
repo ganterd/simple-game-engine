@@ -144,6 +144,6 @@ namespace SGE
 		this->iboData = iboData;
 		this->numTris = numTris;
 		glBindVertexArray(0);
-		glDeleteBuffers(1, &bufferIndex);
+		//glDeleteBuffers(1, &bufferIndex);
 	}
 }

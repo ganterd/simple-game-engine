@@ -48,7 +48,7 @@ namespace SGE
 
 		Export std::vector<SceneLight> extractLights();
 
-		template <typename T> Export std::vector<T*> getComponentsOfType()
+		template <typename T> std::vector<T*> getComponentsOfType()
 		{
 			std::vector<Entity*> entityList;
 			entityList.push_back(mRootEntity);

@@ -38,8 +38,8 @@ void ShadowMap::update()
     {
         /* Convert the local AABB to the world AABB */
         AABB componentAABB = c->aabb();
-        glm::vec3 min = componentAABB.min();
-        glm::vec3 max = componentAABB.max();
+        glm::vec3 min = (componentAABB.min)();
+        glm::vec3 max = (componentAABB.max)();
         glm::vec4 p0(min.x, min.y, min.z, 1.0f);
         glm::vec4 p1(min.x, min.y, max.z, 1.0f);
         glm::vec4 p2(min.x, max.y, min.z, 1.0f);
@@ -59,7 +59,7 @@ void ShadowMap::update()
         mShadowCastersAABB += glm::vec3(p7 * c->getEntity()->getWorldModelMat());
     }
 
-    mShadowCastersCentroid = mShadowCastersAABB.min() + mShadowCastersAABB.max();
+    mShadowCastersCentroid = (mShadowCastersAABB.min)() + (mShadowCastersAABB.max)();
     mShadowCastersCentroid *= 0.5f;
 
     glm::vec3 positionWorld = glm::vec3(glm::vec4(mEntity->getPosition(), 1.0f) * mEntity->getWorldModelMat());

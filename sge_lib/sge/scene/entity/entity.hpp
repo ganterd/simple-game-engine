@@ -59,7 +59,7 @@ namespace SGE
 
 		Export void addComponent(EntityComponent* component);
 		Export std::vector<EntityComponent*> getComponents(){ return mComponents; };
-		template <typename ComponentType> Export std::vector<ComponentType*> getComponentsOfType()
+		template <typename ComponentType> std::vector<ComponentType*> getComponentsOfType()
 		{
 			std::vector<ComponentType*> compatibleComponents;
 			for(EntityComponent* c : mComponents)

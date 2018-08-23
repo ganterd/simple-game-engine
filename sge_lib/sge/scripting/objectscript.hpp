@@ -7,7 +7,7 @@ namespace SGE
     class ObjectScript : public EntityComponent
     {
     public:
-        ObjectScript();
+        Export ObjectScript();
         
         virtual void update(){};
     };

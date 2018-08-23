@@ -15,8 +15,8 @@ namespace SGE
         Box(const AABB& aabb, const glm::vec4& colour = glm::vec4(0.8f, 1.0f, 0.8f, 0.8f))
         {
             mColour = colour;
-            glm::vec3 min = aabb.min();
-            glm::vec3 max = aabb.max();
+            glm::vec3 min = (aabb.min)();
+            glm::vec3 max = (aabb.max)();
             float vertices[] = {
                 min.x, min.y, min.z, max.x, min.y, min.z,
                 min.x, min.y, max.z, max.x, min.y, max.z,

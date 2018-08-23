@@ -28,8 +28,8 @@ namespace SGE
         LOG(DEBUG) << "Model Loaded:";
         LOG(DEBUG) << "|- File [" << file << "]";
         LOG(DEBUG) << "|- AABB "
-            << "[" << mAABB.min().x << "," << mAABB.min().y << "," << mAABB.min().z << "]->"
-            << "[" << mAABB.max().x << "," << mAABB.max().y << "," << mAABB.max().z << "]";
+            << "[" << (mAABB.min)().x << "," << (mAABB.min)().y << "," << (mAABB.min)().z << "]->"
+            << "[" << (mAABB.max)().x << "," << (mAABB.max)().y << "," << (mAABB.max)().z << "]";
 		return true;
 	}
 
