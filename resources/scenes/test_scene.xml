@@ -79,12 +79,11 @@
 
 		<entity name="FillLight">
 			<transform>
-				<translation x="5" y="4" z="2"/>
+				<translation x="5" y="1" z="2"/>
 				<rotation x="0" y="0" z="0"/>
 			</transform>
 			<light>
 				<diffuse r="0.3" g="0.3" b="1.0" power="10.0" />
-				<ambient r="0.1" g="0.1" b="0.1" />
 				<shadows>true</shadows>
 			</light>
 		</entity>

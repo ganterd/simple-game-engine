@@ -64,7 +64,9 @@ void ShadowMap::update()
 
     glm::vec3 positionWorld = glm::vec3(glm::vec4(mEntity->getPosition(), 1.0f) * mEntity->getWorldModelMat());
 
-    mLightViewMatrix = glm::perspective(glm::radians(45.0f), 1.0f, 1.0f, (sinf(Time::gameTime()) + 2.0f) * 10.0f)
+	mNearPlane = 1.0f;
+	mFarPlane = 20.0f;
+    mLightViewMatrix = glm::perspective(glm::radians(45.0f), 1.0f, mNearPlane, mFarPlane)
         * glm::lookAt(
             positionWorld,
             mShadowCastersCentroid,
@@ -80,9 +82,7 @@ void ShadowMap::render()
     mRenderTarget->bind();
     mRenderTarget->clear();
     glm::vec3 positionWorld = glm::vec3(glm::vec4(mEntity->getPosition(), 1.0f) * mEntity->getWorldModelMat());
-    //mShader->setVariable("inLightPosition", positionWorld);
-    mShader->setVariable("inLightNearPlane", 1.0f);
-    mShader->setVariable("inLightFarPlane", 20.0f);
+    mShader->setVariable("inLightPosition", positionWorld);
     mShader->setVariable("viewProjectionMatrix", mLightViewMatrix);
     SceneManager::getActiveScene()->draw(mShader);
     ShaderManager::setCurrentShader(nullptr);

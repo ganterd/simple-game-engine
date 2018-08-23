@@ -20,6 +20,8 @@ namespace SGE
         glm::mat4 mLightViewMatrix;
         AABB mShadowCastersAABB;
         glm::vec3 mShadowCastersCentroid;
+		float mNearPlane;
+		float mFarPlane;
 
         Shader* mShader;
         IRenderTarget* mRenderTarget;
@@ -32,5 +34,7 @@ namespace SGE
         void render();
         IRenderBuffer* renderBuffer(){ return mRenderTarget->getRenderBuffer("depth"); };
         glm::mat4 lightViewMatrix(){ return mLightViewMatrix; };
+		float nearPlane(){ return mNearPlane; };
+		float farPlane(){ return mFarPlane; };
     };
 }

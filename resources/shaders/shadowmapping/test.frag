@@ -2,12 +2,13 @@
 
 in vec3 fragPosition;
 
+uniform vec3 inLightPosition;
 uniform float inLightNearPlane;
 uniform float inLightFarPlane;
 
 out vec4 outDepth;
 
 void main(){
-    float depth = (length(fragPosition) - inLightNearPlane) / inLightFarPlane;
+    float depth = length(fragPosition - inLightPosition);
     outDepth = vec4(vec3(depth), 1.0f);
 }

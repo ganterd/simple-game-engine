@@ -13,5 +13,5 @@ void main()
 	vec4 v = vec4(vPosition, 1);
 	gl_Position = viewProjectionMatrix * modelMatrix * v;
 
-	fragPosition = vec3(viewProjectionMatrix * modelMatrix * v);
+	fragPosition = vec3(modelMatrix * v);
 }

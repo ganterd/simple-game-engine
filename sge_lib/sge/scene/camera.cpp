@@ -149,6 +149,7 @@ namespace SGE
 			{
 				lightingPass->setVariable("inLightHasShadowMap", 0);
 			}
+			lightingPass->enable();
 
 			/* Do a whole screen-space render pass */
 			/* TODO: Change this to only the light-affected screen region */
