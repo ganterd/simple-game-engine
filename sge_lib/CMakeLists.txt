@@ -23,7 +23,7 @@ add_definitions(-DSGE_BUILDING)
 
 add_library(
 	sge_lib SHARED
-	#${SGE_LIB_HEADERS}
+	${SGE_LIB_HEADERS}
 	${SGE_LIB_SOURCES}
 )
 add_dependencies(

@@ -80,7 +80,7 @@ void ShadowMap::render()
     mRenderTarget->bind();
     mRenderTarget->clear();
     glm::vec3 positionWorld = glm::vec3(glm::vec4(mEntity->getPosition(), 1.0f) * mEntity->getWorldModelMat());
-    mShader->setVariable("inLightPosition", positionWorld);
+    //mShader->setVariable("inLightPosition", positionWorld);
     mShader->setVariable("inLightNearPlane", 1.0f);
     mShader->setVariable("inLightFarPlane", 20.0f);
     mShader->setVariable("viewProjectionMatrix", mLightViewMatrix);

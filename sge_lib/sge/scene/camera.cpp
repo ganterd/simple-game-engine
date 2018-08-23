@@ -112,9 +112,10 @@ namespace SGE
 			if(shaddowMappers.size())
 			{
 				ShadowMap* m = shaddowMappers[0];
-				//m->render();
+				m->render();
 			}
 		}
+		glFinish();
 
 		/* Lighting Passes */
 		glDisable(GL_CULL_FACE);
@@ -152,6 +153,7 @@ namespace SGE
 			/* Do a whole screen-space render pass */
 			/* TODO: Change this to only the light-affected screen region */
 			OverlayQuad::draw();
+			glFinish();
 
 			/* Ping-pong the textures */
 			IRenderBuffer* tmp = fromBuffer;

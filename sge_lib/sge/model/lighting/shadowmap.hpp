@@ -18,7 +18,6 @@ namespace SGE
     {
     private:
         glm::mat4 mLightViewMatrix;
-        glm::mat4 mLookAtMatrix;
         AABB mShadowCastersAABB;
         glm::vec3 mShadowCastersCentroid;
 

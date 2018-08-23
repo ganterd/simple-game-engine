@@ -33,30 +33,31 @@ void main(){
 
     if(inLightHasShadowMap == 1)
     {
-        vec4 p = inLightViewMatrix * vec4(position, 1.0f);
-        if(p.x > -1.0f && p.x < 1.0f && p.y > -1.0f && p.y < 1.0f && p.z > -1.0f)
-        {
+		//finalColour += diffuse * inLightAmbient;
+        vec4 lightMapPosition = inLightViewMatrix * vec4(position, 1.0f);
+        if(lightMapPosition.x > -1.0f && lightMapPosition.x < 1.0f 
+			&& lightMapPosition.y > -1.0f && lightMapPosition.y < 1.0f 
+			&& lightMapPosition.z > -1.0f
+		){
+			vec2 lightMapPosition = (lightMapPosition.xy + vec2(1.0f)) * 0.5f;
+			float depth = texture(inLightShadowMap, lightMapPosition).r;
+			finalColour += vec3(depth);
         }
-        else
-        {
-            discard;
-        }
-    }
+		else
+		{
+			/* Diffuse term */
+			float lambertian = clamp(dot(normal, lightDirection), 0.0f, 1.0f);
+			float falloff = inLightPower / lightDistance;
+			vec3 diffuseTerm = diffuse * lambertian * inLightColour * falloff;
 
-    /* Diffuse term */
-    float lambertian = clamp(dot(normal, lightDirection), 0.0f, 1.0f);
-    float falloff = inLightPower / lightDistance;
-    vec3 diffuseTerm = diffuse * lambertian * inLightColour * falloff;
+			/* Specular term */
+			vec3 halfVector = normalize(viewDirection + lightDirection);
+			float specularLambertian = clamp(dot(normal, halfVector), 0.0f, 1.0f);
+			float specularIntensity = pow(specularLambertian, 16.0f);
+			vec3 specularTerm = specular * inLightColour * specularIntensity * falloff;
 
-    /* Specular term */
-    vec3 halfVector = normalize(viewDirection + lightDirection);
-    float specularLambertian = clamp(dot(normal, halfVector), 0.0f, 1.0f);
-    float specularIntensity = pow(specularLambertian, 16.0f);
-    vec3 specularTerm = specular * inLightColour * specularIntensity * falloff;
-
-    /* Ambient term */
-    vec3 ambientTerm = diffuse * inLightAmbient;
-
-    finalColour += diffuseTerm + specularTerm + ambientTerm;
-    lightAccumulation = vec4(finalColour, 1.0f);
+			finalColour += diffuseTerm + specularTerm;
+		}
+	}
+	lightAccumulation = vec4(finalColour, 1.0f);
 }
